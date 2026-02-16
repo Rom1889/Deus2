@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XP Deus II V4 - Ultimate Expert Tool</title>
+    <title>XP Deus II V5 - Precision Expert Tool</title>
     <style>
         /* --- DESIGN SYSTEM TACTIQUE --- */
         :root {
@@ -22,6 +22,7 @@
             --success: #66bb6a;
             --warning: #ffa726;
             --danger: #ef5350;
+            --info: #29b6f6;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,6 +67,7 @@
             white-space: nowrap;
             display: flex;
             justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .nav-btn {
@@ -186,6 +188,18 @@
             margin-top: 20px;
         }
 
+        /* --- STICKY PANEL --- */
+        .sticky-panel {
+            position: -webkit-sticky; /* Pour Safari */
+            position: sticky;
+            top: 54px; 
+            z-index: 95;
+            background: var(--bg-panel);
+            border: 1px solid var(--accent-gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
         .info-tag {
             display: inline-block;
             background: var(--bg-input);
@@ -198,26 +212,38 @@
             margin-bottom: 5px;
         }
 
-        /* --- TABLES --- */
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9rem; }
-        th { text-align: left; color: var(--accent-blue); padding: 10px; border-bottom: 1px solid var(--border-light); font-weight: 600; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-main); }
-        tr:last-child td { border-bottom: none; }
-
         /* --- ALERTS --- */
         .alert { padding: 12px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; border-left: 3px solid; }
         .alert-info { background: rgba(92, 139, 192, 0.1); border-color: var(--accent-blue); }
         .alert-expert { background: rgba(212, 175, 55, 0.1); border-color: var(--accent-gold); color: #e8d084; }
         .alert-warn { background: rgba(255, 167, 38, 0.1); border-color: var(--warning); }
 
-        /* --- PERFORMANCE BARS --- */
-        .perf-bar-container { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .perf-label { width: 100px; font-size: 0.8rem; color: var(--text-dim); text-align: right; }
-        .perf-track { flex-grow: 1; height: 6px; background: var(--bg-input); border-radius: 3px; overflow: hidden; }
-        .perf-fill { height: 100%; transition: width 0.3s; }
+        /* --- PERFORMANCE BARS & LABELS --- */
+        .perf-bar-container { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         
+        .perf-label-group {
+            display: flex;
+            flex-direction: column;
+            width: 140px; 
+            text-align: right;
+            justify-content: center;
+        }
+        .perf-title { font-size: 0.75rem; font-weight: bold; color: var(--text-main); text-transform: uppercase; }
+        .perf-question { font-size: 0.6rem; color: var(--text-dim); font-style: italic; line-height: 1.1; margin-top: 1px; }
+
+        .perf-track-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 6px; }
+        .perf-track { flex-grow: 1; height: 8px; background: var(--bg-input); border-radius: 4px; overflow: hidden; position: relative; }
+        .perf-fill { height: 100%; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .range-label { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; min-width: 45px; }
+        .range-label.min { text-align: right; }
+        .range-label.max { text-align: left; }
+
         .fill-depth { background: var(--accent-blue); }
         .fill-sep { background: var(--warning); }
+        .fill-fine { background: var(--success); } 
+        .fill-id { background: var(--info); } 
+        .fill-mask { background: var(--danger); }
 
         /* --- TERRAIN CARDS --- */
         .terrain-card {
@@ -252,14 +278,18 @@
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
             .nav-container { justify-content: flex-start; }
             header h1 { font-size: 1.4rem; }
+            .sticky-panel { top: 50px; margin-left: -15px; margin-right: -15px; border-radius: 0; }
+            .perf-label-group { width: 90px; } /* Compact on mobile */
+            .perf-question { display: none; } /* Hide question on very small screens */
+            @media (min-width: 380px) { .perf-question { display: block; } .perf-label-group { width: 130px; } }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>XP Deus II V4</h1>
-        <p>CONSOLE EXPERT PRO | ULTIMATE EVOLUTION</p>
+        <h1>XP Deus II V5</h1>
+        <p>CONSOLE EXPERT PRO | ANALYSE TACTIQUE</p>
     </header>
 
     <div class="nav-container">
@@ -316,30 +346,78 @@
             <div id="terrain-detail"></div>
         </div>
 
-        <!-- TAB 3: PARAMETRES (ENRICHIS) -->
+        <!-- TAB 3: PARAMETRES (ENRICHIS & CORRIGES) -->
         <div id="params" class="tab-content">
             <div class="card">
                 <h2>⚙️ Simulateur Interactif Complet</h2>
-                <p style="color:var(--text-dim); margin-bottom:20px;">Comprenez l'impact de chaque millimètre de réglage.</p>
+                <p style="color:var(--text-dim); margin-bottom:20px;">Analysez l'impact de chaque réglage en temps réel.</p>
 
-                <!-- Indicateurs de Performance (MOVED TO TOP) -->
-                <div style="background:var(--bg-input); padding:15px; border-radius:6px; border:1px solid var(--border-light); margin-bottom: 25px;">
-                    <label style="margin-bottom:10px;">Analyse d'Impact (Temps Réel)</label>
+                <!-- Indicateurs de Performance (STICKY) -->
+                <div class="sticky-panel" style="background:var(--bg-panel); padding:15px; border-radius:6px; border:1px solid var(--accent-gold);">
+                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px;">📊 ANALYSE TACTIQUE (TEMPS RÉEL)</label>
+                    
                     <div class="perf-bar-container">
-                        <span class="perf-label">Profondeur</span>
-                        <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:70%"></div></div>
+                        <div class="perf-label-group">
+                            <span class="perf-title">Puissance</span>
+                            <span class="perf-question">À quelle profondeur ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Surface</span>
+                            <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
+                            <span class="range-label max">Profond</span>
+                        </div>
                     </div>
+
                     <div class="perf-bar-container">
-                        <span class="perf-label">Séparation</span>
-                        <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:40%"></div></div>
+                        <div class="perf-label-group">
+                            <span class="perf-title">Séparation</span>
+                            <span class="perf-question">Pièce au milieu de clous ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Lent</span>
+                            <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
+                            <span class="range-label max">Rapide</span>
+                        </div>
                     </div>
+
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Sensibilité</span>
+                            <span class="perf-question">Objets minuscules ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Standard</span>
+                            <div class="perf-track"><div id="bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
+                            <span class="range-label max">Or Fin</span>
+                        </div>
+                    </div>
+
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Discrimination</span>
+                            <span class="perf-question">Or ou vieux clou ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Ouvert</span>
+                            <div class="perf-track"><div id="bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
+                            <span class="range-label max">Strict</span>
+                        </div>
+                    </div>
+
                      <div class="perf-bar-container">
-                        <span class="perf-label">Masquage Fer</span>
-                        <div class="perf-track"><div id="bar-mask" class="perf-fill" style="width:20%; background:#ef5350;"></div></div>
+                        <div class="perf-label-group">
+                            <span class="perf-title" style="color:var(--danger)">Risque Masquage</span>
+                            <span class="perf-question">Cibles manquées ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Faible</span>
+                            <div class="perf-track"><div id="bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
+                            <span class="range-label max" style="color:var(--danger)">Critique</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="grid-2">
+                <div class="grid-2" style="margin-top: 20px;">
                     <div>
                         <h4 style="color:var(--accent-blue); margin-bottom:15px; border-bottom:1px solid var(--border-light);">Puissance & Vitesse</h4>
                         <div class="slider-container">
@@ -636,6 +714,109 @@
             if(tabId === 'tools') renderLogs();
         }
 
+        // --- CALCULATION ENGINE (Shared) ---
+        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio) {
+            // 1. PUISSANCE (Depth)
+            let depthScore = ((sens - 60) * 1.5) + ((5 - reac) * 12); 
+            depthScore -= (sil * 4); // Silencer hurts depth significantly
+            if(audio === "Morphing") depthScore += 5;
+            if(disc > 10) depthScore -= (disc/5); 
+            
+            // 2. SÉPARATION (Reactivity)
+            let sepScore = (reac * 20); 
+            if(sens > 95) sepScore -= 5;
+            if(audio === "Pitch" || audio === "2-Tones") sepScore += 5;
+            if(sil > 2) sepScore -= 10; 
+
+            // 3. FINESSE (Sensitivity - Tiny objects)
+            let fineScore = (sens - 75) * 4; 
+            if(reac >= 2.5) fineScore += 10; 
+            if(disc < 0) fineScore += 10; 
+
+            // 4. IDENTIFICATION (Discrimination - Gold vs Nail)
+            let idScore = 50;
+            if(audio === "FullTones") idScore += 25;
+            if(audio === "Pitch") idScore += 15;
+            if(audio === "Square") idScore += 10;
+            if(iron > 0) idScore += 15; else idScore -= 20; 
+            if(bcaps > 0) idScore += 10; 
+            if(disc > 5 && disc < 20) idScore += 10; 
+
+            // 5. MASQUAGE
+            let maskScore = (sil * 15) + ((5-reac) * 10) + (bcaps * 5); 
+            if(iron === 0) maskScore += 25;
+            if(disc > 15) maskScore += (disc - 10);
+            if(notch > 0) maskScore += 15;
+
+            // Normalize
+            const normalize = (val) => Math.max(5, Math.min(100, val));
+            
+            return { 
+                depth: normalize(depthScore), 
+                sep: normalize(sepScore), 
+                fine: normalize(fineScore),
+                id: normalize(idScore),
+                mask: normalize(maskScore) 
+            };
+        }
+
+        // --- WIZARD LIVE UPDATE LOGIC ---
+        function updateWizardLive() {
+            // Read Base values from inputs 
+            const sens = parseInt(document.getElementById('wiz-rng-sens').value);
+            const reac = parseFloat(document.getElementById('wiz-rng-reac').value);
+            const disc = parseInt(document.getElementById('wiz-rng-disc').value);
+            
+            // Read Advanced values from inputs
+            const sil = parseInt(document.getElementById('wiz-rng-sil').value);
+            const iron = parseInt(document.getElementById('wiz-rng-iron').value);
+            const resp = parseInt(document.getElementById('wiz-rng-resp').value);
+            const bcaps = parseInt(document.getElementById('wiz-rng-bcaps').value);
+            const audioType = document.getElementById('wiz-sel-audio').value; 
+
+            // Update display values next to sliders
+            document.getElementById('wiz-val-sens').textContent = sens;
+            document.getElementById('wiz-val-reac').textContent = reac;
+            document.getElementById('wiz-val-disc').textContent = disc;
+            document.getElementById('wiz-val-sil').textContent = sil;
+            document.getElementById('wiz-val-iron').textContent = iron;
+            document.getElementById('wiz-val-resp').textContent = resp;
+            document.getElementById('wiz-val-bcaps').textContent = bcaps;
+
+            // Calculate Performance
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType); 
+
+            // Update Gauges
+            document.getElementById('wiz-bar-depth').style.width = scores.depth + "%";
+            document.getElementById('wiz-bar-sep').style.width = scores.sep + "%";
+            document.getElementById('wiz-bar-fine').style.width = scores.fine + "%";
+            document.getElementById('wiz-bar-id').style.width = scores.id + "%";
+            document.getElementById('wiz-bar-mask').style.width = scores.mask + "%";
+
+            // Provide Live Advice Feedback
+            const feedbackSens = getFeedback('sens', sens);
+            const feedbackReac = getFeedback('reac', reac);
+            const feedbackDisc = getFeedback('disc', disc);
+            const feedbackSil = getFeedback('sil', sil);
+            const feedbackIron = getFeedback('iron', iron);
+            const feedbackResp = getFeedback('resp', resp);
+            const feedbackBcaps = getFeedback('bcaps', bcaps);
+
+            function updateFeed(id, obj) {
+                const el = document.getElementById(id);
+                el.textContent = obj.text;
+                el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
+            }
+
+            updateFeed('wiz-feed-sens', feedbackSens);
+            updateFeed('wiz-feed-reac', feedbackReac);
+            updateFeed('wiz-feed-disc', feedbackDisc);
+            updateFeed('wiz-feed-sil', feedbackSil);
+            updateFeed('wiz-feed-iron', feedbackIron);
+            updateFeed('wiz-feed-resp', feedbackResp);
+            updateFeed('wiz-feed-bcaps', feedbackBcaps);
+        }
+
         // --- WIZARD LOGIC ---
         function runWizard() {
             const tVal = document.getElementById('wiz-terrain').value;
@@ -645,64 +826,182 @@
             const tData = DATA.terrains[tVal];
             const oData = DATA.objectives[oVal];
 
-            // LOGIQUE DE SYNERGIE INTELLIGENTE
+            // 1. DERIVE SETTINGS (Automatic Logic)
+            let sensVal = parseInt(oData.sens.substring(0, 2)); 
+            let reacVal = parseFloat(oData.react.substring(0, 3)); 
+            let discVal = parseInt(oData.discri.split('-')[0]); 
+            
+            // Advanced Defaults based on Context
+            let silencerVal = 1; 
+            if (tVal === 'pollué') silencerVal = 2;
+            if (oVal === 'profond') silencerVal = 0;
+
+            let ironVolVal = 3; 
+            if (tVal === 'pollué') ironVolVal = 3;
+
+            let audioRespVal = 4; 
+            if (tVal === 'minéralisé') audioRespVal = 3;
+            if (oVal === 'profond') audioRespVal = 5;
+
+            let bCapsVal = 0; 
+            if (tVal === 'pollué' || tVal === 'plage') bCapsVal = 2;
+
+            let audioType = oData.audio;
+
+            // 2. GENERATE HTML
             let synergyHtml = "";
             let comboColor = "alert-info";
 
-            // Combinaisons spécifiques
             if (tVal === 'pollué' && oVal === 'monnaies') {
-                synergyHtml = "⚠️ <strong>Défi Technique :</strong> Trouver des monnaies dans la pollution est difficile. Le Silencieux à 2 est crucial ici pour calmer le fer, même si vous perdez un peu de profondeur.";
+                synergyHtml = "⚠️ <strong>Défi Technique :</strong> Trouver des monnaies dans la pollution est difficile.";
                 comboColor = "alert-warn";
             } else if (tVal === 'minéralisé' && oVal === 'or') {
-                synergyHtml = "🚨 <strong>Attention Or/Sol :</strong> L'or natif sonne comme le sol minéralisé. Utilisez impérativement le mode GOLD FIELD ou une discri IAR, sinon vous confondrez tout.";
+                synergyHtml = "🚨 <strong>Attention Or/Sol :</strong> L'or natif sonne comme le sol. Utilisez le mode GOLD FIELD.";
                 comboColor = "alert-warn";
             } else if (tVal === 'plage' && oVal === 'or') {
-                 synergyHtml = "✨ <strong>Or sur Plage :</strong> Les chaînes en or sonnent très bas (ID 20-30). Ne discriminez surtout pas l'alu, vous perdriez l'or. Creusez tout ce qui est stable.";
-                 comboColor = "alert-expert";
-            } else if (tVal === 'prairie' && oVal === 'profond') {
-                 synergyHtml = "🚀 <strong>Conditions Idéales :</strong> Sol propre + Gros objectifs. Vous pouvez mettre la Réactivité à 0 et le Silencieux à -1 pour une profondeur extrême.";
+                 synergyHtml = "✨ <strong>Or sur Plage :</strong> Ne discriminez pas l'alu, vous perdriez l'or.";
                  comboColor = "alert-expert";
             } else {
-                 synergyHtml = "✅ <strong>Configuration Standard :</strong> Ce couple Terrain/Objectif ne présente pas de conflit majeur. Suivez les réglages ci-contre.";
+                 synergyHtml = "✅ <strong>Configuration Standard :</strong> Pas de conflit majeur.";
             }
-
-            // Secret Settings Logic
-            let secretTip = "";
-            if (tVal === 'pollué') secretTip = "🔩 <strong>Secret :</strong> Mettez le <em>B.CAPS (Bouchons)</em> à 3 pour rejeter les capsules de bière sans perdre les monnaies.";
-            if (tVal === 'minéralisé') secretTip = "🔴 <strong>Secret :</strong> Réduisez la Réponse Audio à 3 pour éviter la saturation du sol.";
-            if (oVal === 'or') secretTip = "✨ <strong>Secret :</strong> Ne mettez jamais le Silencieux (Silencer) au dessus de 1, vous perdriez les chaînettes en or.";
-            if (oVal === 'profond') secretTip = "🌊 <strong>Secret :</strong> Utilisez l'audio PWM (et non Square) pour mieux percevoir les nuances de profondeur.";
-
 
             let html = `
             <div class="result-box" style="border-left: 4px solid var(--accent-gold);">
-                <h3 style="color:var(--accent-gold); margin-bottom:15px; text-transform:uppercase;">Configuration Recommandée</h3>
                 
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color:var(--accent-blue); font-size:0.9rem; margin-bottom:5px;">PROGRAMME BASE</h4>
-                        <div style="font-size:1.2rem; font-weight:bold; color:var(--text-main); margin-bottom:15px;">${oData.program.join(' / ')}</div>
-                        
-                        <table>
-                            <tr><th>Paramètre</th><th>Valeur</th></tr>
-                            <tr><td>Sensibilité</td><td style="color:var(--accent-gold); font-weight:bold;">${oData.sens}</td></tr>
-                            <tr><td>Réactivité</td><td style="color:var(--accent-gold); font-weight:bold;">${oData.react}</td></tr>
-                            <tr><td>Discrimination</td><td style="color:var(--accent-gold); font-weight:bold;">${oData.discri}</td></tr>
-                            <tr><td>Fréquence</td><td>${tData.config.freq}</td></tr>
-                            <tr><td>Ground Stab</td><td>${tData.config.stab}</td></tr>
-                        </table>
+                <!-- GAUGES SECTION IN WIZARD -->
+                <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:6px; margin-bottom: 20px; border:1px solid var(--border-light);">
+                    <label style="margin-bottom:10px; color:var(--text-main); font-size:0.85rem; text-transform:uppercase;">Analyse Tactique (Temps Réel)</label>
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Puissance</span>
+                            <span class="perf-question">À quelle profondeur ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Surface</span>
+                            <div class="perf-track"><div id="wiz-bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
+                            <span class="range-label max">Profond</span>
+                        </div>
                     </div>
-                    <div style="display:flex; flex-direction:column; justify-content:center;">
-                         <div class="alert ${comboColor}" style="margin-bottom:10px;">
-                            ${synergyHtml}
-                         </div>
-                         <div class="alert alert-expert" style="margin-bottom:10px;">
-                            ${secretTip ? secretTip : "💡 <strong>Conseil :</strong> " + oData.conseil}
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Séparation</span>
+                            <span class="perf-question">Pièce au milieu de clous ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Lent</span>
+                            <div class="perf-track"><div id="wiz-bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
+                            <span class="range-label max">Rapide</span>
+                        </div>
+                    </div>
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Sensibilité</span>
+                            <span class="perf-question">Objets minuscules ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Standard</span>
+                            <div class="perf-track"><div id="wiz-bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
+                            <span class="range-label max">Or Fin</span>
+                        </div>
+                    </div>
+                    <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title">Discrimination</span>
+                            <span class="perf-question">Or ou vieux clou ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Ouvert</span>
+                            <div class="perf-track"><div id="wiz-bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
+                            <span class="range-label max">Strict</span>
+                        </div>
+                    </div>
+                     <div class="perf-bar-container">
+                        <div class="perf-label-group">
+                            <span class="perf-title" style="color:var(--danger)">Risque Masquage</span>
+                            <span class="perf-question">Cibles manquées ?</span>
+                        </div>
+                        <div class="perf-track-wrapper">
+                            <span class="range-label min">Faible</span>
+                            <div class="perf-track"><div id="wiz-bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
+                            <span class="range-label max" style="color:var(--danger)">Critique</span>
                         </div>
                     </div>
                 </div>
+
+                <div class="grid-2">
+                    <div>
+                        <h4 style="color:var(--accent-blue); font-size:0.9rem; margin-bottom:5px; border-bottom:1px solid var(--border-light);">PARAMÈTRES DE BASE (INTERACTIF)</h4>
+                        <div style="font-size:1.1rem; font-weight:bold; color:var(--text-main); margin-bottom:10px;">${oData.program[0]}</div>
+                        
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Sensibilité</label><span id="wiz-val-sens" class="slider-val">${sensVal}</span></div>
+                            <input type="range" id="wiz-rng-sens" min="60" max="99" value="${sensVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-sens" class="param-feedback"></div>
+                        </div>
+
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Réactivité</label><span id="wiz-val-reac" class="slider-val">${reacVal}</span></div>
+                            <input type="range" id="wiz-rng-reac" min="0" max="5" step="0.5" value="${reacVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-reac" class="param-feedback"></div>
+                        </div>
+
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Discrimination</label><span id="wiz-val-disc" class="slider-val">${discVal}</span></div>
+                            <input type="range" id="wiz-rng-disc" min="-6" max="40" value="${discVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-disc" class="param-feedback"></div>
+                        </div>
+
+                        <div style="font-size:0.85rem; color:var(--text-dim); margin-top:10px;">
+                            <strong>Fréquence:</strong> ${tData.config.freq} <br>
+                            <strong>G. Stab:</strong> ${tData.config.stab}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--warning); font-size:0.9rem; margin-bottom:5px; border-bottom:1px solid var(--border-light);">PARAMÈTRES AVANCÉS (INTERACTIF)</h4>
+                        
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Silencieux</label><span id="wiz-val-sil" class="slider-val">${silencerVal}</span></div>
+                            <input type="range" id="wiz-rng-sil" min="0" max="5" value="${silencerVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-sil" class="param-feedback"></div>
+                        </div>
+
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Vol Fer</label><span id="wiz-val-iron" class="slider-val">${ironVolVal}</span></div>
+                            <input type="range" id="wiz-rng-iron" min="0" max="5" value="${ironVolVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-iron" class="param-feedback"></div>
+                        </div>
+
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>Rép. Audio</label><span id="wiz-val-resp" class="slider-val">${audioRespVal}</span></div>
+                            <input type="range" id="wiz-rng-resp" min="0" max="7" value="${audioRespVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-resp" class="param-feedback"></div>
+                        </div>
+
+                        <div class="slider-container" style="margin-bottom:15px;">
+                            <div class="slider-header"><label>B.Caps</label><span id="wiz-val-bcaps" class="slider-val">${bCapsVal}</span></div>
+                            <input type="range" id="wiz-rng-bcaps" min="0" max="5" value="${bCapsVal}" oninput="updateWizardLive()">
+                            <div id="wiz-feed-bcaps" class="param-feedback"></div>
+                        </div>
+
+                        <label style="margin-top:10px;">Audio Type</label>
+                        <select id="wiz-sel-audio" onchange="updateWizardLive()" style="margin-bottom:5px;">
+                            <option value="Pitch" ${audioType === 'Pitch' ? 'selected' : ''}>Pitch</option>
+                            <option value="Square" ${audioType === 'Square' ? 'selected' : ''}>Square</option>
+                            <option value="Morphing" ${audioType === 'Morphing' ? 'selected' : ''}>Morphing</option>
+                            <option value="2-Tones" ${audioType === '2-Tones' ? 'selected' : ''}>2-Tons</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-top:15px;">
+                     <div class="alert ${comboColor}" style="margin-bottom:10px;">${synergyHtml}</div>
+                     <div class="alert alert-expert">💡 <strong>Conseil :</strong> ${oData.conseil}</div>
+                </div>
             </div>`;
             document.getElementById('wiz-result').innerHTML = html;
+            
+            // Trigger calculation immediately to set bars
+            setTimeout(() => updateWizardLive(), 50);
         }
 
         // --- TERRAINS RENDER ---
@@ -771,7 +1070,7 @@
             }
             if(type === 'resp') {
                 if(val <= 3) return {text: "Les cibles profondes sonnent faiblement. Bonne info de distance.", color: "good"};
-                if(val >= 6) return {text: "Sons saturés. Tout sonne fort (même profond). Fatiguant à l'oreille.", color: "warn"};
+                if(val >= 6) return {text: "Sons saturés. Tout sonne fort (même profond). Perte de nuance.", color: "warn"};
                 return {text: "Standard. Amplifie légèrement les sons lointains.", color: "good"};
             }
             if(type === 'sil') {
@@ -829,7 +1128,7 @@
             
             const audio = document.getElementById('sel-audio').value;
 
-            // Update Values
+            // Update Values Display
             document.getElementById('val-sens').innerText = sens;
             document.getElementById('val-reac').innerText = reac;
             document.getElementById('val-disc').innerText = disc;
@@ -865,28 +1164,30 @@
             setFb('feed-bcaps', fbBcaps);
             setFb('feed-notch', fbNotch);
 
-            // Logic Calculation for Performance Bars
-            let depthScore = ((sens - 70) * 2) + ((5 - reac) * 12);
-            // Silencer impact on depth (slight negative)
-            depthScore -= (sil * 2); 
-            if(depthScore > 100) depthScore = 100;
-            if(depthScore < 10) depthScore = 10;
+            // CALCULATE GAUGES USING SHARED ENGINE
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio);
 
-            let sepScore = (reac * 20); 
-            if(sens > 95) sepScore -= 10;
-            if(sepScore > 100) sepScore = 100;
-            if(sepScore < 10) sepScore = 10;
+            // Render Bars
+            document.getElementById('bar-depth').style.width = scores.depth + "%";
+            document.getElementById('bar-sep').style.width = scores.sep + "%";
+            document.getElementById('bar-fine').style.width = scores.fine + "%";
+            document.getElementById('bar-id').style.width = scores.id + "%";
+            document.getElementById('bar-mask').style.width = scores.mask + "%";
 
-            let maskScore = (sil * 15) + ((5-reac) * 10) + (bcaps * 5); // How much iron masks good targets
-            if(maskScore > 100) maskScore = 100;
-
-            document.getElementById('bar-depth').style.width = depthScore + "%";
-            document.getElementById('bar-sep').style.width = sepScore + "%";
-            document.getElementById('bar-mask').style.width = maskScore + "%";
-
-            // Analysis Text
+            // --- ANALYSE TEXTUELLE ---
             let analysis = `<h4 style="color:var(--accent-gold);">Analyse de la configuration</h4>`;
             
+            // Warnings Iron Mask
+            if(iron === 0) {
+                 analysis += `<p class="alert alert-warn">🔇 <strong>Danger "Volume Fer 0" :</strong> Vous n'entendez pas la pollution ferreuse. En terrain pollué, vous allez subir un masquage silencieux important. Recommandé : Vol Fer à 2 ou 3.</p>`;
+            }
+
+            // Warnings Audio Response
+            if(resp >= 6) {
+                analysis += `<p class="alert alert-warn">🔊 <strong>Saturation Audio :</strong> Avec une Réponse Audio à ${resp}, les cibles de surface et profondes sonnent pareil. Vous perdez la notion de distance/profondeur.</p>`;
+            }
+
+            // Mode Logic
             if(sens >= 95 && reac <= 1) {
                 analysis += `<p class="alert alert-expert">🚀 <strong>Mode Turbo Profondeur :</strong> Excellent pour terrain propre. Attention aux faux signaux sur sol minéralisé.</p>`;
             } else if (reac >= 3) {
@@ -895,10 +1196,10 @@
                  analysis += `<p class="alert alert-info">⚖️ <strong>Mode Équilibré :</strong> Bon compromis pour la prospection générale.</p>`;
             }
             
-            if(sil >= 3) {
-                analysis += `<p class="alert alert-warn">⚠️ <strong>Attention Silencieux :</strong> À ce niveau (${sil}), vous risquez de rater des monnaies proches de clous.</p>`;
+            if(notch > 0) {
+                 analysis += `<p class="alert alert-info">🎯 <strong>Notch Actif :</strong> Vous rejetez une fenêtre de cibles. Utile pour les tirettes d'alu, mais risqué pour certains bijoux.</p>`;
             }
-            
+
             document.getElementById('sim-analysis').innerHTML = analysis;
         }
 
