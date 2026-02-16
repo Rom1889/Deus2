@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XP Deus II V5 - Precision Expert Tool</title>
+    <title>XP Deus II V5 - BY MICHEL 09</title>
     <style>
         /* --- DESIGN SYSTEM TACTIQUE --- */
         :root {
@@ -14,7 +14,7 @@
             --accent-gold: #d4af37; /* Or Tactique */
             --accent-blue: #5c8bc0; /* Bleu Acier */
             --text-main: #e0e6ed;
-            --text-dim: #94a3b8;
+            --text-dim: #aab6c6; /* Eclairci pour meilleure lisibilité mobile */
             
             --border-light: #2d333d;
             --border-active: #d4af37;
@@ -31,7 +31,7 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.5;
             min-height: 100vh;
             font-size: 15px;
         }
@@ -39,7 +39,7 @@
         /* --- HEADER --- */
         header {
             background: linear-gradient(180deg, #1f242d 0%, #121418 100%);
-            padding: 25px 20px;
+            padding: 20px 15px;
             border-bottom: 2px solid var(--accent-gold);
             text-align: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
@@ -47,13 +47,13 @@
 
         header h1 {
             color: var(--accent-gold);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             margin-bottom: 5px;
         }
 
-        header p { color: var(--text-dim); font-size: 0.9rem; }
+        header p { color: var(--text-dim); font-size: 0.85rem; }
 
         /* --- NAVIGATION --- */
         .nav-container {
@@ -62,23 +62,24 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-light);
-            padding: 0 10px;
+            padding: 0 5px;
             overflow-x: auto;
             white-space: nowrap;
             display: flex;
             justify-content: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
         }
 
         .nav-btn {
             background: none;
             border: none;
             color: var(--text-dim);
-            padding: 15px 20px;
+            padding: 12px 15px;
             cursor: pointer;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.2s;
             border-bottom: 3px solid transparent;
         }
@@ -87,7 +88,7 @@
         .nav-btn.active { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
 
         /* --- CONTENT --- */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px 60px 20px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px 60px 15px; }
         .tab-content { display: none; animation: fadeEffect 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeEffect { from {opacity: 0; transform: translateY(5px);} to {opacity: 1; transform: translateY(0);} }
@@ -97,7 +98,7 @@
             background: var(--bg-panel);
             border: 1px solid var(--border-light);
             border-radius: 8px;
-            padding: 25px;
+            padding: 20px;
             margin-bottom: 20px;
             position: relative;
         }
@@ -118,7 +119,7 @@
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 
         /* --- FORMS --- */
-        label { display: block; color: var(--text-dim); margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        label { display: block; color: var(--text-dim); margin-bottom: 6px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
         
         select, input[type="text"], input[type="number"], textarea {
             width: 100%;
@@ -135,7 +136,7 @@
 
         /* --- BUTTONS --- */
         .btn {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 4px;
             border: none;
             cursor: pointer;
@@ -157,15 +158,15 @@
         .slider-val { color: var(--accent-gold); font-weight: bold; font-family: monospace; font-size: 1.1rem; }
         
         input[type="range"] {
-            -webkit-appearance: none; width: 100%; height: 6px; background: var(--bg-input);
-            border-radius: 3px; outline: none; border: 1px solid var(--border-light);
+            -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); /* Thicker for touch */
+            border-radius: 4px; outline: none; border: 1px solid var(--border-light);
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; /* Bigger for touch */
             background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body);
             transition: transform 0.1s;
         }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
 
         .param-feedback {
             font-size: 0.8rem;
@@ -184,7 +185,7 @@
             background: rgba(212, 175, 55, 0.05);
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 6px;
-            padding: 20px;
+            padding: 15px;
             margin-top: 20px;
         }
 
@@ -192,12 +193,14 @@
         .sticky-panel {
             position: -webkit-sticky; /* Pour Safari */
             position: sticky;
-            top: 54px; 
+            top: 48px; /* Ajusté pour la nav bar */
             z-index: 95;
             background: var(--bg-panel);
             border: 1px solid var(--accent-gold);
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            padding: 10px 15px;
+            border-radius: 6px;
         }
 
         .info-tag {
@@ -219,7 +222,12 @@
         .alert-warn { background: rgba(255, 167, 38, 0.1); border-color: var(--warning); }
 
         /* --- PERFORMANCE BARS & LABELS --- */
-        .perf-bar-container { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .perf-bar-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 8px; 
+        }
         
         .perf-label-group {
             display: flex;
@@ -227,15 +235,29 @@
             width: 140px; 
             text-align: right;
             justify-content: center;
+            flex-shrink: 0;
         }
         .perf-title { font-size: 0.75rem; font-weight: bold; color: var(--text-main); text-transform: uppercase; }
         .perf-question { font-size: 0.6rem; color: var(--text-dim); font-style: italic; line-height: 1.1; margin-top: 1px; }
 
-        .perf-track-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 6px; }
-        .perf-track { flex-grow: 1; height: 8px; background: var(--bg-input); border-radius: 4px; overflow: hidden; position: relative; }
+        .perf-track-wrapper { 
+            flex-grow: 1; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            min-width: 0; /* Prevents overflow in flex items */
+        }
+        .perf-track { 
+            flex-grow: 1; 
+            height: 8px; 
+            background: var(--bg-input); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            position: relative; 
+        }
         .perf-fill { height: 100%; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        .range-label { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; min-width: 45px; }
+        .range-label { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; }
         .range-label.min { text-align: right; }
         .range-label.max { text-align: left; }
 
@@ -278,10 +300,44 @@
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
             .nav-container { justify-content: flex-start; }
             header h1 { font-size: 1.4rem; }
-            .sticky-panel { top: 50px; margin-left: -15px; margin-right: -15px; border-radius: 0; }
-            .perf-label-group { width: 90px; } /* Compact on mobile */
-            .perf-question { display: none; } /* Hide question on very small screens */
-            @media (min-width: 380px) { .perf-question { display: block; } .perf-label-group { width: 130px; } }
+            
+            /* Sticky Panel Mobile Optimizations */
+            .sticky-panel { 
+                top: 45px; 
+                margin-left: -15px; 
+                margin-right: -15px; 
+                border-radius: 0; 
+                border-left: none; 
+                border-right: none;
+                padding: 10px;
+            }
+            
+            .sticky-panel label { font-size: 0.75rem; margin-bottom: 8px; display: block; text-align: center; }
+
+            .perf-bar-container { 
+                flex-direction: column; 
+                align-items: stretch; 
+                gap: 2px; 
+                margin-bottom: 10px;
+            }
+            
+            .perf-label-group { 
+                width: 100%; 
+                text-align: left; 
+                flex-direction: row; 
+                justify-content: space-between; 
+                align-items: baseline;
+                margin-bottom: 2px;
+            }
+            
+            .perf-title { font-size: 0.75rem; }
+            .perf-question { display: none; } /* Hide questions on mobile to save space */
+            
+            .perf-track-wrapper {
+                width: 100%;
+            }
+            
+            .range-label { font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -353,8 +409,8 @@
                 <p style="color:var(--text-dim); margin-bottom:20px;">Analysez l'impact de chaque réglage en temps réel.</p>
 
                 <!-- Indicateurs de Performance (STICKY) -->
-                <div class="sticky-panel" style="background:var(--bg-panel); padding:15px; border-radius:6px; border:1px solid var(--accent-gold);">
-                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px;">📊 ANALYSE TACTIQUE (TEMPS RÉEL)</label>
+                <div class="sticky-panel">
+                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px; display:block; text-align:center;">📊 ANALYSE TACTIQUE</label>
                     
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
@@ -406,7 +462,7 @@
 
                      <div class="perf-bar-container">
                         <div class="perf-label-group">
-                            <span class="perf-title" style="color:var(--danger)">Risque Masquage</span>
+                            <span class="perf-title" style="color:var(--danger)">Masquage</span>
                             <span class="perf-question">Cibles manquées ?</span>
                         </div>
                         <div class="perf-track-wrapper">
@@ -869,8 +925,9 @@
             <div class="result-box" style="border-left: 4px solid var(--accent-gold);">
                 
                 <!-- GAUGES SECTION IN WIZARD -->
-                <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:6px; margin-bottom: 20px; border:1px solid var(--border-light);">
-                    <label style="margin-bottom:10px; color:var(--text-main); font-size:0.85rem; text-transform:uppercase;">Analyse Tactique (Temps Réel)</label>
+                <div class="sticky-panel">
+                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px; display:block; text-align:center;">📊 ANALYSE TACTIQUE</label>
+                    
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Puissance</span>
@@ -882,6 +939,7 @@
                             <span class="range-label max">Profond</span>
                         </div>
                     </div>
+
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Séparation</span>
@@ -893,6 +951,7 @@
                             <span class="range-label max">Rapide</span>
                         </div>
                     </div>
+
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Sensibilité</span>
@@ -904,6 +963,7 @@
                             <span class="range-label max">Or Fin</span>
                         </div>
                     </div>
+
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Discrimination</span>
@@ -915,9 +975,10 @@
                             <span class="range-label max">Strict</span>
                         </div>
                     </div>
+
                      <div class="perf-bar-container">
                         <div class="perf-label-group">
-                            <span class="perf-title" style="color:var(--danger)">Risque Masquage</span>
+                            <span class="perf-title" style="color:var(--danger)">Masquage</span>
                             <span class="perf-question">Cibles manquées ?</span>
                         </div>
                         <div class="perf-track-wrapper">
