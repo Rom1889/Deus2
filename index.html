@@ -257,7 +257,14 @@
         }
         .perf-fill { height: 100%; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         
-        .range-label { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; }
+        /* ALIGNEMENT FIXED WIDTH LABELS */
+        .range-label { 
+            font-size: 0.65rem; 
+            color: var(--text-dim); 
+            white-space: nowrap; 
+            width: 65px; /* Largeur fixe pour alignement parfait */
+            display: inline-block;
+        }
         .range-label.min { text-align: right; }
         .range-label.max { text-align: left; }
 
@@ -337,7 +344,7 @@
                 width: 100%;
             }
             
-            .range-label { font-size: 0.6rem; }
+            .range-label { font-size: 0.6rem; width: 60px; } /* Ajustement mobile */
         }
     </style>
 </head>
@@ -345,7 +352,7 @@
 
     <header>
         <h1>XP Deus II V5</h1>
-        <p>CONSOLE EXPERT PRO | ANALYSE TACTIQUE</p>
+        <p>CONSOLE EXPERT PRO | BY MICHEL 09</p>
     </header>
 
     <div class="nav-container">
@@ -402,7 +409,7 @@
             <div id="terrain-detail"></div>
         </div>
 
-        <!-- TAB 3: PARAMETRES (ENRICHIS & CORRIGES) -->
+        <!-- TAB 3: PARAMETRES -->
         <div id="params" class="tab-content">
             <div class="card">
                 <h2>⚙️ Simulateur Interactif Complet</h2>
@@ -430,9 +437,9 @@
                             <span class="perf-question">Pièce au milieu de clous ?</span>
                         </div>
                         <div class="perf-track-wrapper">
-                            <span class="range-label min">Lent</span>
+                            <span class="range-label min">Amalgame</span>
                             <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
-                            <span class="range-label max">Rapide</span>
+                            <span class="range-label max">Séparé</span>
                         </div>
                     </div>
 
@@ -444,19 +451,19 @@
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Standard</span>
                             <div class="perf-track"><div id="bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
-                            <span class="range-label max">Or Fin</span>
+                            <span class="range-label max">Extra Fin</span>
                         </div>
                     </div>
 
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
-                            <span class="perf-title">Discrimination</span>
+                            <span class="perf-title">Discrim.</span>
                             <span class="perf-question">Or ou vieux clou ?</span>
                         </div>
                         <div class="perf-track-wrapper">
-                            <span class="range-label min">Ouvert</span>
+                            <span class="range-label min">Tout Métal</span>
                             <div class="perf-track"><div id="bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
-                            <span class="range-label max">Strict</span>
+                            <span class="range-label max">Filtre Max</span>
                         </div>
                     </div>
 
@@ -468,7 +475,7 @@
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Faible</span>
                             <div class="perf-track"><div id="bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
-                            <span class="range-label max" style="color:var(--danger)">Critique</span>
+                            <span class="range-label max" style="color:var(--danger)">Élevé</span>
                         </div>
                     </div>
                 </div>
@@ -713,40 +720,41 @@
                 prairie: {
                     name: "🌾 Prairie / Champ Propre",
                     min: "Basse (0-10)", poll: "Faible", depth: "50-70 cm",
-                    config: { sens: 95, reac: 1, disc: 8, freq: "28 kHz", stab: 0, fer: 2 },
+                    config: { sens: 95, reac: 1, disc: 8, freq: "FMF 4-45kHz", stab: 0, fer: 2 },
                     experts: ["Réactivité 0-1 ABSOLUMENT (chaque cran = 2-3cm de profondeur)", "Sensibilité 95-99 possible (tester avant)", "Shift Freq AUTO si ligne électrique proche"],
                     astuces: ["Balayez lentement pour laisser le temps au signal de monter."]
                 },
                 minéralisé: {
                     name: "🔴 Sol Minéralisé (Rouge)",
                     min: "Haute (60-90)", poll: "Moyenne", depth: "30-45 cm",
-                    config: { sens: 88, reac: 2.5, disc: 10, freq: "40 kHz", stab: 2, fer: 2 },
-                    experts: ["Ground Stabilizer 2-3 ESSENTIEL", "Fréquence 40 kHz pour sortir les cibles du bruit de sol", "GRAB (pompage) régulier nécessaire"],
+                    config: { sens: 88, reac: 2.5, disc: 10, freq: "FMF 40kHz Max", stab: 2, fer: 2 },
+                    experts: ["Ground Stabilizer 2-3 ESSENTIEL", "Fréquence FMF Multi-High pour sortir les cibles du bruit de sol", "GRAB (pompage) régulier nécessaire"],
                     astuces: ["Ne poussez pas la sensibilité au-delà de 90."]
                 },
                 pollué: {
                     name: "🔩 Terrain Pollué (Ferraille)",
                     min: "Moyenne", poll: "TRÈS HAUTE", depth: "25-40 cm",
-                    config: { sens: 87, reac: 3, disc: 10, freq: "28 kHz", stab: 1, fer: 3 },
+                    config: { sens: 87, reac: 3, disc: 10, freq: "FMF 24kHz Max", stab: 1, fer: 3 },
                     experts: ["Réactivité 3+ OBLIGATOIRE", "Audio 2-Tones ou Pitch pour séparer", "Silencer à 1 ou 2 pour calmer le fer"],
                     astuces: ["Écoutez les 'bavures' des signaux ferreux."]
                 },
                 plage: {
                     name: "🏖️ Plage (Sable)",
                     min: "Variable (Sel)", poll: "Alu/Languettes", depth: "35-50 cm",
-                    config: { sens: 92, reac: 2, disc: 15, freq: "28 kHz", stab: 1, fer: 2 },
-                    experts: ["Mode BEACH indispensable (soustraction sel)", "GB (Effet de sol) souvent vers 23-27 sur sable mouillé", "Sable noir = Minéralisation extrême -> 40kHz"],
+                    config: { sens: 92, reac: 2, disc: 15, freq: "FMF Salt", stab: 1, fer: 2 },
+                    experts: ["Mode BEACH indispensable (soustraction sel)", "GB (Effet de sol) souvent vers 23-27 sur sable mouillé", "Sable noir = Minéralisation extrême -> FMF Max"],
                     astuces: ["Sable mouillé = meilleure conductivité que sec."]
                 },
                 eau: {
                     name: "💧 Eau Douce",
                     min: "Très basse", poll: "Faible", depth: "40-60 cm",
-                    config: { sens: 93, reac: 2, disc: 5, freq: "14/28 kHz", stab: 0, fer: 2 },
+                    config: { sens: 93, reac: 2, disc: 5, freq: "FMF 14/28 kHz", stab: 0, fer: 2 },
                     experts: ["Discrimination basse (0-5) pour tout prendre", "Eau = isolant sonore, on peut monter la Sensibilité"],
                     astuces: ["Attention à l'étanchéité du bouchon gris (Antenne)."]
                 }
             },
             faq: [
+                {q: "C'est quoi le FMF ?", a: "Le Fast Multi Frequency est une technologie XP qui envoie des fréquences basses (4kHz) et hautes (45kHz) simultanément pour voir gros ET petit en même temps."},
                 {q: "Quelle sensibilité pour débuter ?", a: "Commencez à 93. Si stable, montez à 95. Si instable, descendez par paliers de 2 jusqu'à 85."},
                 {q: "Différence Monnaies vs Reliques ?", a: "Monnaies = cibles conductrices rondes (Audio net). Reliques = objets ferreux ou alliages (Audio baveux)."},
                 {q: "Qu'est-ce que le Multi-Processing ?", a: "C'est la capacité du Deus II V4 à traiter deux niveaux de réactivité simultanément (une voie pour le fond, une pour la surface)."},
@@ -760,7 +768,7 @@
             document.getElementById(tabId).classList.add('active');
             
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            if(event) event.currentTarget.classList.add('active');
             
             if(tabId === 'terrains') renderTerrains();
             if(tabId === 'faq') renderFAQ();
@@ -770,12 +778,61 @@
             if(tabId === 'tools') renderLogs();
         }
 
+        // --- TERRAINS RENDER ---
+        function renderTerrains() {
+            const container = document.getElementById('terrain-grid');
+            if(container.innerHTML !== "") return; 
+
+            for(const key in DATA.terrains) {
+                const t = DATA.terrains[key];
+                const card = document.createElement('div');
+                card.className = 'terrain-card';
+                card.innerHTML = `<h3>${t.name}</h3><p style="color:var(--text-dim); font-size:0.85rem;">${t.min} | ${t.depth}</p>`;
+                card.onclick = () => showTerrainDetail(key);
+                container.appendChild(card);
+            }
+        }
+
+        function showTerrainDetail(key) {
+            const t = DATA.terrains[key];
+            const c = t.config;
+            const html = `
+            <div class="result-box" style="animation: fadeEffect 0.3s;">
+                <h3 style="color:var(--accent-gold); border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:15px;">${t.name} - CONFIGURATION DÉTAILLÉE</h3>
+                
+                <div class="grid-2">
+                    <table>
+                        <tr><th>Réglage</th><th>Valeur</th></tr>
+                        <tr><td>Sensibilité</td><td>${c.sens}</td></tr>
+                        <tr><td>Réactivité</td><td>${c.reac}</td></tr>
+                        <tr><td>Discri</td><td>${c.disc}</td></tr>
+                        <tr><td>Audio</td><td>Square/Pitch</td></tr>
+                    </table>
+                    <table>
+                        <tr><th>Tech</th><th>Valeur</th></tr>
+                        <tr><td>Fréquence</td><td>${c.freq}</td></tr>
+                        <tr><td>Stabilizer</td><td>${c.stab}</td></tr>
+                        <tr><td>Vol Fer</td><td>${c.fer}</td></tr>
+                        <tr><td>Notch</td><td>00-00</td></tr>
+                    </table>
+                </div>
+
+                <h4 style="color:var(--accent-blue); margin-top:15px; margin-bottom:10px;">Avis des Experts XP</h4>
+                <ul>
+                    ${t.experts.map(e => `<li style="margin-bottom:5px; color:var(--text-main); list-style-position:inside;">${e}</li>`).join('')}
+                </ul>
+            </div>`;
+            document.getElementById('terrain-detail').innerHTML = html;
+        }
+
         // --- CALCULATION ENGINE (Shared) ---
-        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio) {
+        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode) {
             // 1. PUISSANCE (Depth)
             let depthScore = ((sens - 60) * 1.5) + ((5 - reac) * 12); 
-            depthScore -= (sil * 4); // Silencer hurts depth significantly
+            depthScore -= (sil * 4); 
             if(audio === "Morphing") depthScore += 5;
+            if(fmfMode === "deep") depthScore += 10; 
+            if(fmfMode === "sensitive") depthScore -= 5;
             if(disc > 10) depthScore -= (disc/5); 
             
             // 2. SÉPARATION (Reactivity)
@@ -787,6 +844,7 @@
             // 3. FINESSE (Sensitivity - Tiny objects)
             let fineScore = (sens - 75) * 4; 
             if(reac >= 2.5) fineScore += 10; 
+            if(fmfMode === "sensitive") fineScore += 15; 
             if(disc < 0) fineScore += 10; 
 
             // 4. IDENTIFICATION (Discrimination - Gold vs Nail)
@@ -829,6 +887,8 @@
             const resp = parseInt(document.getElementById('wiz-rng-resp').value);
             const bcaps = parseInt(document.getElementById('wiz-rng-bcaps').value);
             const audioType = document.getElementById('wiz-sel-audio').value; 
+            
+            const fmfMode = "general"; 
 
             // Update display values next to sliders
             document.getElementById('wiz-val-sens').textContent = sens;
@@ -840,7 +900,7 @@
             document.getElementById('wiz-val-bcaps').textContent = bcaps;
 
             // Calculate Performance
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType); 
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType, fmfMode); 
 
             // Update Gauges
             document.getElementById('wiz-bar-depth').style.width = scores.depth + "%";
@@ -860,8 +920,10 @@
 
             function updateFeed(id, obj) {
                 const el = document.getElementById(id);
-                el.textContent = obj.text;
-                el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
+                if(el) {
+                    el.textContent = obj.text;
+                    el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
+                }
             }
 
             updateFeed('wiz-feed-sens', feedbackSens);
@@ -946,9 +1008,9 @@
                             <span class="perf-question">Pièce au milieu de clous ?</span>
                         </div>
                         <div class="perf-track-wrapper">
-                            <span class="range-label min">Lent</span>
+                            <span class="range-label min">Amalgame</span>
                             <div class="perf-track"><div id="wiz-bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
-                            <span class="range-label max">Rapide</span>
+                            <span class="range-label max">Séparé</span>
                         </div>
                     </div>
 
@@ -960,19 +1022,19 @@
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Standard</span>
                             <div class="perf-track"><div id="wiz-bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
-                            <span class="range-label max">Or Fin</span>
+                            <span class="range-label max">Extra Fin</span>
                         </div>
                     </div>
 
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
-                            <span class="perf-title">Discrimination</span>
+                            <span class="perf-title">Discrim.</span>
                             <span class="perf-question">Or ou vieux clou ?</span>
                         </div>
                         <div class="perf-track-wrapper">
-                            <span class="range-label min">Ouvert</span>
+                            <span class="range-label min">Tout Métal</span>
                             <div class="perf-track"><div id="wiz-bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
-                            <span class="range-label max">Strict</span>
+                            <span class="range-label max">Filtre Max</span>
                         </div>
                     </div>
 
@@ -984,7 +1046,7 @@
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Faible</span>
                             <div class="perf-track"><div id="wiz-bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
-                            <span class="range-label max" style="color:var(--danger)">Critique</span>
+                            <span class="range-label max" style="color:var(--danger)">Élevé</span>
                         </div>
                     </div>
                 </div>
@@ -1063,53 +1125,6 @@
             
             // Trigger calculation immediately to set bars
             setTimeout(() => updateWizardLive(), 50);
-        }
-
-        // --- TERRAINS RENDER ---
-        function renderTerrains() {
-            const container = document.getElementById('terrain-grid');
-            if(container.innerHTML !== "") return; 
-
-            for(const key in DATA.terrains) {
-                const t = DATA.terrains[key];
-                const card = document.createElement('div');
-                card.className = 'terrain-card';
-                card.innerHTML = `<h3>${t.name}</h3><p style="color:var(--text-dim); font-size:0.85rem;">${t.min} | ${t.depth}</p>`;
-                card.onclick = () => showTerrainDetail(key);
-                container.appendChild(card);
-            }
-        }
-
-        function showTerrainDetail(key) {
-            const t = DATA.terrains[key];
-            const c = t.config;
-            const html = `
-            <div class="result-box" style="animation: fadeEffect 0.3s;">
-                <h3 style="color:var(--accent-gold); border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:15px;">${t.name} - CONFIGURATION DÉTAILLÉE</h3>
-                
-                <div class="grid-2">
-                    <table>
-                        <tr><th>Réglage</th><th>Valeur</th></tr>
-                        <tr><td>Sensibilité</td><td>${c.sens}</td></tr>
-                        <tr><td>Réactivité</td><td>${c.reac}</td></tr>
-                        <tr><td>Discri</td><td>${c.disc}</td></tr>
-                        <tr><td>Audio</td><td>Square/Pitch</td></tr>
-                    </table>
-                    <table>
-                        <tr><th>Tech</th><th>Valeur</th></tr>
-                        <tr><td>Fréquence</td><td>${c.freq}</td></tr>
-                        <tr><td>Stabilizer</td><td>${c.stab}</td></tr>
-                        <tr><td>Vol Fer</td><td>${c.fer}</td></tr>
-                        <tr><td>Notch</td><td>00-00</td></tr>
-                    </table>
-                </div>
-
-                <h4 style="color:var(--accent-blue); margin-top:15px; margin-bottom:10px;">Avis des Experts XP</h4>
-                <ul>
-                    ${t.experts.map(e => `<li style="margin-bottom:5px; color:var(--text-main); list-style-position:inside;">${e}</li>`).join('')}
-                </ul>
-            </div>`;
-            document.getElementById('terrain-detail').innerHTML = html;
         }
 
         // --- SIMULATOR LOGIC WITH ADVANCED FEEDBACK ---
@@ -1226,7 +1241,9 @@
             setFb('feed-notch', fbNotch);
 
             // CALCULATE GAUGES USING SHARED ENGINE
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio);
+            // For Sim tab, we don't have FMF Mode selector connected yet in this version's UI shown above, defaulting to general
+            const fmfMode = "general";
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode);
 
             // Render Bars
             document.getElementById('bar-depth').style.width = scores.depth + "%";
