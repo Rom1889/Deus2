@@ -14,7 +14,7 @@
             --accent-gold: #d4af37; /* Or Tactique */
             --accent-blue: #5c8bc0; /* Bleu Acier */
             --text-main: #e0e6ed;
-            --text-dim: #aab6c6; /* Eclairci pour meilleure lisibilité mobile */
+            --text-dim: #aab6c6; 
             
             --border-light: #2d333d;
             --border-active: #d4af37;
@@ -23,6 +23,7 @@
             --warning: #ffa726;
             --danger: #ef5350;
             --info: #29b6f6;
+            --fmf: #b388ff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,7 +69,7 @@
             display: flex;
             justify-content: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
+            -webkit-overflow-scrolling: touch; 
         }
 
         .nav-btn {
@@ -158,11 +159,11 @@
         .slider-val { color: var(--accent-gold); font-weight: bold; font-family: monospace; font-size: 1.1rem; }
         
         input[type="range"] {
-            -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); /* Thicker for touch */
+            -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); 
             border-radius: 4px; outline: none; border: 1px solid var(--border-light);
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; /* Bigger for touch */
+            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; 
             background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body);
             transition: transform 0.1s;
         }
@@ -245,7 +246,7 @@
             display: flex; 
             align-items: center; 
             gap: 6px; 
-            min-width: 0; /* Prevents overflow in flex items */
+            min-width: 0; 
         }
         .perf-track { 
             flex-grow: 1; 
@@ -262,7 +263,7 @@
             font-size: 0.65rem; 
             color: var(--text-dim); 
             white-space: nowrap; 
-            width: 65px; /* Largeur fixe pour alignement parfait */
+            width: 65px; 
             display: inline-block;
         }
         .range-label.min { text-align: right; }
@@ -318,33 +319,13 @@
                 border-right: none;
                 padding: 10px;
             }
-            
             .sticky-panel label { font-size: 0.75rem; margin-bottom: 8px; display: block; text-align: center; }
-
-            .perf-bar-container { 
-                flex-direction: column; 
-                align-items: stretch; 
-                gap: 2px; 
-                margin-bottom: 10px;
-            }
-            
-            .perf-label-group { 
-                width: 100%; 
-                text-align: left; 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: baseline;
-                margin-bottom: 2px;
-            }
-            
+            .perf-bar-container { flex-direction: column; align-items: stretch; gap: 2px; margin-bottom: 10px; }
+            .perf-label-group { width: 100%; text-align: left; flex-direction: row; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
             .perf-title { font-size: 0.75rem; }
-            .perf-question { display: none; } /* Hide questions on mobile to save space */
-            
-            .perf-track-wrapper {
-                width: 100%;
-            }
-            
-            .range-label { font-size: 0.6rem; width: 60px; } /* Ajustement mobile */
+            .perf-question { display: none; } 
+            .perf-track-wrapper { width: 100%; }
+            .range-label { font-size: 0.6rem; width: 60px; }
         }
     </style>
 </head>
@@ -518,7 +499,19 @@
                     </div>
                     
                     <div>
-                        <h4 style="color:var(--accent-blue); margin-bottom:15px; border-bottom:1px solid var(--border-light);">Audio & Nuances</h4>
+                        <h4 style="color:var(--fmf); margin-bottom:15px; border-bottom:1px solid var(--border-light);">FMF Strategy & Audio</h4>
+                        
+                        <div style="margin-bottom:20px; border:1px solid var(--fmf); padding:10px; border-radius:6px; background:rgba(179, 136, 255, 0.05);">
+                            <label style="color:var(--fmf); font-weight:bold;">Stratégie FMF</label>
+                            <select id="sel-fmf" onchange="updateSim()" style="background:var(--bg-input);">
+                                <option value="general">FMF Standard (4-45kHz) - Polyvalent</option>
+                                <option value="sensitive">FMF Sensitive (40kHz Max) - Petites cibles</option>
+                                <option value="deep">FMF Deep (14kHz Max) - Grosses masses</option>
+                                <option value="park">FMF Park (24kHz Max) - Pollution</option>
+                            </select>
+                            <div id="feed-fmf" class="param-feedback" style="color:var(--text-dim); margin-top:5px;">Balayage multi-fréquence standard.</div>
+                        </div>
+
                         <div class="slider-container">
                             <div class="slider-header"><label>Réponse Audio</label><span id="val-resp" class="slider-val">4</span></div>
                             <input type="range" id="rng-resp" min="0" max="7" value="4" oninput="updateSim()">
@@ -538,6 +531,20 @@
                             <option value="2-Tones">🎵 2-Tons (Séparation)</option>
                             <option value="FullTones">🎹 Full Tones (Nuances riches)</option>
                         </select>
+
+                        <!-- MORPHING OPTIONS (Hidden by default) -->
+                        <div id="div-morphing-options" style="display:none; margin-top:15px; border:1px solid var(--info); padding:10px; border-radius:6px; background:rgba(41, 182, 246, 0.05);">
+                            <label style="color:var(--info);">Type de Morphing</label>
+                            <select id="sel-morphing-type" onchange="updateSim()" style="background:var(--bg-input);">
+                                <option value="smooth">1. Smooth (Lissé - Anti-Fatigue)</option>
+                                <option value="pulse">2. Pulse (Impulsion - Profondeur)</option>
+                                <option value="smart">3. Smart (Filtré - Zone Polluée)</option>
+                                <option value="raw">4. Raw (Brut - Max Information)</option>
+                            </select>
+                            <div style="font-size:0.75rem; color:var(--text-dim); margin-top:5px;">
+                                <i>Le mode <b>Raw</b> offre le plus d'infos mais est bruyant.</i>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
@@ -557,12 +564,12 @@
                         <h3 style="color:var(--accent-blue); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">Voie 1 : Profondeur (Low)</h3>
                         <div class="slider-container">
                             <div class="slider-header"><label>Réactivité V1</label><span id="val-v1-reac" class="slider-val">1.0</span></div>
-                            <input type="range" id="rng-v1-reac" min="0" max="2.5" step="0.5" value="1" oninput="updateExpert()">
+                            <input type="range" id="rng-v1-reac" min="0" max="2.5" step="0.5" value="1" oninput="updateExpert(); updateSim();">
                             <div id="feed-v1-reac" class="param-feedback">Pénétration maximale.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Sensibilité V1</label><span id="val-v1-sens" class="slider-val">95</span></div>
-                            <input type="range" id="rng-v1-sens" min="80" max="99" value="95" oninput="updateExpert()">
+                            <input type="range" id="rng-v1-sens" min="80" max="99" value="95" oninput="updateExpert(); updateSim();">
                             <div id="feed-v1-sens" class="param-feedback">Haute puissance.</div>
                         </div>
                     </div>
@@ -571,12 +578,12 @@
                         <h3 style="color:var(--warning); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">Voie 2 : Séparation (High)</h3>
                         <div class="slider-container">
                             <div class="slider-header"><label>Réactivité V2</label><span id="val-v2-reac" class="slider-val">3.5</span></div>
-                            <input type="range" id="rng-v2-reac" min="2.5" max="5" step="0.5" value="3.5" oninput="updateExpert()">
+                            <input type="range" id="rng-v2-reac" min="2.5" max="5" step="0.5" value="3.5" oninput="updateExpert(); updateSim();">
                             <div id="feed-v2-reac" class="param-feedback">Excellente séparation.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Sensibilité V2</label><span id="val-v2-sens" class="slider-val">90</span></div>
-                            <input type="range" id="rng-v2-sens" min="80" max="99" value="90" oninput="updateExpert()">
+                            <input type="range" id="rng-v2-sens" min="80" max="99" value="90" oninput="updateExpert(); updateSim();">
                              <div id="feed-v2-sens" class="param-feedback">Stabilité contrôlée.</div>
                         </div>
                     </div>
@@ -826,11 +833,14 @@
         }
 
         // --- CALCULATION ENGINE (Shared) ---
-        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode) {
+        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode, v1reac, v1sens, v2reac, v2sens, morphType) {
             // 1. PUISSANCE (Depth)
             let depthScore = ((sens - 60) * 1.5) + ((5 - reac) * 12); 
             depthScore -= (sil * 4); 
-            if(audio === "Morphing") depthScore += 5;
+            if(audio === "Morphing") {
+                depthScore += 5;
+                if(morphType === "pulse") depthScore += 5; 
+            }
             if(fmfMode === "deep") depthScore += 10; 
             if(fmfMode === "sensitive") depthScore -= 5;
             if(disc > 10) depthScore -= (disc/5); 
@@ -840,6 +850,7 @@
             if(sens > 95) sepScore -= 5;
             if(audio === "Pitch" || audio === "2-Tones") sepScore += 5;
             if(sil > 2) sepScore -= 10; 
+            if(audio === "Morphing" && morphType === "smart") sepScore += 5; 
 
             // 3. FINESSE (Sensitivity - Tiny objects)
             let fineScore = (sens - 75) * 4; 
@@ -852,6 +863,8 @@
             if(audio === "FullTones") idScore += 25;
             if(audio === "Pitch") idScore += 15;
             if(audio === "Square") idScore += 10;
+            if(audio === "Morphing" && morphType === "raw") idScore += 15; 
+
             if(iron > 0) idScore += 15; else idScore -= 20; 
             if(bcaps > 0) idScore += 10; 
             if(disc > 5 && disc < 20) idScore += 10; 
@@ -887,8 +900,25 @@
             const resp = parseInt(document.getElementById('wiz-rng-resp').value);
             const bcaps = parseInt(document.getElementById('wiz-rng-bcaps').value);
             const audioType = document.getElementById('wiz-sel-audio').value; 
+
+            // Handle Morphing UI in Wizard
+            const morphOpts = document.getElementById('wiz-div-morphing-options');
+            if(audioType === 'Morphing') {
+                morphOpts.style.display = 'block';
+            } else {
+                morphOpts.style.display = 'none';
+            }
+            const morphType = document.getElementById('wiz-sel-morphing-type').value;
             
-            const fmfMode = "general"; 
+            const fmfMode = document.getElementById('wiz-sel-fmf').value; 
+            
+            // Read Expert values
+            const v1_reac = parseFloat(document.getElementById('wiz-rng-v1-reac').value);
+            const v1_sens = parseInt(document.getElementById('wiz-rng-v1-sens').value);
+            const v2_reac = parseFloat(document.getElementById('wiz-rng-v2-reac').value);
+            const v2_sens = parseInt(document.getElementById('wiz-rng-v2-sens').value);
+            const stab = parseInt(document.getElementById('wiz-sel-stab').value);
+
 
             // Update display values next to sliders
             document.getElementById('wiz-val-sens').textContent = sens;
@@ -898,9 +928,14 @@
             document.getElementById('wiz-val-iron').textContent = iron;
             document.getElementById('wiz-val-resp').textContent = resp;
             document.getElementById('wiz-val-bcaps').textContent = bcaps;
+            
+            document.getElementById('wiz-val-v1-reac').textContent = v1_reac;
+            document.getElementById('wiz-val-v1-sens').textContent = v1_sens;
+            document.getElementById('wiz-val-v2-reac').textContent = v2_reac;
+            document.getElementById('wiz-val-v2-sens').textContent = v2_sens;
 
             // Calculate Performance
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType, fmfMode); 
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType, fmfMode, v1_reac, v1_sens, v2_reac, v2_sens, morphType); 
 
             // Update Gauges
             document.getElementById('wiz-bar-depth').style.width = scores.depth + "%";
@@ -917,6 +952,12 @@
             const feedbackIron = getFeedback('iron', iron);
             const feedbackResp = getFeedback('resp', resp);
             const feedbackBcaps = getFeedback('bcaps', bcaps);
+            
+            const feedbackV1Reac = getFeedback('v1reac', v1_reac);
+            const feedbackV1Sens = getFeedback('v1sens', v1_sens);
+            const feedbackV2Reac = getFeedback('v2reac', v2_reac);
+            const feedbackV2Sens = getFeedback('v2sens', v2_sens);
+            const feedbackStab = getFeedback('stab', stab);
 
             function updateFeed(id, obj) {
                 const el = document.getElementById(id);
@@ -933,6 +974,12 @@
             updateFeed('wiz-feed-iron', feedbackIron);
             updateFeed('wiz-feed-resp', feedbackResp);
             updateFeed('wiz-feed-bcaps', feedbackBcaps);
+            
+            updateFeed('wiz-feed-v1-reac', feedbackV1Reac);
+            updateFeed('wiz-feed-v1-sens', feedbackV1Sens);
+            updateFeed('wiz-feed-v2-reac', feedbackV2Reac);
+            updateFeed('wiz-feed-v2-sens', feedbackV2Sens);
+            updateFeed('wiz-feed-stab', feedbackStab);
         }
 
         // --- WIZARD LOGIC ---
@@ -963,6 +1010,26 @@
 
             let bCapsVal = 0; 
             if (tVal === 'pollué' || tVal === 'plage') bCapsVal = 2;
+            
+            // FMF Mode Default
+            let fmfModeVal = "general";
+            if(oVal === 'or') fmfModeVal = "sensitive";
+            if(oVal === 'profond') fmfModeVal = "deep";
+            if(tVal === 'pollué') fmfModeVal = "park";
+
+            
+            // Expert Defaults
+            let v1ReacVal = 1.0;
+            if (oVal === 'profond') v1ReacVal = 0.5;
+            
+            let v1SensVal = 95;
+            
+            let v2ReacVal = 3.0;
+            if (tVal === 'pollué') v2ReacVal = 4.0;
+            
+            let v2SensVal = 90;
+            
+            let stabVal = tData.config.stab;
 
             let audioType = oData.audio;
 
@@ -987,13 +1054,12 @@
             <div class="result-box" style="border-left: 4px solid var(--accent-gold);">
                 
                 <!-- GAUGES SECTION IN WIZARD -->
-                <div class="sticky-panel">
-                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px; display:block; text-align:center;">📊 ANALYSE TACTIQUE</label>
+                <div class="sticky-panel" style="top:0; position:sticky; margin-bottom:20px; box-shadow:none; border:1px solid var(--border-light); padding:10px;">
+                    <label style="margin-bottom:12px; color:var(--text-main); font-weight:bold; letter-spacing:1px; display:block; text-align:center; font-size:0.9rem;">PERFORMANCE THÉORIQUE</label>
                     
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Puissance</span>
-                            <span class="perf-question">À quelle profondeur ?</span>
                         </div>
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Surface</span>
@@ -1005,7 +1071,6 @@
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Séparation</span>
-                            <span class="perf-question">Pièce au milieu de clous ?</span>
                         </div>
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Amalgame</span>
@@ -1017,7 +1082,6 @@
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Sensibilité</span>
-                            <span class="perf-question">Objets minuscules ?</span>
                         </div>
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Standard</span>
@@ -1029,7 +1093,6 @@
                     <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title">Discrim.</span>
-                            <span class="perf-question">Or ou vieux clou ?</span>
                         </div>
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Tout Métal</span>
@@ -1041,7 +1104,6 @@
                      <div class="perf-bar-container">
                         <div class="perf-label-group">
                             <span class="perf-title" style="color:var(--danger)">Masquage</span>
-                            <span class="perf-question">Cibles manquées ?</span>
                         </div>
                         <div class="perf-track-wrapper">
                             <span class="range-label min">Faible</span>
@@ -1074,9 +1136,14 @@
                             <div id="wiz-feed-disc" class="param-feedback"></div>
                         </div>
 
-                        <div style="font-size:0.85rem; color:var(--text-dim); margin-top:10px;">
-                            <strong>Fréquence:</strong> ${tData.config.freq} <br>
-                            <strong>G. Stab:</strong> ${tData.config.stab}
+                        <div style="margin-top:20px; border:1px solid var(--fmf); padding:10px; border-radius:6px; background:rgba(179, 136, 255, 0.05);">
+                            <label style="color:var(--fmf); font-weight:bold;">Stratégie FMF</label>
+                            <select id="wiz-sel-fmf" onchange="updateWizardLive()" style="background:var(--bg-input);">
+                                <option value="general" ${fmfModeVal === 'general' ? 'selected' : ''}>FMF Standard (4-45kHz)</option>
+                                <option value="sensitive" ${fmfModeVal === 'sensitive' ? 'selected' : ''}>FMF Sensitive (40kHz Max)</option>
+                                <option value="deep" ${fmfModeVal === 'deep' ? 'selected' : ''}>FMF Deep (14kHz Max)</option>
+                                <option value="park" ${fmfModeVal === 'park' ? 'selected' : ''}>FMF Park (24kHz Max)</option>
+                            </select>
                         </div>
                     </div>
                     <div>
@@ -1113,7 +1180,63 @@
                             <option value="Morphing" ${audioType === 'Morphing' ? 'selected' : ''}>Morphing</option>
                             <option value="2-Tones" ${audioType === '2-Tones' ? 'selected' : ''}>2-Tons</option>
                         </select>
+
+                         <!-- MORPHING OPTIONS WIZARD (Hidden by default) -->
+                        <div id="wiz-div-morphing-options" style="display:none; margin-top:15px; border:1px solid var(--info); padding:10px; border-radius:6px; background:rgba(41, 182, 246, 0.05);">
+                            <label style="color:var(--info);">Type de Morphing</label>
+                            <select id="wiz-sel-morphing-type" onchange="updateWizardLive()" style="background:var(--bg-input);">
+                                <option value="smooth">1. Smooth</option>
+                                <option value="pulse">2. Pulse</option>
+                                <option value="smart">3. Smart</option>
+                                <option value="raw">4. Raw</option>
+                            </select>
+                        </div>
                     </div>
+                </div>
+                
+                <!-- SECTION ARCHITECTURE FMF (EXPERT) -->
+                <div style="margin-top:20px; background:rgba(179, 136, 255, 0.05); border:1px solid var(--fmf); border-radius:6px; padding:15px;">
+                     <h4 style="color:var(--fmf); font-size:0.9rem; margin-bottom:15px; border-bottom:1px solid var(--fmf); text-transform:uppercase;">ARCHITECTURE FMF (MULTI-PROCESSING)</h4>
+                     
+                     <div class="grid-2">
+                        <div>
+                            <div style="margin-bottom:5px; color:var(--text-dim); font-size:0.8rem; font-weight:bold;">VOIE 1 (PROFONDEUR)</div>
+                            <div class="slider-container" style="margin-bottom:10px;">
+                                <div class="slider-header"><label>Réac V1</label><span id="wiz-val-v1-reac" class="slider-val">${v1ReacVal}</span></div>
+                                <input type="range" id="wiz-rng-v1-reac" min="0" max="2.5" step="0.5" value="${v1ReacVal}" oninput="updateWizardLive()">
+                                <div id="wiz-feed-v1-reac" class="param-feedback"></div>
+                            </div>
+                            <div class="slider-container" style="margin-bottom:10px;">
+                                <div class="slider-header"><label>Sens V1</label><span id="wiz-val-v1-sens" class="slider-val">${v1SensVal}</span></div>
+                                <input type="range" id="wiz-rng-v1-sens" min="80" max="99" value="${v1SensVal}" oninput="updateWizardLive()">
+                                <div id="wiz-feed-v1-sens" class="param-feedback"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="margin-bottom:5px; color:var(--text-dim); font-size:0.8rem; font-weight:bold;">VOIE 2 (SÉPARATION)</div>
+                            <div class="slider-container" style="margin-bottom:10px;">
+                                <div class="slider-header"><label>Réac V2</label><span id="wiz-val-v2-reac" class="slider-val">${v2ReacVal}</span></div>
+                                <input type="range" id="wiz-rng-v2-reac" min="2.5" max="5" step="0.5" value="${v2ReacVal}" oninput="updateWizardLive()">
+                                <div id="wiz-feed-v2-reac" class="param-feedback"></div>
+                            </div>
+                            <div class="slider-container" style="margin-bottom:10px;">
+                                <div class="slider-header"><label>Sens V2</label><span id="wiz-val-v2-sens" class="slider-val">${v2SensVal}</span></div>
+                                <input type="range" id="wiz-rng-v2-sens" min="80" max="99" value="${v2SensVal}" oninput="updateWizardLive()">
+                                <div id="wiz-feed-v2-sens" class="param-feedback"></div>
+                            </div>
+                        </div>
+                     </div>
+                     
+                     <div style="margin-top:10px;">
+                        <label>Ground Stabilizer</label>
+                        <select id="wiz-sel-stab" onchange="updateWizardLive()">
+                            <option value="0" ${stabVal === 0 ? 'selected' : ''}>0 - OFF</option>
+                            <option value="1" ${stabVal === 1 ? 'selected' : ''}>1 - Léger</option>
+                            <option value="2" ${stabVal === 2 ? 'selected' : ''}>2 - Standard</option>
+                            <option value="3" ${stabVal === 3 ? 'selected' : ''}>3 - Fort</option>
+                        </select>
+                        <div id="wiz-feed-stab" class="param-feedback" style="margin-top:5px;"></div>
+                     </div>
                 </div>
                 
                 <div style="margin-top:15px;">
@@ -1125,6 +1248,53 @@
             
             // Trigger calculation immediately to set bars
             setTimeout(() => updateWizardLive(), 50);
+        }
+
+        // --- TERRAINS RENDER ---
+        function renderTerrains() {
+            const container = document.getElementById('terrain-grid');
+            if(container.innerHTML !== "") return; 
+
+            for(const key in DATA.terrains) {
+                const t = DATA.terrains[key];
+                const card = document.createElement('div');
+                card.className = 'terrain-card';
+                card.innerHTML = `<h3>${t.name}</h3><p style="color:var(--text-dim); font-size:0.85rem;">${t.min} | ${t.depth}</p>`;
+                card.onclick = () => showTerrainDetail(key);
+                container.appendChild(card);
+            }
+        }
+
+        function showTerrainDetail(key) {
+            const t = DATA.terrains[key];
+            const c = t.config;
+            const html = `
+            <div class="result-box" style="animation: fadeEffect 0.3s;">
+                <h3 style="color:var(--accent-gold); border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:15px;">${t.name} - CONFIGURATION DÉTAILLÉE</h3>
+                
+                <div class="grid-2">
+                    <table>
+                        <tr><th>Réglage</th><th>Valeur</th></tr>
+                        <tr><td>Sensibilité</td><td>${c.sens}</td></tr>
+                        <tr><td>Réactivité</td><td>${c.reac}</td></tr>
+                        <tr><td>Discri</td><td>${c.disc}</td></tr>
+                        <tr><td>Audio</td><td>Square/Pitch</td></tr>
+                    </table>
+                    <table>
+                        <tr><th>Tech</th><th>Valeur</th></tr>
+                        <tr><td>Fréquence</td><td>${c.freq}</td></tr>
+                        <tr><td>Stabilizer</td><td>${c.stab}</td></tr>
+                        <tr><td>Vol Fer</td><td>${c.fer}</td></tr>
+                        <tr><td>Notch</td><td>00-00</td></tr>
+                    </table>
+                </div>
+
+                <h4 style="color:var(--accent-blue); margin-top:15px; margin-bottom:10px;">Avis des Experts XP</h4>
+                <ul>
+                    ${t.experts.map(e => `<li style="margin-bottom:5px; color:var(--text-main); list-style-position:inside;">${e}</li>`).join('')}
+                </ul>
+            </div>`;
+            document.getElementById('terrain-detail').innerHTML = html;
         }
 
         // --- SIMULATOR LOGIC WITH ADVANCED FEEDBACK ---
@@ -1213,6 +1383,22 @@
             document.getElementById('val-sil').innerText = sil;
             document.getElementById('val-bcaps').innerText = bcaps;
             document.getElementById('val-notch').innerText = notch > 0 ? notch + "-" + (notch+6) : "OFF";
+            
+            // Show/Hide Morphing Options
+            const morphOpts = document.getElementById('div-morphing-options');
+            if(audio === "Morphing") {
+                morphOpts.style.display = 'block';
+            } else {
+                morphOpts.style.display = 'none';
+            }
+            const morphType = document.getElementById('sel-morphing-type').value;
+
+            // Read Expert values from expert tab (for simulation fusion)
+            // Note: Since elements are on another tab but in same DOM, we can read them.
+            const v1_reac = parseFloat(document.getElementById('rng-v1-reac').value);
+            const v1_sens = parseInt(document.getElementById('rng-v1-sens').value);
+            const v2_reac = parseFloat(document.getElementById('rng-v2-reac').value);
+            const v2_sens = parseInt(document.getElementById('rng-v2-sens').value);
 
 
             // Update Feedback Text
@@ -1241,9 +1427,8 @@
             setFb('feed-notch', fbNotch);
 
             // CALCULATE GAUGES USING SHARED ENGINE
-            // For Sim tab, we don't have FMF Mode selector connected yet in this version's UI shown above, defaulting to general
-            const fmfMode = "general";
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode);
+            const fmfMode = document.getElementById('sel-fmf').value;
+            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode, v1_reac, v1_sens, v2_reac, v2_sens, morphType);
 
             // Render Bars
             document.getElementById('bar-depth').style.width = scores.depth + "%";
