@@ -321,6 +321,23 @@
             <div class="card">
                 <h2>⚙️ Simulateur Interactif Complet</h2>
                 <p style="color:var(--text-dim); margin-bottom:20px;">Comprenez l'impact de chaque millimètre de réglage.</p>
+
+                <!-- Indicateurs de Performance (MOVED TO TOP) -->
+                <div style="background:var(--bg-input); padding:15px; border-radius:6px; border:1px solid var(--border-light); margin-bottom: 25px;">
+                    <label style="margin-bottom:10px;">Analyse d'Impact (Temps Réel)</label>
+                    <div class="perf-bar-container">
+                        <span class="perf-label">Profondeur</span>
+                        <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:70%"></div></div>
+                    </div>
+                    <div class="perf-bar-container">
+                        <span class="perf-label">Séparation</span>
+                        <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:40%"></div></div>
+                    </div>
+                     <div class="perf-bar-container">
+                        <span class="perf-label">Masquage Fer</span>
+                        <div class="perf-track"><div id="bar-mask" class="perf-fill" style="width:20%; background:#ef5350;"></div></div>
+                    </div>
+                </div>
                 
                 <div class="grid-2">
                     <div>
@@ -381,22 +398,6 @@
                             <option value="FullTones">🎹 Full Tones (Nuances riches)</option>
                         </select>
                         
-                        <!-- Indicateurs de Performance -->
-                        <div style="background:var(--bg-input); padding:15px; border-radius:6px; border:1px solid var(--border-light);">
-                            <label style="margin-bottom:10px;">Analyse d'Impact</label>
-                            <div class="perf-bar-container">
-                                <span class="perf-label">Profondeur</span>
-                                <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:70%"></div></div>
-                            </div>
-                            <div class="perf-bar-container">
-                                <span class="perf-label">Séparation</span>
-                                <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:40%"></div></div>
-                            </div>
-                             <div class="perf-bar-container">
-                                <span class="perf-label">Masquage Fer</span>
-                                <div class="perf-track"><div id="bar-mask" class="perf-fill" style="width:20%; background:#ef5350;"></div></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
