@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XP Deus II V5 - CONSOLE EXPERT PRO</title>
+    <title>XP Deus II - CONSOLE EXPERT PRO</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         :root {
@@ -91,7 +91,7 @@
 
         .result-box { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 6px; padding: 15px; margin-top: 20px; }
 
-        /* NEW STICKY PANEL LAYOUT FOR MOBILE */
+        /* STICKY PANEL & CHARTS */
         .sticky-panel { 
             position: sticky; 
             top: 48px; 
@@ -218,8 +218,8 @@
 
     <header>
         <div>
-            <h1>⚡ XP Deus II V5</h1>
-            <p>CONSOLE EXPERT PRO | V4.3 (MOBILE UI)</p>
+            <h1>⚡ XP Deus II</h1>
+            <p>Design by MICHEL09</p>
         </div>
         <div class="header-right">
             <button class="theme-toggle" onclick="toggleTheme()">🌙 Thème</button>
@@ -916,7 +916,34 @@
 
             // Additional FMF & Audio Tweaks (applied on top of base calculation)
             const fmf = document.getElementById('sel-fmf').value;
-            if (fmf === 'sensitive') perf.finesse += 15;
+            // FMF Strategy Impacts
+            switch(fmf) {
+                case 'general':
+                    // Baseline
+                    break;
+                case 'sensitive':
+                    perf.finesse += 20;
+                    perf.depth -= 5;
+                    break;
+                case 'deep':
+                    perf.depth += 15;
+                    perf.finesse -= 10;
+                    perf.separation -= 5;
+                    break;
+                case 'park':
+                    perf.separation += 10;
+                    perf.masking -= 5; // Better handling of trash
+                    break;
+                case 'beach':
+                    perf.id += 10; // More stable ID on wet sand context
+                    perf.depth -= 5;
+                    break;
+                case 'gold':
+                    perf.finesse += 30;
+                    perf.id -= 20; // Harder to ID ferrous vs gold at high freq
+                    perf.depth -= 10;
+                    break;
+            }
             
             const audioType = document.getElementById('sel-audio').value;
             if (audioType === 'Morphing') {
