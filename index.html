@@ -3,362 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XP Deus II V5 - BY MICHEL 09</title>
+    <title>XP Deus II V5 - CONSOLE EXPERT PRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
-        /* --- DESIGN SYSTEM TACTIQUE --- */
         :root {
             --bg-body: #121418;
             --bg-panel: #1b2028;
             --bg-input: #0f1114;
-            
-            --accent-gold: #d4af37; /* Or Tactique */
-            --accent-blue: #5c8bc0; /* Bleu Acier */
+            --accent-gold: #d4af37;
+            --accent-blue: #5c8bc0;
             --text-main: #e0e6ed;
-            --text-dim: #aab6c6; 
-            
+            --text-dim: #aab6c6;
             --border-light: #2d333d;
-            --border-active: #d4af37;
-            
             --success: #66bb6a;
             --warning: #ffa726;
             --danger: #ef5350;
             --info: #29b6f6;
             --fmf: #b388ff;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f5f5f5;
+            --bg-panel: #ffffff;
+            --bg-input: #e8e8e8;
+            --text-main: #1a1a1a;
+            --text-dim: #555555;
+            --border-light: #d0d0d0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; min-height: 100vh; font-size: 15px; transition: var(--transition); }
 
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.5;
-            min-height: 100vh;
-            font-size: 15px;
-        }
+        header { background: linear-gradient(180deg, #1f242d 0%, #121418 100%); padding: 15px; border-bottom: 2px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 10px; }
+        [data-theme="light"] header { background: linear-gradient(180deg, #f0f0f0 0%, #e0e0e0 100%); }
+        header h1 { color: var(--accent-gold); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; flex: 1; min-width: 200px; }
+        header p { color: var(--text-dim); font-size: 0.8rem; }
 
-        /* --- HEADER --- */
-        header {
-            background: linear-gradient(180deg, #1f242d 0%, #121418 100%);
-            padding: 20px 15px;
-            border-bottom: 2px solid var(--accent-gold);
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
+        .header-right { display: flex; gap: 10px; align-items: center; }
+        .theme-toggle { background: var(--bg-panel); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: var(--transition); }
+        .theme-toggle:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
-        header h1 {
-            color: var(--accent-gold);
-            font-size: 1.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        header p { color: var(--text-dim); font-size: 0.85rem; }
-
-        /* --- NAVIGATION --- */
-        .nav-container {
-            background: var(--bg-panel);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border-light);
-            padding: 0 5px;
-            overflow-x: auto;
-            white-space: nowrap;
-            display: flex;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            -webkit-overflow-scrolling: touch; 
-        }
-
-        .nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-dim);
-            padding: 12px 15px;
-            cursor: pointer;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-            border-bottom: 3px solid transparent;
-        }
-
+        .nav-container { background: var(--bg-panel); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-light); padding: 0 5px; overflow-x: auto; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .nav-btn { background: none; border: none; color: var(--text-dim); padding: 12px 15px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; transition: var(--transition); border-bottom: 3px solid transparent; white-space: nowrap; }
         .nav-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.02); }
         .nav-btn.active { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
 
-        /* --- CONTENT --- */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px 60px 15px; }
         .tab-content { display: none; animation: fadeEffect 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeEffect { from {opacity: 0; transform: translateY(5px);} to {opacity: 1; transform: translateY(0);} }
 
-        /* --- CARDS & PANELS --- */
-        .card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .card h2 {
-            color: var(--accent-blue);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border-left: 3px solid var(--accent-gold);
-            padding-left: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .card { background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: 8px; padding: 20px; margin-bottom: 20px; transition: var(--transition); }
+        .card h2 { color: var(--accent-blue); font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent-gold); padding-left: 10px; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 
-        /* --- FORMS --- */
-        label { display: block; color: var(--text-dim); margin-bottom: 6px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        select, input[type="text"], input[type="number"], textarea {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-light);
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 0.95rem;
-            font-family: inherit;
-        }
-        
-        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent-gold); }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-right: 5px; margin-bottom: 5px; }
+        .badge-recommended { background: rgba(102, 187, 106, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-risky { background: rgba(255, 167, 38, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-optimal { background: rgba(92, 139, 192, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
 
-        /* --- BUTTONS --- */
-        .btn {
-            padding: 12px 20px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: 0.2s;
-        }
+        label { display: block; color: var(--text-dim); margin-bottom: 6px; font-size: 0.8rem; text-transform: uppercase; }
+        select, input[type="text"], input[type="number"], textarea { width: 100%; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-main); padding: 12px; border-radius: 4px; font-size: 0.95rem; font-family: inherit; transition: var(--transition); }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2); }
+
+        .btn { padding: 12px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; transition: var(--transition); }
         .btn-gold { background: var(--accent-gold); color: #121418; }
-        .btn-gold:hover { background: #bfa030; }
+        .btn-gold:hover { background: #bfa030; transform: translateY(-1px); }
         .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-dim); }
         .btn-outline:hover { border-color: var(--text-main); color: var(--text-main); }
         .btn-danger { background: rgba(239, 83, 80, 0.2); color: var(--danger); border: 1px solid var(--danger); }
         .btn-danger:hover { background: var(--danger); color: white; }
 
-        /* --- SLIDERS --- */
-        .slider-container { margin-bottom: 25px; position: relative; }
+        .slider-container { margin-bottom: 25px; }
         .slider-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .slider-val { color: var(--accent-gold); font-weight: bold; font-family: monospace; font-size: 1.1rem; }
-        
-        input[type="range"] {
-            -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); 
-            border-radius: 4px; outline: none; border: 1px solid var(--border-light);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; 
-            background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body);
-            transition: transform 0.1s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); border-radius: 4px; outline: none; border: 1px solid var(--border-light); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body); box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4); }
+        input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body); box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4); }
 
-        .param-feedback {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-top: 5px;
-            font-style: italic;
-            border-left: 2px solid var(--border-light);
-            padding-left: 8px;
-            transition: color 0.3s;
-        }
+        .param-feedback { font-size: 0.8rem; color: var(--text-dim); margin-top: 5px; font-style: italic; border-left: 2px solid var(--border-light); padding-left: 8px; }
         .feedback-warn { color: var(--warning); border-color: var(--warning); }
         .feedback-good { color: var(--success); border-color: var(--success); }
+        .feedback-danger { color: var(--danger); border-color: var(--danger); }
 
-        /* --- RESULT BOXES --- */
-        .result-box {
-            background: rgba(212, 175, 55, 0.05);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 20px;
-        }
+        .result-box { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 6px; padding: 15px; margin-top: 20px; }
 
-        /* --- STICKY PANEL --- */
-        .sticky-panel {
-            position: -webkit-sticky; /* Pour Safari */
-            position: sticky;
-            top: 48px; /* Ajusté pour la nav bar */
-            z-index: 95;
-            background: var(--bg-panel);
-            border: 1px solid var(--accent-gold);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            margin-bottom: 25px;
-            padding: 10px 15px;
-            border-radius: 6px;
-        }
+        .sticky-panel { position: sticky; top: 48px; z-index: 95; background: var(--bg-panel); border: 1px solid var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 25px; padding: 10px 15px; border-radius: 6px; }
 
-        .info-tag {
-            display: inline-block;
-            background: var(--bg-input);
-            border: 1px solid var(--border-light);
-            padding: 4px 10px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            border-radius: 4px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-
-        /* --- ALERTS --- */
-        .alert { padding: 12px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; border-left: 3px solid; }
-        .alert-info { background: rgba(92, 139, 192, 0.1); border-color: var(--accent-blue); }
-        .alert-expert { background: rgba(212, 175, 55, 0.1); border-color: var(--accent-gold); color: #e8d084; }
-        .alert-warn { background: rgba(255, 167, 38, 0.1); border-color: var(--warning); }
-
-        /* --- PERFORMANCE BARS & LABELS --- */
-        .perf-bar-container { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            margin-bottom: 8px; 
-        }
-        
-        .perf-label-group {
-            display: flex;
-            flex-direction: column;
-            width: 140px; 
-            text-align: right;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .perf-bar-container { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .perf-label-group { display: flex; flex-direction: column; width: 140px; text-align: right; flex-shrink: 0; }
         .perf-title { font-size: 0.75rem; font-weight: bold; color: var(--text-main); text-transform: uppercase; }
-        .perf-question { font-size: 0.6rem; color: var(--text-dim); font-style: italic; line-height: 1.1; margin-top: 1px; }
-
-        .perf-track-wrapper { 
-            flex-grow: 1; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            min-width: 0; 
-        }
-        .perf-track { 
-            flex-grow: 1; 
-            height: 8px; 
-            background: var(--bg-input); 
-            border-radius: 4px; 
-            overflow: hidden; 
-            position: relative; 
-        }
-        .perf-fill { height: 100%; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* ALIGNEMENT FIXED WIDTH LABELS */
-        .range-label { 
-            font-size: 0.65rem; 
-            color: var(--text-dim); 
-            white-space: nowrap; 
-            width: 65px; 
-            display: inline-block;
-        }
-        .range-label.min { text-align: right; }
-        .range-label.max { text-align: left; }
+        .perf-question { font-size: 0.6rem; color: var(--text-dim); font-style: italic; }
+        .perf-track-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 6px; }
+        .perf-track { flex-grow: 1; height: 8px; background: var(--bg-input); border-radius: 4px; overflow: hidden; }
+        .perf-fill { height: 100%; transition: width var(--transition); }
+        .range-label { font-size: 0.65rem; color: var(--text-dim); white-space: nowrap; width: 65px; }
 
         .fill-depth { background: var(--accent-blue); }
         .fill-sep { background: var(--warning); }
-        .fill-fine { background: var(--success); } 
-        .fill-id { background: var(--info); } 
+        .fill-fine { background: var(--success); }
+        .fill-id { background: var(--info); }
         .fill-mask { background: var(--danger); }
 
-        /* --- TERRAIN CARDS --- */
-        .terrain-card {
-            background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: 8px;
-            padding: 20px; cursor: pointer; transition: all 0.2s;
-        }
-        .terrain-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
-        .terrain-card h3 { color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 5px; }
+        .radar-container { position: relative; height: 300px; margin: 20px 0; }
 
-        /* --- ID VISUALIZER --- */
-        .id-scale {
-            display: flex; height: 30px; border-radius: 4px; overflow: hidden; margin-top: 10px; font-size: 0.75rem; color: #000; font-weight: bold; text-align: center; line-height: 30px;
-        }
-        .id-zone { height: 100%; transition: width 0.3s; }
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: var(--bg-input); border-radius: 6px; overflow: hidden; }
+        .comparison-table th { background: rgba(92, 139, 192, 0.2); color: var(--accent-blue); padding: 12px; text-align: left; font-weight: bold; border-bottom: 2px solid var(--border-light); }
+        .comparison-table td { padding: 12px; border-bottom: 1px solid var(--border-light); color: var(--text-main); }
 
-        /* --- LOGBOOK & SAVED --- */
-        .saved-item {
-            background: var(--bg-input);
-            border: 1px solid var(--border-light);
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .id-scale { display: flex; height: 30px; border-radius: 4px; overflow: hidden; margin-top: 10px; font-size: 0.75rem; color: #000; font-weight: bold; }
+        .id-zone { height: 100%; transition: width var(--transition); }
+
+        .saved-item { background: var(--bg-input); border: 1px solid var(--border-light); padding: 15px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .saved-item:hover { border-color: var(--accent-gold); box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1); }
         .saved-item-content h4 { color: var(--text-main); font-size: 1rem; margin-bottom: 4px; }
-        .saved-item-content p { color: var(--text-dim); font-size: 0.85rem; margin: 0; }
+        .saved-item-content p { color: var(--text-dim); font-size: 0.85rem; }
+        .saved-item-actions { display: flex; gap: 8px; }
+        .saved-item-actions button { padding: 6px 12px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; transition: var(--transition); }
 
-        /* --- RESPONSIVE --- */
+        .btn-download { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+        .btn-download:hover { background: var(--accent-gold); color: #121418; }
+        .btn-delete { background: rgba(239, 83, 80, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-delete:hover { background: var(--danger); color: white; }
+
+        .alert { padding: 12px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; border-left: 3px solid; }
+        .alert-info { background: rgba(92, 139, 192, 0.1); border-color: var(--accent-blue); }
+        .alert-warn { background: rgba(255, 167, 38, 0.1); border-color: var(--warning); }
+        .alert-success { background: rgba(102, 187, 106, 0.1); border-color: var(--success); }
+
+        .terrain-card { background: var(--bg-input); border: 1px solid var(--border-light); padding: 15px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .terrain-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); }
+        .terrain-card h3 { color: var(--accent-gold); margin-bottom: 8px; }
+        .terrain-card p { color: var(--text-dim); font-size: 0.9rem; margin: 4px 0; }
+
+        .faq-item { margin-bottom: 20px; padding: 15px; background: var(--bg-input); border-left: 3px solid var(--accent-gold); border-radius: 4px; }
+        .faq-item strong { color: var(--accent-blue); }
+
         @media (max-width: 768px) {
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .nav-container { justify-content: flex-start; }
-            header h1 { font-size: 1.4rem; }
-            
-            /* Sticky Panel Mobile Optimizations */
-            .sticky-panel { 
-                top: 45px; 
-                margin-left: -15px; 
-                margin-right: -15px; 
-                border-radius: 0; 
-                border-left: none; 
-                border-right: none;
-                padding: 10px;
-            }
-            .sticky-panel label { font-size: 0.75rem; margin-bottom: 8px; display: block; text-align: center; }
-            .perf-bar-container { flex-direction: column; align-items: stretch; gap: 2px; margin-bottom: 10px; }
-            .perf-label-group { width: 100%; text-align: left; flex-direction: row; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
-            .perf-title { font-size: 0.75rem; }
-            .perf-question { display: none; } 
-            .perf-track-wrapper { width: 100%; }
-            .range-label { font-size: 0.6rem; width: 60px; }
+            header { flex-direction: column; text-align: center; }
+            .perf-bar-container { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>XP Deus II V5</h1>
-        <p>CONSOLE EXPERT PRO | BY MICHEL 09</p>
+        <div>
+            <h1>⚡ XP Deus II V5</h1>
+            <p>CONSOLE EXPERT PRO | V3.2 (STICKY FIX)</p>
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Thème</button>
+        </div>
     </header>
 
-    <div class="nav-container">
-        <button class="nav-btn active" onclick="setTab('wizard')">Assistant</button>
-        <button class="nav-btn" onclick="setTab('terrains')">Terrains</button>
-        <button class="nav-btn" onclick="setTab('params')">Simulateur PRO</button>
-        <button class="nav-btn" onclick="setTab('expert')">Mode Expert V4</button>
+    <div class="nav-container" id="nav-tabs">
+        <button class="nav-btn active" onclick="setTab('config')">⚡ Configuration</button>
+        <button class="nav-btn" onclick="setTab('terrains')">🌍 Terrains</button>
         <button class="nav-btn" onclick="setTab('profiles')">💾 Profils</button>
         <button class="nav-btn" onclick="setTab('tools')">🆔 Outils</button>
-        <button class="nav-btn" onclick="setTab('faq')">FAQ</button>
+        <button class="nav-btn" onclick="setTab('faq')">❓ FAQ</button>
     </div>
 
     <div class="container">
-
-        <!-- TAB 1: ASSISTANT -->
-        <div id="wizard" class="tab-content active">
+        <!-- CONFIG TAB (WIZARD + SIMULATOR + EXPERT + ADVANCED) -->
+        <div id="config" class="tab-content active">
+            <!-- ASSISTANT SECTION -->
             <div class="card">
                 <h2>🎯 Assistant Tactique Intelligent</h2>
                 <div class="grid-2">
                     <div>
                         <label>Terrain</label>
-                        <select id="wiz-terrain" onchange="runWizard()">
-                            <option value="">-- Sélectionner le type de sol --</option>
+                        <select id="wiz-terrain" onchange="updateWizard()">
+                            <option value="">-- Sélectionner le terrain --</option>
                             <option value="prairie">🌾 Prairie / Champ propre</option>
-                            <option value="minéralisé">🔴 Sol minéralisé (Argile, rouge)</option>
+                            <option value="minéralisé">🔴 Sol minéralisé (Argile rouge)</option>
                             <option value="pollué">🔩 Terrain très pollué (Ferraille)</option>
                             <option value="plage">🏖️ Plage (Sable sec/humide)</option>
                             <option value="eau">💧 Eau douce</option>
@@ -366,286 +189,287 @@
                     </div>
                     <div>
                         <label>Objectif</label>
-                        <select id="wiz-obj" onchange="runWizard()">
+                        <select id="wiz-obj" onchange="updateWizard()">
                             <option value="">-- Sélectionner la cible --</option>
                             <option value="monnaies">💰 Monnaies Anciennes</option>
-                            <option value="or">✨ Or & Bijoux (Petites cibles)</option>
+                            <option value="or">✨ Or & Bijoux</option>
                             <option value="reliques">🏛️ Reliques & Militaria</option>
-                            <option value="profond">🔍 Grosses Masses Profondes</option>
-                            <option value="tout">🎯 Polyvalent (Tout venant)</option>
+                            <option value="profond">🔍 Masses Profondes</option>
+                            <option value="tout">🎯 Polyvalent</option>
                         </select>
                     </div>
                 </div>
                 <div id="wiz-result"></div>
             </div>
-        </div>
 
-        <!-- TAB 2: TERRAINS -->
-        <div id="terrains" class="tab-content">
-            <div class="card">
-                <h2>🌍 Encyclopédie des Terrains</h2>
-                <p style="color:var(--text-dim); margin-bottom:20px;">Cliquez sur une carte pour voir la fiche technique complète.</p>
-                <div id="terrain-grid" class="grid-3"></div>
-            </div>
-            <div id="terrain-detail"></div>
-        </div>
-
-        <!-- TAB 3: PARAMETRES -->
-        <div id="params" class="tab-content">
-            <div class="card">
-                <h2>⚙️ Simulateur Interactif Complet</h2>
-                <p style="color:var(--text-dim); margin-bottom:20px;">Analysez l'impact de chaque réglage en temps réel.</p>
-
-                <!-- Indicateurs de Performance (STICKY) -->
-                <div class="sticky-panel">
-                    <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; letter-spacing:1px; display:block; text-align:center;">📊 ANALYSE TACTIQUE</label>
-                    
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Puissance</span>
-                            <span class="perf-question">À quelle profondeur ?</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Surface</span>
-                            <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
-                            <span class="range-label max">Profond</span>
-                        </div>
-                    </div>
-
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Séparation</span>
-                            <span class="perf-question">Pièce au milieu de clous ?</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Amalgame</span>
-                            <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
-                            <span class="range-label max">Séparé</span>
-                        </div>
-                    </div>
-
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Sensibilité</span>
-                            <span class="perf-question">Objets minuscules ?</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Standard</span>
-                            <div class="perf-track"><div id="bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
-                            <span class="range-label max">Extra Fin</span>
-                        </div>
-                    </div>
-
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Discrim.</span>
-                            <span class="perf-question">Or ou vieux clou ?</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Tout Métal</span>
-                            <div class="perf-track"><div id="bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
-                            <span class="range-label max">Filtre Max</span>
-                        </div>
-                    </div>
-
-                     <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title" style="color:var(--danger)">Masquage</span>
-                            <span class="perf-question">Cibles manquées ?</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Faible</span>
-                            <div class="perf-track"><div id="bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
-                            <span class="range-label max" style="color:var(--danger)">Élevé</span>
-                        </div>
+            <!-- ANALYSE TACTIQUE GLOBALE (MOVED OUTSIDE OF SIMULATOR CARD) -->
+            <div class="sticky-panel">
+                <label style="margin-bottom:12px; color:var(--accent-gold); font-weight:bold; display:block; text-align:center;">📊 ANALYSE TACTIQUE GLOBALE</label>
+                <div class="perf-bar-container">
+                    <div class="perf-label-group"><span class="perf-title">Puissance</span><span class="perf-question">À quelle profondeur ?</span></div>
+                    <div class="perf-track-wrapper">
+                        <span class="range-label">Surface</span>
+                        <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
+                        <span class="range-label">Profond</span>
                     </div>
                 </div>
-                
+                <div class="perf-bar-container">
+                    <div class="perf-label-group"><span class="perf-title">Séparation</span><span class="perf-question">Pièce au milieu de clous ?</span></div>
+                    <div class="perf-track-wrapper">
+                        <span class="range-label">Amalgame</span>
+                        <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
+                        <span class="range-label">Séparé</span>
+                    </div>
+                </div>
+                <div class="perf-bar-container">
+                    <div class="perf-label-group"><span class="perf-title">Finesse</span><span class="perf-question">Objets minuscules ?</span></div>
+                    <div class="perf-track-wrapper">
+                        <span class="range-label">Standard</span>
+                        <div class="perf-track"><div id="bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
+                        <span class="range-label">Extra Fin</span>
+                    </div>
+                </div>
+                <div class="perf-bar-container">
+                    <div class="perf-label-group"><span class="perf-title">Discrim.</span><span class="perf-question">Or ou vieux clou ?</span></div>
+                    <div class="perf-track-wrapper">
+                        <span class="range-label">Tout Métal</span>
+                        <div class="perf-track"><div id="bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
+                        <span class="range-label">Filtre Max</span>
+                    </div>
+                </div>
+                <div class="perf-bar-container">
+                    <div class="perf-label-group"><span class="perf-title" style="color:var(--danger);">⚠️ Masquage</span><span class="perf-question">Cibles manquées ?</span></div>
+                    <div class="perf-track-wrapper">
+                        <span class="range-label">Faible</span>
+                        <div class="perf-track"><div id="bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
+                        <span class="range-label">Élevé</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULATOR SECTION -->
+            <div class="card">
+                <h2>⚙️ Simulateur Interactif Complet</h2>
+                <p style="color:var(--text-dim); margin-bottom:20px;">Analysez l'impact en temps réel de chaque paramètre.</p>
+
+                <!-- Sticky panel removed from here -->
+
                 <div class="grid-2" style="margin-top: 20px;">
                     <div>
-                        <h4 style="color:var(--accent-blue); margin-bottom:15px; border-bottom:1px solid var(--border-light);">Puissance & Vitesse</h4>
+                        <h4 style="color:var(--accent-blue); margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">⚡ Puissance & Vitesse</h4>
                         <div class="slider-container">
-                            <div class="slider-header"><label>Sensibilité</label><span id="val-sens" class="slider-val">93</span></div>
-                            <input type="range" id="rng-sens" min="70" max="99" value="93" oninput="updateSim()">
+                            <div class="slider-header"><label>Sensibilité (Standard)</label><span id="val-sens" class="slider-val">93</span></div>
+                            <input type="range" id="rng-sens" min="70" max="99" value="93" oninput="updateSimulator()">
                             <div id="feed-sens" class="param-feedback">Zone optimale pour la plupart des terrains.</div>
                         </div>
                         <div class="slider-container">
-                            <div class="slider-header"><label>Réactivité</label><span id="val-reac" class="slider-val">2.0</span></div>
-                            <input type="range" id="rng-reac" min="0" max="5" step="0.5" value="2" oninput="updateSim()">
+                            <div class="slider-header"><label>Réactivité (Standard)</label><span id="val-reac" class="slider-val">2.0</span></div>
+                            <input type="range" id="rng-reac" min="0" max="5" step="0.5" value="2" oninput="updateSimulator()">
                             <div id="feed-reac" class="param-feedback">Vitesse standard. Bon compromis.</div>
                         </div>
-                        
-                        <h4 style="color:var(--accent-blue); margin-top:25px; margin-bottom:15px; border-bottom:1px solid var(--border-light);">Filtres, Rejets & Encoches</h4>
+                        <h4 style="color:var(--accent-blue); margin-top:25px; margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">🔍 Filtres & Rejets</h4>
                         <div class="slider-container">
                             <div class="slider-header"><label>Discrimination</label><span id="val-disc" class="slider-val">10</span></div>
-                            <input type="range" id="rng-disc" min="-6" max="40" value="10" oninput="updateSim()">
+                            <input type="range" id="rng-disc" min="-6" max="40" value="10" oninput="updateSimulator()">
                             <div id="feed-disc" class="param-feedback">Rejet classique des ferreux.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Silencieux (Silencer)</label><span id="val-sil" class="slider-val">1</span></div>
-                            <input type="range" id="rng-sil" min="0" max="5" value="1" oninput="updateSim()">
+                            <input type="range" id="rng-sil" min="0" max="5" value="1" oninput="updateSimulator()">
                             <div id="feed-sil" class="param-feedback">Standard. Filtre peu de craquements.</div>
                         </div>
-                         <div class="slider-container">
+                        <div class="slider-container">
                             <div class="slider-header"><label>B.Caps (Rejet Capsules)</label><span id="val-bcaps" class="slider-val">0</span></div>
-                            <input type="range" id="rng-bcaps" min="0" max="5" value="0" oninput="updateSim()">
+                            <input type="range" id="rng-bcaps" min="0" max="5" value="0" oninput="updateSimulator()">
                             <div id="feed-bcaps" class="param-feedback">Filtre désactivé.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Notch (Encoche)</label><span id="val-notch" class="slider-val">OFF</span></div>
-                            <input type="range" id="rng-notch" min="0" max="60" value="0" oninput="updateSim()">
-                            <div id="feed-notch" class="param-feedback">Aucune fréquence rejetée spécifiquement.</div>
+                            <input type="range" id="rng-notch" min="0" max="60" value="0" oninput="updateSimulator()">
+                            <div id="feed-notch" class="param-feedback">Aucune fréquence rejetée.</div>
                         </div>
                     </div>
-                    
+
                     <div>
-                        <h4 style="color:var(--fmf); margin-bottom:15px; border-bottom:1px solid var(--border-light);">FMF Strategy & Audio</h4>
-                        
+                        <h4 style="color:var(--fmf); margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">🌊 FMF Strategy & Audio</h4>
                         <div style="margin-bottom:20px; border:1px solid var(--fmf); padding:10px; border-radius:6px; background:rgba(179, 136, 255, 0.05);">
                             <label style="color:var(--fmf); font-weight:bold;">Stratégie FMF</label>
-                            <select id="sel-fmf" onchange="updateSim()" style="background:var(--bg-input);">
+                            <select id="sel-fmf" onchange="updateSimulator()">
                                 <option value="general">FMF Standard (4-45kHz) - Polyvalent</option>
                                 <option value="sensitive">FMF Sensitive (40kHz Max) - Petites cibles</option>
                                 <option value="deep">FMF Deep (14kHz Max) - Grosses masses</option>
-                                <option value="park">FMF Park (24kHz Max) - Pollution</option>
+                                <option value="park">FMF Park (24kHz Max) - Zones polluées</option>
                             </select>
                             <div id="feed-fmf" class="param-feedback" style="color:var(--text-dim); margin-top:5px;">Balayage multi-fréquence standard.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Type Audio</label><span id="val-audio" class="slider-val">Square</span></div>
+                            <select id="sel-audio" onchange="updateSimulator()">
+                                <option value="Pitch">🔊 Pitch (Classique & Percutant)</option>
+                                <option value="Square" selected>📊 Square (Numérique/Net)</option>
+                                <option value="Morphing">🌊 Morphing (Expert)</option>
+                                <option value="2-Tones">🎵 2-Tons (Séparation)</option>
+                                <option value="FullTones">🎹 Full Tones (Nuances riches)</option>
+                            </select>
+                            <div id="feed-audio" class="param-feedback">Audio standard.</div>
+                        </div>
+
+                        <!-- MORPHING SUB-CONFIG (HIDDEN BY DEFAULT) -->
+                        <div id="morphing-config" style="display:none; background:rgba(92, 139, 192, 0.1); border-left:3px solid var(--accent-gold); padding:10px; margin-bottom:20px; border-radius:4px;">
+                             <div class="slider-header"><label style="color:var(--accent-gold);">Mode Morphing (4 Modes)</label></div>
+                             <select id="sel-morphing-mode" onchange="updateSimulator()" style="margin-top:5px;">
+                                 <option value="1">Mode 1: Continu (Profondeur)</option>
+                                 <option value="2">Mode 2: Seuil (Réactif)</option>
+                                 <option value="3">Mode 3: Logarithmique (Boost Faibles)</option>
+                                 <option value="4">Mode 4: Hybride (Filtre Fer)</option>
+                             </select>
+                             <div class="param-feedback" id="feed-morphing-sub">Sélectionnez la courbe de réponse.</div>
                         </div>
 
                         <div class="slider-container">
                             <div class="slider-header"><label>Réponse Audio</label><span id="val-resp" class="slider-val">4</span></div>
-                            <input type="range" id="rng-resp" min="0" max="7" value="4" oninput="updateSim()">
+                            <input type="range" id="rng-resp" min="0" max="7" value="4" oninput="updateSimulator()">
                             <div id="feed-resp" class="param-feedback">Standard. Les cibles profondes sonnent un peu plus faible.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Volume Fer</label><span id="val-iron" class="slider-val">3</span></div>
-                            <input type="range" id="rng-iron" min="0" max="5" value="3" oninput="updateSim()">
-                             <div id="feed-iron" class="param-feedback">Audio ON. Vous entendez le fer en grave.</div>
+                            <input type="range" id="rng-iron" min="0" max="5" value="3" oninput="updateSimulator()">
+                            <div id="feed-iron" class="param-feedback">Audio ON. Vous entendez le fer en grave.</div>
                         </div>
+                    </div>
+                </div>
 
-                         <label style="margin-top:20px;">Type Audio</label>
-                        <select id="sel-audio" onchange="updateSim()" style="margin-bottom:20px;">
-                            <option value="Pitch">🔊 Pitch (Classique & Percutant)</option>
-                            <option value="Square">📊 Square (Numérique/Net)</option>
-                            <option value="Morphing">🌊 Morphing (V4 Profondeur)</option>
-                            <option value="2-Tones">🎵 2-Tons (Séparation)</option>
-                            <option value="FullTones">🎹 Full Tones (Nuances riches)</option>
-                        </select>
-
-                        <!-- MORPHING OPTIONS (Hidden by default) -->
-                        <div id="div-morphing-options" style="display:none; margin-top:15px; border:1px solid var(--info); padding:10px; border-radius:6px; background:rgba(41, 182, 246, 0.05);">
-                            <label style="color:var(--info);">Type de Morphing</label>
-                            <select id="sel-morphing-type" onchange="updateSim()" style="background:var(--bg-input);">
-                                <option value="smooth">1. Smooth (Lissé - Anti-Fatigue)</option>
-                                <option value="pulse">2. Pulse (Impulsion - Profondeur)</option>
-                                <option value="smart">3. Smart (Filtré - Zone Polluée)</option>
-                                <option value="raw">4. Raw (Brut - Max Information)</option>
-                            </select>
-                            <div style="font-size:0.75rem; color:var(--text-dim); margin-top:5px;">
-                                <i>Le mode <b>Raw</b> offre le plus d'infos mais est bruyant.</i>
-                            </div>
-                        </div>
-                        
+                <div style="margin-top: 30px; padding: 20px; background: rgba(92, 139, 192, 0.05); border-radius: 8px;">
+                    <h4 style="color:var(--accent-blue); margin-bottom:15px;">📊 Profil de Performance (5D)</h4>
+                    <div class="radar-container">
+                        <canvas id="radarChart"></canvas>
                     </div>
                 </div>
 
                 <div id="sim-analysis" class="result-box"></div>
             </div>
-        </div>
 
-        <!-- TAB 4: EXPERT -->
-        <div id="expert" class="tab-content">
+            <!-- ADVANCED SETTINGS CARD (MOVED HERE) -->
+            <div class="card" style="border-left: 3px solid var(--info);">
+                <h2>🎛️ Réglages Avancés (Sol & Stabilité)</h2>
+                <div class="grid-2">
+                    <div>
+                        <h4 style="color:var(--accent-blue); margin-bottom:15px;">🎯 Sol & Stabilité</h4>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Ground Stabilizer</label><span id="val-stab" class="slider-val">2</span></div>
+                            <input type="range" id="rng-stab" min="0" max="3" value="2" oninput="updateAdvanced(); updateSimulator();">
+                            <div id="feed-stab" class="param-feedback">Standard pour minéralisé.</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--accent-blue); margin-bottom:15px;">🌍 Ground Grab</h4>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>GB Manual</label><span id="val-grab" class="slider-val">AUTO</span></div>
+                            <input type="range" id="rng-grab" min="60" max="90" value="90" oninput="updateAdvanced(); updateSimulator();">
+                            <div id="feed-grab" class="param-feedback">90 (Rejet par défaut).</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- AJOUT DU DIV MANQUANT POUR LE FEEDBACK AVANCE -->
+                <div id="advanced-feedback" class="result-box" style="margin-top:15px;"></div>
+            </div>
+
+            <!-- EXPERT V4 SECTION -->
             <div class="card">
-                <h2>🔥 Mode Expert : Multi-Processing V4</h2>
-                <p style="margin-bottom:20px; color:var(--text-dim)">Le V4 traite deux signaux. Ajustez l'écart pour maximiser la couverture.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>🔥 Mode Expert : Multi-Processing V4</h2>
+                    <span class="badge badge-risky">AVANCÉ</span>
+                </div>
+                <p style="margin-bottom:20px; color:var(--text-dim);">Le V4 permet de dissocier les traitements de signaux. Choisissez une stratégie pour prioriser les canaux.</p>
+
+                <!-- Processing Mode Selection -->
+                <div style="margin-bottom:25px; border:1px solid var(--accent-gold); padding:15px; border-radius:6px; background:rgba(212, 175, 55, 0.05);">
+                    <label style="color:var(--accent-gold); font-weight:bold; font-size:1rem;">📡 Type de Multi-Processing</label>
+                    <select id="sel-process-mode" onchange="updateExpert(); updateSimulator();" style="margin-top:8px;">
+                        <option value="fusion">1. Fusion Parallèle (Équilibré V1+V2)</option>
+                        <option value="depth">2. Priorité Profondeur (Boost V1)</option>
+                        <option value="sep">3. Priorité Séparation (Boost V2 / PWM)</option>
+                    </select>
+                    <div class="param-feedback" style="color:var(--text-main); margin-top:5px;">Définit comment le détecteur combine les deux voies de traitement.</div>
+                </div>
 
                 <div class="grid-2">
                     <div style="border:1px solid var(--accent-blue); padding:20px; border-radius:6px; background:rgba(92, 139, 192, 0.05);">
-                        <h3 style="color:var(--accent-blue); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">Voie 1 : Profondeur (Low)</h3>
+                        <h3 style="color:var(--accent-blue); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">📍 Voie 1 : Profondeur (Low)</h3>
                         <div class="slider-container">
                             <div class="slider-header"><label>Réactivité V1</label><span id="val-v1-reac" class="slider-val">1.0</span></div>
-                            <input type="range" id="rng-v1-reac" min="0" max="2.5" step="0.5" value="1" oninput="updateExpert(); updateSim();">
+                            <input type="range" id="rng-v1-reac" min="0" max="2.5" step="0.5" value="1" oninput="updateExpert(); updateSimulator();">
                             <div id="feed-v1-reac" class="param-feedback">Pénétration maximale.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Sensibilité V1</label><span id="val-v1-sens" class="slider-val">95</span></div>
-                            <input type="range" id="rng-v1-sens" min="80" max="99" value="95" oninput="updateExpert(); updateSim();">
-                            <div id="feed-v1-sens" class="param-feedback">Haute puissance.</div>
+                            <input type="range" id="rng-v1-sens" min="80" max="99" value="95" oninput="updateExpert(); updateSimulator();">
+                            <div id="feed-v1-sens" class="param-feedback">Haute puissance pour profondeur.</div>
                         </div>
                     </div>
 
                     <div style="border:1px solid var(--warning); padding:20px; border-radius:6px; background:rgba(255, 167, 38, 0.05);">
-                        <h3 style="color:var(--warning); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">Voie 2 : Séparation (High)</h3>
+                        <h3 style="color:var(--warning); text-transform:uppercase; font-size:1rem; margin-bottom:15px;">⚡ Voie 2 : Séparation (High)</h3>
                         <div class="slider-container">
                             <div class="slider-header"><label>Réactivité V2</label><span id="val-v2-reac" class="slider-val">3.5</span></div>
-                            <input type="range" id="rng-v2-reac" min="2.5" max="5" step="0.5" value="3.5" oninput="updateExpert(); updateSim();">
+                            <input type="range" id="rng-v2-reac" min="2.5" max="5" step="0.5" value="3.5" oninput="updateExpert(); updateSimulator();">
                             <div id="feed-v2-reac" class="param-feedback">Excellente séparation.</div>
                         </div>
                         <div class="slider-container">
                             <div class="slider-header"><label>Sensibilité V2</label><span id="val-v2-sens" class="slider-val">90</span></div>
-                            <input type="range" id="rng-v2-sens" min="80" max="99" value="90" oninput="updateExpert(); updateSim();">
-                             <div id="feed-v2-sens" class="param-feedback">Stabilité contrôlée.</div>
+                            <input type="range" id="rng-v2-sens" min="80" max="99" value="90" oninput="updateExpert(); updateSimulator();">
+                            <div id="feed-v2-sens" class="param-feedback">Stabilité contrôlée.</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top:20px; border:1px solid var(--border-light);">
-                    <h3 style="color:var(--text-dim); font-size:1rem;">Paramètres de Sol Avancés</h3>
-                    <div class="grid-3" style="margin-top:15px;">
-                        <div>
-                            <label>Ground Stabilizer</label>
-                            <select id="exp-stab" onchange="updateExpert()">
-                                <option value="0">0 - OFF (Risque faux signaux)</option>
-                                <option value="1">1 - Léger (Profondeur OK)</option>
-                                <option value="2" selected>2 - Standard (Minéralisé)</option>
-                                <option value="3">3 - Fort (Perte or fin)</option>
-                            </select>
-                            <div id="feed-stab" class="param-feedback" style="margin-top:5px;">Standard.</div>
-                        </div>
-                        <div>
-                            <label>Shift Freq (EMI)</label>
-                            <select>
-                                <option value="auto">AUTO (Scan permanent)</option>
-                                <option value="man">Manuel</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div id="expert-feedback"></div>
+                <div id="expert-feedback" class="result-box"></div>
             </div>
         </div>
 
-        <!-- TAB 5: MES PROFILS (NEW) -->
+        <!-- TERRAINS TAB -->
+        <div id="terrains" class="tab-content">
+            <div class="card">
+                <h2>🌍 Encyclopédie des Terrains</h2>
+                <p style="color:var(--text-dim); margin-bottom:20px;">Cliquez sur une carte pour voir la fiche technique détaillée.</p>
+                <div id="terrain-grid" class="grid-3"></div>
+            </div>
+            <div id="terrain-detail"></div>
+        </div>
+
+        <!-- PROFILES TAB -->
         <div id="profiles" class="tab-content">
             <div class="card">
                 <h2>💾 Sauvegarder Mes Configurations</h2>
                 <div class="grid-2">
                     <div>
                         <label>Nom du profil</label>
-                        <input type="text" id="profile-name" placeholder="Ex: Mon Champ Préféré">
+                        <input type="text" id="profile-name" placeholder="Ex: Prairie - Monnaies">
                     </div>
                     <div>
-                        <label>Action</label>
-                        <button class="btn btn-gold" style="width:100%" onclick="saveProfile()">Enregistrer les paramètres actuels</button>
+                        <label>Terrain / Objectif</label>
+                        <input type="text" id="profile-terrain" placeholder="Ex: Prairie minéralisée - Or fin">
                     </div>
                 </div>
-                <p style="font-size:0.8rem; color:var(--text-dim); margin-top:10px;">*Sauvegarde les valeurs actuelles des onglets Paramètres et Expert.</p>
+                <button class="btn btn-gold" style="width:100%; margin-top:12px;" onclick="saveProfile()">💾 Enregistrer Config Actuelle</button>
+                <p style="font-size:0.8rem; color:var(--text-dim); margin-top:10px;">*Sauvegarde tous les paramètres des onglets Simulateur et Expert.</p>
             </div>
+
             <div class="card">
-                <h2>Mes Profils Enregistrés</h2>
+                <h2>📋 Mes Profils Enregistrés</h2>
                 <div id="saved-profiles-list">
-                    <p style="color:var(--text-dim); text-align:center;">Aucun profil sauvegardé.</p>
+                    <p style="color:var(--text-dim); text-align:center; padding:20px;">Aucun profil sauvegardé.</p>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 6: OUTILS & ID (NEW) -->
+        <!-- TOOLS TAB -->
         <div id="tools" class="tab-content">
             <div class="card">
                 <h2>🆔 Guide Visuel des Indices (Target ID)</h2>
-                <p style="color:var(--text-dim); margin-bottom:15px;">Référence rapide pour identifier les cibles probables selon l'indice affiché.</p>
+                <p style="color:var(--text-dim); margin-bottom:15px;">Référence rapide pour identifier les cibles selon l'indice affiché.</p>
                 
-                <div style="position:relative; margin-bottom:30px;">
+                <div style="margin-bottom:30px;">
                     <div class="id-scale">
                         <div class="id-zone" style="width:10%; background:#ef5350;">FER</div>
                         <div class="id-zone" style="width:20%; background:#ffa726;">OR/ALU</div>
@@ -659,14 +483,14 @@
                 </div>
 
                 <div class="grid-2">
-                    <ul style="font-size:0.9rem; color:var(--text-main);">
-                        <li><strong style="color:#ef5350">00-09:</strong> Ferreux (Clous, fers à cheval)</li>
-                        <li><strong style="color:#ffa726">10-25:</strong> Aluminium fin, Petit Or, Petits bijoux</li>
-                        <li><strong style="color:#ffee58">26-50:</strong> Nickel, Cartouches, Bronze moyen</li>
+                    <ul style="font-size:0.9rem; color:var(--text-main); list-style-position: inside;">
+                        <li><strong style="color:#ef5350;">00-09:</strong> Ferreux (Clous, fers à cheval)</li>
+                        <li><strong style="color:#ffa726;">10-25:</strong> Aluminium, Petit Or, Bijoux</li>
+                        <li><strong style="color:#ffee58;">26-50:</strong> Nickel, Cartouches, Bronze</li>
                     </ul>
-                    <ul style="font-size:0.9rem; color:var(--text-main);">
-                        <li><strong style="color:#66bb6a">51-85:</strong> Cuivre, Monnaies Argent, Bronze large</li>
-                        <li><strong style="color:#29b6f6">86-99:</strong> Grosses masses Argent, Hot Rocks, Alu massif</li>
+                    <ul style="font-size:0.9rem; color:var(--text-main); list-style-position: inside;">
+                        <li><strong style="color:#66bb6a;">51-85:</strong> Cuivre, Monnaies, Bronze large</li>
+                        <li><strong style="color:#29b6f6;">86-99:</strong> Grosses masses, Argent, Hot Rocks</li>
                     </ul>
                 </div>
             </div>
@@ -683,949 +507,534 @@
                         <input type="number" id="log-depth" placeholder="20">
                     </div>
                 </div>
-                <div style="margin-top:10px;">
-                    <button class="btn btn-outline" style="width:100%" onclick="addLog()">Ajouter au journal</button>
-                </div>
-                
-                <div id="logbook-list" style="margin-top:20px;">
-                    <!-- Logs go here -->
-                </div>
+                <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="addLog()">➕ Ajouter au journal</button>
+                <div id="logbook-list" style="margin-top:20px;"></div>
             </div>
         </div>
 
-        <!-- TAB 8: FAQ -->
+        <!-- FAQ TAB -->
         <div id="faq" class="tab-content">
             <div class="card">
                 <h2>❓ Foire Aux Questions</h2>
                 <div id="faq-container"></div>
             </div>
         </div>
-
     </div>
 
-    <!-- JAVASCRIPT ENGINE -->
     <script>
-        // --- BASE DE DONNÉES COMPLÈTE ---
         const DATA = {
-            programs: {
-                general: { name: "General", desc: "Polyvalent, bon équilibre partout" },
-                sensitive: { name: "Sensitive", desc: "Profondeur maximale, terrain propre" },
-                fast: { name: "Fast", desc: "Vitesse de détection élevée, ferraille" },
-                gold: { name: "Gold", desc: "Or fin, petites cibles" },
-                relics: { name: "Relics", desc: "Objets anciens" },
-                beach: { name: "Beach", desc: "Plage, eau, sable, sel" },
-                deep: { name: "Deep", desc: "Grosses masses profondes" }
-            },
             objectives: {
-                monnaies: { label: "Monnaies Anciennes", program: ["General", "Sensitive"], sens: "93-95", react: "1-2", discri: "8-10", audio: "Square", conseil: "Priorisez la profondeur (Réac basse) et une audio nette (Square) pour identifier les monnaies profondes." },
-                or: { label: "Or & Bijoux", program: ["Gold"], sens: "94-97", react: "2.5-3", discri: "0-5", audio: "Morphing", conseil: "Sensibilité max requise. Ne discriminez pas trop (0-5) pour ne pas rater l'or fin." },
-                reliques: { label: "Objets / Reliques", program: ["Relics"], sens: "89-93", react: "2.5-3.5", discri: "8-12", audio: "2-Tones", conseil: "Bon équilibre profondeur/séparation. Le 2-Tons aide à vite trier le fer." },
-                profond: { label: "Masses Profondes", program: ["Deep", "Sensitive"], sens: "95-99", react: "0-1", discri: "-6 à 5", audio: "Morphing", conseil: "Réactivité 0 indispensable pour l'extrême profondeur. Balayage lent obligatoire." },
-                tout: { label: "Polyvalent", program: ["General"], sens: "92-94", react: "2", discri: "10", audio: "Square", conseil: "Le meilleur compromis pour débuter une zone inconnue." }
+                monnaies: { label: "Monnaies Anciennes", sens: 93, reac: 1.5, disc: 8, audio: "Square", conseil: "Priorisez la profondeur avec réactivité basse et audio nette." },
+                or: { label: "Or & Bijoux", sens: 96, reac: 2.5, disc: 2, audio: "Morphing", conseil: "Sensibilité maximale requise. Ne discriminez pas (0-5) pour ne pas rater l'or fin." },
+                reliques: { label: "Reliques & Militaria", sens: 90, reac: 2.5, disc: 10, audio: "2-Tones", conseil: "Bon équilibre profondeur/séparation. 2-Tones aide à trier le fer." },
+                profond: { label: "Masses Profondes", sens: 97, reac: 0, disc: 5, audio: "Morphing", conseil: "Réactivité 0 indispensable pour extrême profondeur. Balayage lent obligatoire." },
+                tout: { label: "Polyvalent", sens: 92, reac: 2, disc: 10, audio: "Square", conseil: "Meilleur compromis pour débuter une zone inconnue." }
             },
             terrains: {
-                prairie: {
-                    name: "🌾 Prairie / Champ Propre",
-                    min: "Basse (0-10)", poll: "Faible", depth: "50-70 cm",
-                    config: { sens: 95, reac: 1, disc: 8, freq: "FMF 4-45kHz", stab: 0, fer: 2 },
-                    experts: ["Réactivité 0-1 ABSOLUMENT (chaque cran = 2-3cm de profondeur)", "Sensibilité 95-99 possible (tester avant)", "Shift Freq AUTO si ligne électrique proche"],
-                    astuces: ["Balayez lentement pour laisser le temps au signal de monter."]
-                },
-                minéralisé: {
-                    name: "🔴 Sol Minéralisé (Rouge)",
-                    min: "Haute (60-90)", poll: "Moyenne", depth: "30-45 cm",
-                    config: { sens: 88, reac: 2.5, disc: 10, freq: "FMF 40kHz Max", stab: 2, fer: 2 },
-                    experts: ["Ground Stabilizer 2-3 ESSENTIEL", "Fréquence FMF Multi-High pour sortir les cibles du bruit de sol", "GRAB (pompage) régulier nécessaire"],
-                    astuces: ["Ne poussez pas la sensibilité au-delà de 90."]
-                },
-                pollué: {
-                    name: "🔩 Terrain Pollué (Ferraille)",
-                    min: "Moyenne", poll: "TRÈS HAUTE", depth: "25-40 cm",
-                    config: { sens: 87, reac: 3, disc: 10, freq: "FMF 24kHz Max", stab: 1, fer: 3 },
-                    experts: ["Réactivité 3+ OBLIGATOIRE", "Audio 2-Tones ou Pitch pour séparer", "Silencer à 1 ou 2 pour calmer le fer"],
-                    astuces: ["Écoutez les 'bavures' des signaux ferreux."]
-                },
-                plage: {
-                    name: "🏖️ Plage (Sable)",
-                    min: "Variable (Sel)", poll: "Alu/Languettes", depth: "35-50 cm",
-                    config: { sens: 92, reac: 2, disc: 15, freq: "FMF Salt", stab: 1, fer: 2 },
-                    experts: ["Mode BEACH indispensable (soustraction sel)", "GB (Effet de sol) souvent vers 23-27 sur sable mouillé", "Sable noir = Minéralisation extrême -> FMF Max"],
-                    astuces: ["Sable mouillé = meilleure conductivité que sec."]
-                },
-                eau: {
-                    name: "💧 Eau Douce",
-                    min: "Très basse", poll: "Faible", depth: "40-60 cm",
-                    config: { sens: 93, reac: 2, disc: 5, freq: "FMF 14/28 kHz", stab: 0, fer: 2 },
-                    experts: ["Discrimination basse (0-5) pour tout prendre", "Eau = isolant sonore, on peut monter la Sensibilité"],
-                    astuces: ["Attention à l'étanchéité du bouchon gris (Antenne)."]
-                }
+                prairie: { name: "🌾 Prairie / Champ Propre", depth: "50-70 cm", poll: "Faible", config: { sens: 95, reac: 1, disc: 8 }, tips: ["Réactivité 0-1 pour profondeur max", "Sensibilité 95-99 possible", "Balayez lentement"] },
+                minéralisé: { name: "🔴 Sol Minéralisé (Argile rouge)", depth: "30-45 cm", poll: "Moyenne", config: { sens: 88, reac: 2.5, disc: 10 }, tips: ["Ground Stabilizer 2-3 ESSENTIEL", "FMF Multi-High pour sortir cibles du bruit", "GRAB régulier nécessaire"] },
+                pollué: { name: "🔩 Terrain Pollué (Ferraille)", depth: "25-40 cm", poll: "TRÈS HAUTE", config: { sens: 87, reac: 3, disc: 10 }, tips: ["Réactivité 3+ OBLIGATOIRE", "Audio 2-Tones ou Pitch pour séparer", "Silencer 1-2 pour calmer le fer"] },
+                plage: { name: "🏖️ Plage (Sable)", depth: "35-50 cm", poll: "Alu/Sel", config: { sens: 92, reac: 2, disc: 15 }, tips: ["Mode BEACH indispensable", "GB vers 23-27 sur sable mouillé", "Sable noir = minéralisation extrême"] },
+                eau: { name: "💧 Eau Douce", depth: "40-60 cm", poll: "Faible", config: { sens: 93, reac: 2, disc: 5 }, tips: ["Discrimination basse (0-5)", "FMF 14/28 kHz optimal", "Balayage régulier et lent"] }
             },
             faq: [
-                {q: "C'est quoi le FMF ?", a: "Le Fast Multi Frequency est une technologie XP qui envoie des fréquences basses (4kHz) et hautes (45kHz) simultanément pour voir gros ET petit en même temps."},
-                {q: "Quelle sensibilité pour débuter ?", a: "Commencez à 93. Si stable, montez à 95. Si instable, descendez par paliers de 2 jusqu'à 85."},
-                {q: "Différence Monnaies vs Reliques ?", a: "Monnaies = cibles conductrices rondes (Audio net). Reliques = objets ferreux ou alliages (Audio baveux)."},
-                {q: "Qu'est-ce que le Multi-Processing ?", a: "C'est la capacité du Deus II V4 à traiter deux niveaux de réactivité simultanément (une voie pour le fond, une pour la surface)."},
-                {q: "Mon disque clignote vite ?", a: "C'est normal en mode veille ou recherche. S'il ne clignote plus, la batterie est vide."}
+                { q: "Quelle sensibilité pour prairie?", r: "93-95 pour meilleur équilibre. Au-delà = risque masquage des petites cibles." },
+                { q: "Réactivité 0 = profondeur max?", r: "Oui, mais très lent. Nécessite 30-50cm par coup. Idéal pour recherche statique." },
+                { q: "Comment fonctionne le V4?", r: "Deux signaux parallèles: Voie 1 pour profondeur (faible réac), Voie 2 pour séparation (haute réac)." },
+                { q: "Discrimination négative possible?", r: "Oui (-6 à +40). Négatif = accepte fer fin. Utile en terrain très propre." },
+                { q: "Morphing vs Square?", r: "Morphing = variable selon profondeur. Square = constant et net. Morphing meilleur pour profondeur." },
+                { q: "FMF Park pour zones polluées?", r: "Oui, idéal. Fréquence max 24kHz rejette bruits métalliques parasites." }
             ]
         };
 
-        // --- NAVIGATION ---
-        function setTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) event.currentTarget.classList.add('active');
-            
-            if(tabId === 'terrains') renderTerrains();
-            if(tabId === 'faq') renderFAQ();
-            if(tabId === 'params') updateSim();
-            if(tabId === 'expert') updateExpert();
-            if(tabId === 'profiles') renderProfiles();
-            if(tabId === 'tools') renderLogs();
+        let radarChart = null;
+        let wizardCalculatedConfig = null;
+
+        function toggleTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            const newTheme = theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
         }
 
-        // --- TERRAINS RENDER ---
-        function renderTerrains() {
-            const container = document.getElementById('terrain-grid');
-            if(container.innerHTML !== "") return; 
+        window.addEventListener('load', () => {
+            const theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            loadTerrainGrid();
+            loadFAQ();
+            loadProfilesList();
+            loadLogbook();
+            updateSimulator();
+            setTimeout(() => {
+                if(document.getElementById('radarChart')) initRadarChart();
+            }, 500);
+        });
 
-            for(const key in DATA.terrains) {
-                const t = DATA.terrains[key];
-                const card = document.createElement('div');
-                card.className = 'terrain-card';
-                card.innerHTML = `<h3>${t.name}</h3><p style="color:var(--text-dim); font-size:0.85rem;">${t.min} | ${t.depth}</p>`;
-                card.onclick = () => showTerrainDetail(key);
-                container.appendChild(card);
+        function setTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            
+            const target = document.getElementById(tabName);
+            if(target) target.classList.add('active');
+            
+            const btn = event ? event.currentTarget : document.querySelector(`.nav-btn[onclick="setTab('${tabName}')"]`);
+            if(btn) btn.classList.add('active');
+
+            if (tabName === 'config') {
+                setTimeout(() => {
+                   if (!radarChart) initRadarChart();
+                   else radarChart.update();
+                }, 100);
             }
+        }
+
+        function loadTerrainGrid() {
+            const grid = document.getElementById('terrain-grid');
+            grid.innerHTML = Object.keys(DATA.terrains).map(key => {
+                const t = DATA.terrains[key];
+                return `<div class="terrain-card" onclick="showTerrainDetail('${key}')">
+                    <h3>${t.name}</h3>
+                    <p><strong>Profondeur:</strong> ${t.depth}</p>
+                    <p><strong>Pollution:</strong> ${t.poll}</p>
+                    <p style="color:var(--accent-gold); font-size:0.85rem; margin-top:10px;">👆 Cliquez pour détails</p>
+                </div>`;
+            }).join('');
         }
 
         function showTerrainDetail(key) {
             const t = DATA.terrains[key];
-            const c = t.config;
-            const html = `
-            <div class="result-box" style="animation: fadeEffect 0.3s;">
-                <h3 style="color:var(--accent-gold); border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:15px;">${t.name} - CONFIGURATION DÉTAILLÉE</h3>
-                
+            const detail = document.getElementById('terrain-detail');
+            detail.innerHTML = `<div class="card" style="border-left: 4px solid var(--accent-gold);">
+                <h2>${t.name} - Fiche Technique</h2>
                 <div class="grid-2">
-                    <table>
-                        <tr><th>Réglage</th><th>Valeur</th></tr>
-                        <tr><td>Sensibilité</td><td>${c.sens}</td></tr>
-                        <tr><td>Réactivité</td><td>${c.reac}</td></tr>
-                        <tr><td>Discri</td><td>${c.disc}</td></tr>
-                        <tr><td>Audio</td><td>Square/Pitch</td></tr>
-                    </table>
-                    <table>
-                        <tr><th>Tech</th><th>Valeur</th></tr>
-                        <tr><td>Fréquence</td><td>${c.freq}</td></tr>
-                        <tr><td>Stabilizer</td><td>${c.stab}</td></tr>
-                        <tr><td>Vol Fer</td><td>${c.fer}</td></tr>
-                        <tr><td>Notch</td><td>00-00</td></tr>
-                    </table>
+                    <div>
+                        <h4 style="color:var(--accent-blue); margin-bottom:10px;">📊 Configuration Recommandée</h4>
+                        <p><strong>Sensibilité:</strong> ${t.config.sens}</p>
+                        <p><strong>Réactivité:</strong> ${t.config.reac}</p>
+                        <p><strong>Discrimination:</strong> ${t.config.disc}</p>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--accent-blue); margin-bottom:10px;">💡 Conseils Experts</h4>
+                        <ul>${t.tips.map(tip => `<li>• ${tip}</li>`).join('')}</ul>
+                    </div>
                 </div>
-
-                <h4 style="color:var(--accent-blue); margin-top:15px; margin-bottom:10px;">Avis des Experts XP</h4>
-                <ul>
-                    ${t.experts.map(e => `<li style="margin-bottom:5px; color:var(--text-main); list-style-position:inside;">${e}</li>`).join('')}
-                </ul>
+                <button class="btn btn-gold" style="width:100%; margin-top:15px;" onclick="applyTerrainConfig('${key}')">🚀 Appliquer cette config</button>
             </div>`;
-            document.getElementById('terrain-detail').innerHTML = html;
         }
 
-        // --- CALCULATION ENGINE (Shared) ---
-        function calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode, v1reac, v1sens, v2reac, v2sens, morphType) {
-            // 1. PUISSANCE (Depth)
-            let depthScore = ((sens - 60) * 1.5) + ((5 - reac) * 12); 
-            depthScore -= (sil * 4); 
-            if(audio === "Morphing") {
-                depthScore += 5;
-                if(morphType === "pulse") depthScore += 5; 
-            }
-            if(fmfMode === "deep") depthScore += 10; 
-            if(fmfMode === "sensitive") depthScore -= 5;
-            if(disc > 10) depthScore -= (disc/5); 
-            
-            // 2. SÉPARATION (Reactivity)
-            let sepScore = (reac * 20); 
-            if(sens > 95) sepScore -= 5;
-            if(audio === "Pitch" || audio === "2-Tones") sepScore += 5;
-            if(sil > 2) sepScore -= 10; 
-            if(audio === "Morphing" && morphType === "smart") sepScore += 5; 
-
-            // 3. FINESSE (Sensitivity - Tiny objects)
-            let fineScore = (sens - 75) * 4; 
-            if(reac >= 2.5) fineScore += 10; 
-            if(fmfMode === "sensitive") fineScore += 15; 
-            if(disc < 0) fineScore += 10; 
-
-            // 4. IDENTIFICATION (Discrimination - Gold vs Nail)
-            let idScore = 50;
-            if(audio === "FullTones") idScore += 25;
-            if(audio === "Pitch") idScore += 15;
-            if(audio === "Square") idScore += 10;
-            if(audio === "Morphing" && morphType === "raw") idScore += 15; 
-
-            if(iron > 0) idScore += 15; else idScore -= 20; 
-            if(bcaps > 0) idScore += 10; 
-            if(disc > 5 && disc < 20) idScore += 10; 
-
-            // 5. MASQUAGE
-            let maskScore = (sil * 15) + ((5-reac) * 10) + (bcaps * 5); 
-            if(iron === 0) maskScore += 25;
-            if(disc > 15) maskScore += (disc - 10);
-            if(notch > 0) maskScore += 15;
-
-            // Normalize
-            const normalize = (val) => Math.max(5, Math.min(100, val));
-            
-            return { 
-                depth: normalize(depthScore), 
-                sep: normalize(sepScore), 
-                fine: normalize(fineScore),
-                id: normalize(idScore),
-                mask: normalize(maskScore) 
-            };
+        function applyTerrainConfig(key) {
+            const t = DATA.terrains[key];
+            document.getElementById('rng-sens').value = t.config.sens;
+            document.getElementById('rng-reac').value = t.config.reac;
+            document.getElementById('rng-disc').value = t.config.disc;
+            setTab('config');
+            updateSimulator();
+            alert('✅ Configuration terrain appliquée!');
         }
 
-        // --- WIZARD LIVE UPDATE LOGIC ---
-        function updateWizardLive() {
-            // Read Base values from inputs 
-            const sens = parseInt(document.getElementById('wiz-rng-sens').value);
-            const reac = parseFloat(document.getElementById('wiz-rng-reac').value);
-            const disc = parseInt(document.getElementById('wiz-rng-disc').value);
+        function updateWizard() {
+            const terrainKey = document.getElementById('wiz-terrain').value;
+            const objKey = document.getElementById('wiz-obj').value;
             
-            // Read Advanced values from inputs
-            const sil = parseInt(document.getElementById('wiz-rng-sil').value);
-            const iron = parseInt(document.getElementById('wiz-rng-iron').value);
-            const resp = parseInt(document.getElementById('wiz-rng-resp').value);
-            const bcaps = parseInt(document.getElementById('wiz-rng-bcaps').value);
-            const audioType = document.getElementById('wiz-sel-audio').value; 
-
-            // Handle Morphing UI in Wizard
-            const morphOpts = document.getElementById('wiz-div-morphing-options');
-            if(audioType === 'Morphing') {
-                morphOpts.style.display = 'block';
-            } else {
-                morphOpts.style.display = 'none';
-            }
-            const morphType = document.getElementById('wiz-sel-morphing-type').value;
-            
-            const fmfMode = document.getElementById('wiz-sel-fmf').value; 
-            
-            // Read Expert values
-            const v1_reac = parseFloat(document.getElementById('wiz-rng-v1-reac').value);
-            const v1_sens = parseInt(document.getElementById('wiz-rng-v1-sens').value);
-            const v2_reac = parseFloat(document.getElementById('wiz-rng-v2-reac').value);
-            const v2_sens = parseInt(document.getElementById('wiz-rng-v2-sens').value);
-            const stab = parseInt(document.getElementById('wiz-sel-stab').value);
-
-
-            // Update display values next to sliders
-            document.getElementById('wiz-val-sens').textContent = sens;
-            document.getElementById('wiz-val-reac').textContent = reac;
-            document.getElementById('wiz-val-disc').textContent = disc;
-            document.getElementById('wiz-val-sil').textContent = sil;
-            document.getElementById('wiz-val-iron').textContent = iron;
-            document.getElementById('wiz-val-resp').textContent = resp;
-            document.getElementById('wiz-val-bcaps').textContent = bcaps;
-            
-            document.getElementById('wiz-val-v1-reac').textContent = v1_reac;
-            document.getElementById('wiz-val-v1-sens').textContent = v1_sens;
-            document.getElementById('wiz-val-v2-reac').textContent = v2_reac;
-            document.getElementById('wiz-val-v2-sens').textContent = v2_sens;
-
-            // Calculate Performance
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, 0, audioType, fmfMode, v1_reac, v1_sens, v2_reac, v2_sens, morphType); 
-
-            // Update Gauges
-            document.getElementById('wiz-bar-depth').style.width = scores.depth + "%";
-            document.getElementById('wiz-bar-sep').style.width = scores.sep + "%";
-            document.getElementById('wiz-bar-fine').style.width = scores.fine + "%";
-            document.getElementById('wiz-bar-id').style.width = scores.id + "%";
-            document.getElementById('wiz-bar-mask').style.width = scores.mask + "%";
-
-            // Provide Live Advice Feedback
-            const feedbackSens = getFeedback('sens', sens);
-            const feedbackReac = getFeedback('reac', reac);
-            const feedbackDisc = getFeedback('disc', disc);
-            const feedbackSil = getFeedback('sil', sil);
-            const feedbackIron = getFeedback('iron', iron);
-            const feedbackResp = getFeedback('resp', resp);
-            const feedbackBcaps = getFeedback('bcaps', bcaps);
-            
-            const feedbackV1Reac = getFeedback('v1reac', v1_reac);
-            const feedbackV1Sens = getFeedback('v1sens', v1_sens);
-            const feedbackV2Reac = getFeedback('v2reac', v2_reac);
-            const feedbackV2Sens = getFeedback('v2sens', v2_sens);
-            const feedbackStab = getFeedback('stab', stab);
-
-            function updateFeed(id, obj) {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.textContent = obj.text;
-                    el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
-                }
+            if (!terrainKey || !objKey) {
+                document.getElementById('wiz-result').innerHTML = '';
+                return;
             }
 
-            updateFeed('wiz-feed-sens', feedbackSens);
-            updateFeed('wiz-feed-reac', feedbackReac);
-            updateFeed('wiz-feed-disc', feedbackDisc);
-            updateFeed('wiz-feed-sil', feedbackSil);
-            updateFeed('wiz-feed-iron', feedbackIron);
-            updateFeed('wiz-feed-resp', feedbackResp);
-            updateFeed('wiz-feed-bcaps', feedbackBcaps);
-            
-            updateFeed('wiz-feed-v1-reac', feedbackV1Reac);
-            updateFeed('wiz-feed-v1-sens', feedbackV1Sens);
-            updateFeed('wiz-feed-v2-reac', feedbackV2Reac);
-            updateFeed('wiz-feed-v2-sens', feedbackV2Sens);
-            updateFeed('wiz-feed-stab', feedbackStab);
-        }
+            const tData = DATA.terrains[terrainKey];
+            const oData = DATA.objectives[objKey];
 
-        // --- WIZARD LOGIC ---
-        function runWizard() {
-            const tVal = document.getElementById('wiz-terrain').value;
-            const oVal = document.getElementById('wiz-obj').value;
-            if(!tVal || !oVal) return;
+            let recSens = oData.sens;
+            let recReac = oData.reac;
+            let recDisc = oData.disc;
+            let warnings = [];
 
-            const tData = DATA.terrains[tVal];
-            const oData = DATA.objectives[oVal];
-
-            // 1. DERIVE SETTINGS (Automatic Logic)
-            let sensVal = parseInt(oData.sens.substring(0, 2)); 
-            let reacVal = parseFloat(oData.react.substring(0, 3)); 
-            let discVal = parseInt(oData.discri.split('-')[0]); 
-            
-            // Advanced Defaults based on Context
-            let silencerVal = 1; 
-            if (tVal === 'pollué') silencerVal = 2;
-            if (oVal === 'profond') silencerVal = 0;
-
-            let ironVolVal = 3; 
-            if (tVal === 'pollué') ironVolVal = 3;
-
-            let audioRespVal = 4; 
-            if (tVal === 'minéralisé') audioRespVal = 3;
-            if (oVal === 'profond') audioRespVal = 5;
-
-            let bCapsVal = 0; 
-            if (tVal === 'pollué' || tVal === 'plage') bCapsVal = 2;
-            
-            // FMF Mode Default
-            let fmfModeVal = "general";
-            if(oVal === 'or') fmfModeVal = "sensitive";
-            if(oVal === 'profond') fmfModeVal = "deep";
-            if(tVal === 'pollué') fmfModeVal = "park";
-
-            
-            // Expert Defaults
-            let v1ReacVal = 1.0;
-            if (oVal === 'profond') v1ReacVal = 0.5;
-            
-            let v1SensVal = 95;
-            
-            let v2ReacVal = 3.0;
-            if (tVal === 'pollué') v2ReacVal = 4.0;
-            
-            let v2SensVal = 90;
-            
-            let stabVal = tData.config.stab;
-
-            let audioType = oData.audio;
-
-            // 2. GENERATE HTML
-            let synergyHtml = "";
-            let comboColor = "alert-info";
-
-            if (tVal === 'pollué' && oVal === 'monnaies') {
-                synergyHtml = "⚠️ <strong>Défi Technique :</strong> Trouver des monnaies dans la pollution est difficile.";
-                comboColor = "alert-warn";
-            } else if (tVal === 'minéralisé' && oVal === 'or') {
-                synergyHtml = "🚨 <strong>Attention Or/Sol :</strong> L'or natif sonne comme le sol. Utilisez le mode GOLD FIELD.";
-                comboColor = "alert-warn";
-            } else if (tVal === 'plage' && oVal === 'or') {
-                 synergyHtml = "✨ <strong>Or sur Plage :</strong> Ne discriminez pas l'alu, vous perdriez l'or.";
-                 comboColor = "alert-expert";
-            } else {
-                 synergyHtml = "✅ <strong>Configuration Standard :</strong> Pas de conflit majeur.";
+            if (terrainKey === 'minéralisé' && recSens > 88) {
+                recSens = 88;
+                warnings.push("Sensibilité réduite pour stabilité sol minéralisé.");
+            }
+            if (terrainKey === 'pollué' && recReac < 2.5) {
+                recReac = 3;
+                warnings.push("Réactivité augmentée pour séparer les cibles en milieu pollué.");
+            }
+            if (terrainKey === 'pollué' && recDisc < 6) {
+                recDisc = 10;
+                warnings.push("Discrimination augmentée pour éviter les petits ferreux.");
             }
 
-            let html = `
-            <div class="result-box" style="border-left: 4px solid var(--accent-gold);">
-                
-                <!-- GAUGES SECTION IN WIZARD -->
-                <div class="sticky-panel" style="top:0; position:sticky; margin-bottom:20px; box-shadow:none; border:1px solid var(--border-light); padding:10px;">
-                    <label style="margin-bottom:12px; color:var(--text-main); font-weight:bold; letter-spacing:1px; display:block; text-align:center; font-size:0.9rem;">PERFORMANCE THÉORIQUE</label>
-                    
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Puissance</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Surface</span>
-                            <div class="perf-track"><div id="wiz-bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
-                            <span class="range-label max">Profond</span>
-                        </div>
-                    </div>
+            wizardCalculatedConfig = { sens: recSens, reac: recReac, disc: recDisc, audio: oData.audio };
 
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Séparation</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Amalgame</span>
-                            <div class="perf-track"><div id="wiz-bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
-                            <span class="range-label max">Séparé</span>
-                        </div>
+            const html = `<div style="margin-top:20px;">
+                <div class="result-box" style="border: 2px solid var(--accent-gold);">
+                    <h3 style="color:var(--accent-gold); margin-bottom:10px;">⭐ Configuration Optimisée</h3>
+                    <p>Calcul pour: <strong>${tData.name}</strong> + <strong>${oData.label}</strong></p>
+                    <div style="background:rgba(0,0,0,0.2); padding:10px; margin:10px 0; border-radius:4px;">
+                        <p>Sensibilité: <strong style="color:${recSens !== oData.sens ? 'var(--warning)' : 'var(--success)'}">${recSens}</strong></p>
+                        <p>Réactivité: <strong style="color:${recReac !== oData.reac ? 'var(--warning)' : 'var(--success)'}">${recReac}</strong></p>
+                        <p>Discrimination: <strong>${recDisc}</strong></p>
                     </div>
-
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Sensibilité</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Standard</span>
-                            <div class="perf-track"><div id="wiz-bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
-                            <span class="range-label max">Extra Fin</span>
-                        </div>
-                    </div>
-
-                    <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title">Discrim.</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Tout Métal</span>
-                            <div class="perf-track"><div id="wiz-bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
-                            <span class="range-label max">Filtre Max</span>
-                        </div>
-                    </div>
-
-                     <div class="perf-bar-container">
-                        <div class="perf-label-group">
-                            <span class="perf-title" style="color:var(--danger)">Masquage</span>
-                        </div>
-                        <div class="perf-track-wrapper">
-                            <span class="range-label min">Faible</span>
-                            <div class="perf-track"><div id="wiz-bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
-                            <span class="range-label max" style="color:var(--danger)">Élevé</span>
-                        </div>
-                    </div>
+                    ${warnings.length > 0 ? `<div class="alert alert-warn" style="font-size:0.8rem; padding:8px;">⚠️ ${warnings.join('<br>')}</div>` : ''}
+                    <p style="font-style:italic; color:var(--text-dim); margin-top:5px;">💡 ${oData.conseil}</p>
                 </div>
-
-                <div class="grid-2">
-                    <div>
-                        <h4 style="color:var(--accent-blue); font-size:0.9rem; margin-bottom:5px; border-bottom:1px solid var(--border-light);">PARAMÈTRES DE BASE (INTERACTIF)</h4>
-                        <div style="font-size:1.1rem; font-weight:bold; color:var(--text-main); margin-bottom:10px;">${oData.program[0]}</div>
-                        
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Sensibilité</label><span id="wiz-val-sens" class="slider-val">${sensVal}</span></div>
-                            <input type="range" id="wiz-rng-sens" min="60" max="99" value="${sensVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-sens" class="param-feedback"></div>
-                        </div>
-
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Réactivité</label><span id="wiz-val-reac" class="slider-val">${reacVal}</span></div>
-                            <input type="range" id="wiz-rng-reac" min="0" max="5" step="0.5" value="${reacVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-reac" class="param-feedback"></div>
-                        </div>
-
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Discrimination</label><span id="wiz-val-disc" class="slider-val">${discVal}</span></div>
-                            <input type="range" id="wiz-rng-disc" min="-6" max="40" value="${discVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-disc" class="param-feedback"></div>
-                        </div>
-
-                        <div style="margin-top:20px; border:1px solid var(--fmf); padding:10px; border-radius:6px; background:rgba(179, 136, 255, 0.05);">
-                            <label style="color:var(--fmf); font-weight:bold;">Stratégie FMF</label>
-                            <select id="wiz-sel-fmf" onchange="updateWizardLive()" style="background:var(--bg-input);">
-                                <option value="general" ${fmfModeVal === 'general' ? 'selected' : ''}>FMF Standard (4-45kHz)</option>
-                                <option value="sensitive" ${fmfModeVal === 'sensitive' ? 'selected' : ''}>FMF Sensitive (40kHz Max)</option>
-                                <option value="deep" ${fmfModeVal === 'deep' ? 'selected' : ''}>FMF Deep (14kHz Max)</option>
-                                <option value="park" ${fmfModeVal === 'park' ? 'selected' : ''}>FMF Park (24kHz Max)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 style="color:var(--warning); font-size:0.9rem; margin-bottom:5px; border-bottom:1px solid var(--border-light);">PARAMÈTRES AVANCÉS (INTERACTIF)</h4>
-                        
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Silencieux</label><span id="wiz-val-sil" class="slider-val">${silencerVal}</span></div>
-                            <input type="range" id="wiz-rng-sil" min="0" max="5" value="${silencerVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-sil" class="param-feedback"></div>
-                        </div>
-
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Vol Fer</label><span id="wiz-val-iron" class="slider-val">${ironVolVal}</span></div>
-                            <input type="range" id="wiz-rng-iron" min="0" max="5" value="${ironVolVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-iron" class="param-feedback"></div>
-                        </div>
-
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>Rép. Audio</label><span id="wiz-val-resp" class="slider-val">${audioRespVal}</span></div>
-                            <input type="range" id="wiz-rng-resp" min="0" max="7" value="${audioRespVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-resp" class="param-feedback"></div>
-                        </div>
-
-                        <div class="slider-container" style="margin-bottom:15px;">
-                            <div class="slider-header"><label>B.Caps</label><span id="wiz-val-bcaps" class="slider-val">${bCapsVal}</span></div>
-                            <input type="range" id="wiz-rng-bcaps" min="0" max="5" value="${bCapsVal}" oninput="updateWizardLive()">
-                            <div id="wiz-feed-bcaps" class="param-feedback"></div>
-                        </div>
-
-                        <label style="margin-top:10px;">Audio Type</label>
-                        <select id="wiz-sel-audio" onchange="updateWizardLive()" style="margin-bottom:5px;">
-                            <option value="Pitch" ${audioType === 'Pitch' ? 'selected' : ''}>Pitch</option>
-                            <option value="Square" ${audioType === 'Square' ? 'selected' : ''}>Square</option>
-                            <option value="Morphing" ${audioType === 'Morphing' ? 'selected' : ''}>Morphing</option>
-                            <option value="2-Tones" ${audioType === '2-Tones' ? 'selected' : ''}>2-Tons</option>
-                        </select>
-
-                         <!-- MORPHING OPTIONS WIZARD (Hidden by default) -->
-                        <div id="wiz-div-morphing-options" style="display:none; margin-top:15px; border:1px solid var(--info); padding:10px; border-radius:6px; background:rgba(41, 182, 246, 0.05);">
-                            <label style="color:var(--info);">Type de Morphing</label>
-                            <select id="wiz-sel-morphing-type" onchange="updateWizardLive()" style="background:var(--bg-input);">
-                                <option value="smooth">1. Smooth</option>
-                                <option value="pulse">2. Pulse</option>
-                                <option value="smart">3. Smart</option>
-                                <option value="raw">4. Raw</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- SECTION ARCHITECTURE FMF (EXPERT) -->
-                <div style="margin-top:20px; background:rgba(179, 136, 255, 0.05); border:1px solid var(--fmf); border-radius:6px; padding:15px;">
-                     <h4 style="color:var(--fmf); font-size:0.9rem; margin-bottom:15px; border-bottom:1px solid var(--fmf); text-transform:uppercase;">ARCHITECTURE FMF (MULTI-PROCESSING)</h4>
-                     
-                     <div class="grid-2">
-                        <div>
-                            <div style="margin-bottom:5px; color:var(--text-dim); font-size:0.8rem; font-weight:bold;">VOIE 1 (PROFONDEUR)</div>
-                            <div class="slider-container" style="margin-bottom:10px;">
-                                <div class="slider-header"><label>Réac V1</label><span id="wiz-val-v1-reac" class="slider-val">${v1ReacVal}</span></div>
-                                <input type="range" id="wiz-rng-v1-reac" min="0" max="2.5" step="0.5" value="${v1ReacVal}" oninput="updateWizardLive()">
-                                <div id="wiz-feed-v1-reac" class="param-feedback"></div>
-                            </div>
-                            <div class="slider-container" style="margin-bottom:10px;">
-                                <div class="slider-header"><label>Sens V1</label><span id="wiz-val-v1-sens" class="slider-val">${v1SensVal}</span></div>
-                                <input type="range" id="wiz-rng-v1-sens" min="80" max="99" value="${v1SensVal}" oninput="updateWizardLive()">
-                                <div id="wiz-feed-v1-sens" class="param-feedback"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="margin-bottom:5px; color:var(--text-dim); font-size:0.8rem; font-weight:bold;">VOIE 2 (SÉPARATION)</div>
-                            <div class="slider-container" style="margin-bottom:10px;">
-                                <div class="slider-header"><label>Réac V2</label><span id="wiz-val-v2-reac" class="slider-val">${v2ReacVal}</span></div>
-                                <input type="range" id="wiz-rng-v2-reac" min="2.5" max="5" step="0.5" value="${v2ReacVal}" oninput="updateWizardLive()">
-                                <div id="wiz-feed-v2-reac" class="param-feedback"></div>
-                            </div>
-                            <div class="slider-container" style="margin-bottom:10px;">
-                                <div class="slider-header"><label>Sens V2</label><span id="wiz-val-v2-sens" class="slider-val">${v2SensVal}</span></div>
-                                <input type="range" id="wiz-rng-v2-sens" min="80" max="99" value="${v2SensVal}" oninput="updateWizardLive()">
-                                <div id="wiz-feed-v2-sens" class="param-feedback"></div>
-                            </div>
-                        </div>
-                     </div>
-                     
-                     <div style="margin-top:10px;">
-                        <label>Ground Stabilizer</label>
-                        <select id="wiz-sel-stab" onchange="updateWizardLive()">
-                            <option value="0" ${stabVal === 0 ? 'selected' : ''}>0 - OFF</option>
-                            <option value="1" ${stabVal === 1 ? 'selected' : ''}>1 - Léger</option>
-                            <option value="2" ${stabVal === 2 ? 'selected' : ''}>2 - Standard</option>
-                            <option value="3" ${stabVal === 3 ? 'selected' : ''}>3 - Fort</option>
-                        </select>
-                        <div id="wiz-feed-stab" class="param-feedback" style="margin-top:5px;"></div>
-                     </div>
-                </div>
-                
-                <div style="margin-top:15px;">
-                     <div class="alert ${comboColor}" style="margin-bottom:10px;">${synergyHtml}</div>
-                     <div class="alert alert-expert">💡 <strong>Conseil :</strong> ${oData.conseil}</div>
-                </div>
+                <button class="btn btn-gold" style="width:100%; margin-top:15px;" onclick="applyWizardCalculated()">🚀 Appliquer cette configuration</button>
             </div>`;
             document.getElementById('wiz-result').innerHTML = html;
+        }
+
+        function applyWizardCalculated() {
+            if (!wizardCalculatedConfig) return;
+            document.getElementById('rng-sens').value = wizardCalculatedConfig.sens;
+            document.getElementById('rng-reac').value = wizardCalculatedConfig.reac;
+            document.getElementById('rng-disc').value = wizardCalculatedConfig.disc;
             
-            // Trigger calculation immediately to set bars
-            setTimeout(() => updateWizardLive(), 50);
+            const audioSelect = document.getElementById('sel-audio');
+            audioSelect.value = wizardCalculatedConfig.audio;
+            if(!audioSelect.value) audioSelect.value = "Square"; 
+
+            setTab('config');
+            updateSimulator();
+            document.querySelector('.sticky-panel').scrollIntoView({behavior: 'smooth'});
+            alert('✅ Configuration optimisée appliquée!');
         }
 
-        // --- TERRAINS RENDER ---
-        function renderTerrains() {
-            const container = document.getElementById('terrain-grid');
-            if(container.innerHTML !== "") return; 
-
-            for(const key in DATA.terrains) {
-                const t = DATA.terrains[key];
-                const card = document.createElement('div');
-                card.className = 'terrain-card';
-                card.innerHTML = `<h3>${t.name}</h3><p style="color:var(--text-dim); font-size:0.85rem;">${t.min} | ${t.depth}</p>`;
-                card.onclick = () => showTerrainDetail(key);
-                container.appendChild(card);
-            }
-        }
-
-        function showTerrainDetail(key) {
-            const t = DATA.terrains[key];
-            const c = t.config;
-            const html = `
-            <div class="result-box" style="animation: fadeEffect 0.3s;">
-                <h3 style="color:var(--accent-gold); border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:15px;">${t.name} - CONFIGURATION DÉTAILLÉE</h3>
-                
-                <div class="grid-2">
-                    <table>
-                        <tr><th>Réglage</th><th>Valeur</th></tr>
-                        <tr><td>Sensibilité</td><td>${c.sens}</td></tr>
-                        <tr><td>Réactivité</td><td>${c.reac}</td></tr>
-                        <tr><td>Discri</td><td>${c.disc}</td></tr>
-                        <tr><td>Audio</td><td>Square/Pitch</td></tr>
-                    </table>
-                    <table>
-                        <tr><th>Tech</th><th>Valeur</th></tr>
-                        <tr><td>Fréquence</td><td>${c.freq}</td></tr>
-                        <tr><td>Stabilizer</td><td>${c.stab}</td></tr>
-                        <tr><td>Vol Fer</td><td>${c.fer}</td></tr>
-                        <tr><td>Notch</td><td>00-00</td></tr>
-                    </table>
-                </div>
-
-                <h4 style="color:var(--accent-blue); margin-top:15px; margin-bottom:10px;">Avis des Experts XP</h4>
-                <ul>
-                    ${t.experts.map(e => `<li style="margin-bottom:5px; color:var(--text-main); list-style-position:inside;">${e}</li>`).join('')}
-                </ul>
-            </div>`;
-            document.getElementById('terrain-detail').innerHTML = html;
-        }
-
-        // --- SIMULATOR LOGIC WITH ADVANCED FEEDBACK ---
-        function getFeedback(type, val) {
-            if(type === 'sens') {
-                if(val < 85) return {text: "Réduit drastiquement les faux signaux (sol minéralisé/EMI).", color: "good"};
-                if(val > 96) return {text: "Gain profondeur extrême, mais risque d'instabilité important.", color: "warn"};
-                return {text: "Zone optimale. Bon équilibre puissance/stabilité.", color: "good"};
-            }
-            if(type === 'reac') {
-                if(val <= 1) return {text: "Profondeur MAX. Balayage lent obligatoire. Masquage ferreux fort.", color: "good"};
-                if(val >= 3) return {text: "Sniper. Sépare les cibles collées aux ferreux. Perte de profondeur.", color: "warn"};
-                return {text: "Standard. Bon compromis tout-terrain.", color: "good"};
-            }
-            if(type === 'disc') {
-                if(val < 0) return {text: "Tous métaux. Utile pour entendre le sol et les céramiques.", color: "good"};
-                if(val > 10) return {text: "Attention : risque de rejeter de l'or fin ou monnaies sur la tranche.", color: "warn"};
-                return {text: "Rejet classique des ferreux.", color: "good"};
-            }
-            if(type === 'resp') {
-                if(val <= 3) return {text: "Les cibles profondes sonnent faiblement. Bonne info de distance.", color: "good"};
-                if(val >= 6) return {text: "Sons saturés. Tout sonne fort (même profond). Perte de nuance.", color: "warn"};
-                return {text: "Standard. Amplifie légèrement les sons lointains.", color: "good"};
-            }
-            if(type === 'sil') {
-                if(val >= 3) return {text: "Attention : Masque fortement les bonnes cibles proches des ferreux.", color: "warn"};
-                return {text: "Filtre les craquements ferreux.", color: "good"};
-            }
-            if(type === 'iron') {
-                if(val == 0) return {text: "Silence total sur ferreux. Risque de creuser sur gros fer (sans l'entendre).", color: "warn"};
-                return {text: "Audio ON. Vous entendez le fer en grave.", color: "good"};
-            }
-            if(type === 'bcaps') {
-                if(val == 0) return {text: "Filtre désactivé. Les capsules d'acier sonneront.", color: "good"};
-                if(val >= 4) return {text: "Rejet agressif. Peut affecter certaines grosses monnaies.", color: "warn"};
-                return {text: "Rejet efficace des capsules modernes.", color: "good"};
-            }
-             if(type === 'notch') {
-                if(val == 0) return {text: "Aucune fréquence rejetée spécifiquement.", color: "good"};
-                return {text: `Rejet spécifique de la zone ${val}-${parseInt(val)+6}.`, color: "good"};
-            }
+        // --- CORE SIMULATION LOGIC ---
+        function calculatePerformance() {
+            // Get base standard values
+            let sens = parseFloat(document.getElementById('rng-sens').value);
+            let reac = parseFloat(document.getElementById('rng-reac').value);
             
-            // FEEDBACK MODE EXPERT (V1/V2/STAB)
-             if(type === 'v1reac') {
-                if(val <= 1) return {text: "Parfait pour une voie Profondeur.", color: "good"};
-                return {text: "Trop élevé pour une voie Profondeur. Perte de l'avantage V4.", color: "warn"};
+            // EXPERT PROCESSING LOGIC:
+            // This section overrides or adjusts base sens/reac based on Expert V1/V2 settings if needed.
+            const processMode = document.getElementById('sel-process-mode').value;
+            const v1Reac = parseFloat(document.getElementById('rng-v1-reac').value);
+            const v1Sens = parseFloat(document.getElementById('rng-v1-sens').value);
+            const v2Reac = parseFloat(document.getElementById('rng-v2-reac').value);
+            const v2Sens = parseFloat(document.getElementById('rng-v2-sens').value);
+
+            // Applying Multi-Processing Weights
+            if (processMode === 'fusion') {
+                // Balanced: Average of V1 (Low) and V2 (High) settings
+                sens = (sens + v1Sens + v2Sens) / 3; 
+                reac = (reac + v1Reac + v2Reac) / 3;
+            } else if (processMode === 'depth') {
+                // Depth Priority: V1 is dominant for sensitivity
+                sens = (v1Sens * 0.7) + (sens * 0.3);
+                reac = (v1Reac * 0.7) + (reac * 0.3);
+            } else if (processMode === 'sep') {
+                // Separation Priority: V2 is dominant for reactivity
+                sens = (v2Sens * 0.6) + (sens * 0.4);
+                reac = (v2Reac * 0.8) + (reac * 0.2); // Reactivity leans heavily on V2
             }
-             if(type === 'v1sens') {
-                if(val >= 95) return {text: "Haute puissance. Idéal si le sol le permet.", color: "good"};
-                return {text: "Un peu faible pour une voie Profondeur.", color: "good"};
-            }
-             if(type === 'v2reac') {
-                if(val >= 3) return {text: "Excellente séparation dans le fer.", color: "good"};
-                return {text: "Trop lent pour une voie Séparation.", color: "warn"};
-            }
-             if(type === 'v2sens') {
-                if(val <= 92) return {text: "Stable. Évite la cacophonie.", color: "good"};
-                return {text: "Risque de bruit excessif avec haute réactivité.", color: "warn"};
-            }
-             if(type === 'stab') {
-                if(val <= 1) return {text: "Léger. Préserve les petites cibles.", color: "good"};
-                return {text: "Fort. Stabilise le sol mais masque l'or fin.", color: "warn"};
-            }
+
+            const disc = parseFloat(document.getElementById('rng-disc').value);
+            const audioResp = parseFloat(document.getElementById('rng-resp').value);
+            const silencer = parseFloat(document.getElementById('rng-sil').value);
+            const ironVol = parseFloat(document.getElementById('rng-iron').value);
             
-            return {text:"", color:""};
+            const stabilizer = parseFloat(document.getElementById('rng-stab').value);
+            // const grab = parseFloat(document.getElementById('rng-grab').value); // Used for future expansion
+
+            // --- 1. Profondeur ---
+            let depth = 50 + (sens - 90) * 2 - (reac * 5) + (audioResp * 2);
+            if (stabilizer > 2) depth -= 5;
+            
+            // --- 2. Masquage ---
+            let masking = 20 + (disc * 0.5) + (silencer * 5) - (reac * 8);
+            if (ironVol === 0) masking += 10; 
+
+            // --- 3. Séparation ---
+            let separation = (reac / 5) * 100 + (disc > 5 ? 5 : 0);
+
+            // --- 4. Finesse ---
+            let finesse = ((sens - 70) / 29) * 100;
+            if (document.getElementById('sel-fmf').value === 'sensitive') finesse += 15;
+
+            // --- 5. ID (Stabilité visuelle) ---
+            let id = 80 - (sens > 95 ? (sens - 95) * 5 : 0) + (stabilizer * 5);
+
+            // --- MORPHING MODE IMPACT ---
+            const audioType = document.getElementById('sel-audio').value;
+            if (audioType === 'Morphing') {
+                const morphMode = document.getElementById('sel-morphing-mode').value;
+                if (morphMode == '1') { depth += 5; id -= 5; } 
+                if (morphMode == '2') { separation += 5; depth -= 5; }
+                if (morphMode == '3') { depth += 10; masking += 10; } 
+                if (morphMode == '4') { separation += 10; id += 5; } 
+            }
+
+            return { 
+                depth: Math.max(0, Math.min(100, depth)), 
+                masking: Math.max(0, Math.min(100, masking)), 
+                separation: Math.max(0, Math.min(100, separation)), 
+                finesse: Math.max(0, Math.min(100, finesse)), 
+                id: Math.max(0, Math.min(100, id)) 
+            };
         }
 
-        function updateSim() {
-            const sens = parseInt(document.getElementById('rng-sens').value);
+        function updateSimulator() {
+            const sens = parseFloat(document.getElementById('rng-sens').value);
             const reac = parseFloat(document.getElementById('rng-reac').value);
-            const disc = parseInt(document.getElementById('rng-disc').value);
-            const iron = parseInt(document.getElementById('rng-iron').value);
-            const resp = parseInt(document.getElementById('rng-resp').value);
-            const sil = parseInt(document.getElementById('rng-sil').value);
-            const bcaps = parseInt(document.getElementById('rng-bcaps').value);
-            const notch = parseInt(document.getElementById('rng-notch').value);
-            
-            const audio = document.getElementById('sel-audio').value;
+            const disc = parseFloat(document.getElementById('rng-disc').value);
+            const sil = document.getElementById('rng-sil').value;
+            const iron = document.getElementById('rng-iron').value;
+            const bcaps = document.getElementById('rng-bcaps').value;
+            const notch = document.getElementById('rng-notch').value;
+            const audioType = document.getElementById('sel-audio').value;
 
-            // Update Values Display
-            document.getElementById('val-sens').innerText = sens;
-            document.getElementById('val-reac').innerText = reac;
-            document.getElementById('val-disc').innerText = disc;
-            document.getElementById('val-iron').innerText = iron;
-            document.getElementById('val-resp').innerText = resp;
-            document.getElementById('val-sil').innerText = sil;
-            document.getElementById('val-bcaps').innerText = bcaps;
-            document.getElementById('val-notch').innerText = notch > 0 ? notch + "-" + (notch+6) : "OFF";
-            
-            // Show/Hide Morphing Options
-            const morphOpts = document.getElementById('div-morphing-options');
-            if(audio === "Morphing") {
-                morphOpts.style.display = 'block';
+            // Gestion Affichage Morphing
+            const morphContainer = document.getElementById('morphing-config');
+            if (audioType === 'Morphing') {
+                morphContainer.style.display = 'block';
             } else {
-                morphOpts.style.display = 'none';
-            }
-            const morphType = document.getElementById('sel-morphing-type').value;
-
-            // Read Expert values from expert tab (for simulation fusion)
-            // Note: Since elements are on another tab but in same DOM, we can read them.
-            const v1_reac = parseFloat(document.getElementById('rng-v1-reac').value);
-            const v1_sens = parseInt(document.getElementById('rng-v1-sens').value);
-            const v2_reac = parseFloat(document.getElementById('rng-v2-reac').value);
-            const v2_sens = parseInt(document.getElementById('rng-v2-sens').value);
-
-
-            // Update Feedback Text
-            const fbSens = getFeedback('sens', sens);
-            const fbReac = getFeedback('reac', reac);
-            const fbDisc = getFeedback('disc', disc);
-            const fbResp = getFeedback('resp', resp);
-            const fbSil = getFeedback('sil', sil);
-            const fbIron = getFeedback('iron', iron);
-            const fbBcaps = getFeedback('bcaps', bcaps);
-            const fbNotch = getFeedback('notch', notch);
-
-            function setFb(id, obj) {
-                const el = document.getElementById(id);
-                el.innerText = obj.text;
-                el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
+                morphContainer.style.display = 'none';
             }
 
-            setFb('feed-sens', fbSens);
-            setFb('feed-reac', fbReac);
-            setFb('feed-disc', fbDisc);
-            setFb('feed-resp', fbResp);
-            setFb('feed-sil', fbSil);
-            setFb('feed-iron', fbIron);
-            setFb('feed-bcaps', fbBcaps);
-            setFb('feed-notch', fbNotch);
+            document.getElementById('val-sens').textContent = sens;
+            document.getElementById('val-reac').textContent = reac.toFixed(1);
+            document.getElementById('val-disc').textContent = disc;
+            document.getElementById('val-sil').textContent = sil;
+            document.getElementById('val-iron').textContent = iron;
+            document.getElementById('val-audio').textContent = audioType;
+            document.getElementById('val-bcaps').textContent = bcaps;
+            document.getElementById('val-notch').textContent = notch == 0 ? 'OFF' : notch + ' Hz';
 
-            // CALCULATE GAUGES USING SHARED ENGINE
-            const fmfMode = document.getElementById('sel-fmf').value;
-            const scores = calculatePerformance(sens, reac, disc, iron, resp, sil, bcaps, notch, audio, fmfMode, v1_reac, v1_sens, v2_reac, v2_sens, morphType);
-
-            // Render Bars
-            document.getElementById('bar-depth').style.width = scores.depth + "%";
-            document.getElementById('bar-sep').style.width = scores.sep + "%";
-            document.getElementById('bar-fine').style.width = scores.fine + "%";
-            document.getElementById('bar-id').style.width = scores.id + "%";
-            document.getElementById('bar-mask').style.width = scores.mask + "%";
-
-            // --- ANALYSE TEXTUELLE ---
-            let analysis = `<h4 style="color:var(--accent-gold);">Analyse de la configuration</h4>`;
+            const perf = calculatePerformance();
             
-            // Warnings Iron Mask
-            if(iron === 0) {
-                 analysis += `<p class="alert alert-warn">🔇 <strong>Danger "Volume Fer 0" :</strong> Vous n'entendez pas la pollution ferreuse. En terrain pollué, vous allez subir un masquage silencieux important. Recommandé : Vol Fer à 2 ou 3.</p>`;
+            document.getElementById('bar-depth').style.width = perf.depth + '%';
+            document.getElementById('bar-sep').style.width = perf.separation + '%';
+            document.getElementById('bar-fine').style.width = perf.finesse + '%';
+            document.getElementById('bar-id').style.width = perf.id + '%';
+            document.getElementById('bar-mask').style.width = perf.masking + '%';
+
+            // Feedbacks
+            const feedSens = sens < 80 ? 'Faible' : sens < 90 ? 'Bon' : sens < 95 ? 'Agressif' : 'Très agressif';
+            document.getElementById('feed-sens').textContent = feedSens + (sens > 96 ? ' ⚠️ Risque masquage' : '');
+            document.getElementById('feed-sens').className = 'param-feedback ' + (sens > 96 ? 'feedback-warn' : 'feedback-good');
+
+            const feedReac = reac === 0 ? 'Max puissance - Balayage très lent' : reac < 1.5 ? 'Profondeur max' : reac < 3 ? 'Bon équilibre' : 'Vitesse surface';
+            document.getElementById('feed-reac').textContent = feedReac;
+
+            const perte = disc * 1.2;
+            document.getElementById('feed-disc').textContent = `Perte Or estimée: ~${perte.toFixed(1)}%`;
+            document.getElementById('feed-disc').className = 'param-feedback ' + (perte > 20 ? 'feedback-warn' : 'feedback-good');
+
+            // Morphing Feedback
+            if (audioType === 'Morphing') {
+                const mm = document.getElementById('sel-morphing-mode').value;
+                const mTxt = mm==1?"Profondeur pure":mm==2?"Nettoyage audio":mm==3?"Boost ultra-finesse": "Polyvalent";
+                document.getElementById('feed-morphing-sub').textContent = `Courbe active : ${mTxt}`;
             }
 
-            // Warnings Audio Response
-            if(resp >= 6) {
-                analysis += `<p class="alert alert-warn">🔊 <strong>Saturation Audio :</strong> Avec une Réponse Audio à ${resp}, les cibles de surface et profondes sonnent pareil. Vous perdez la notion de distance/profondeur.</p>`;
-            }
+            document.getElementById('feed-sil').textContent = 'Silencer ' + (sil == 0 ? 'OFF' : 'à ' + sil);
+            document.getElementById('feed-iron').textContent = 'Volume Fer ' + (iron == 0 ? 'MUET' : iron);
+            document.getElementById('feed-bcaps').textContent = bcaps == 0 ? 'Désactivé' : 'Actif à ' + bcaps;
+            document.getElementById('feed-notch').textContent = notch == 0 ? 'Aucune fréquence rejetée' : 'Rejet à ' + notch + ' Hz';
 
-            // Mode Logic
-            if(sens >= 95 && reac <= 1) {
-                analysis += `<p class="alert alert-expert">🚀 <strong>Mode Turbo Profondeur :</strong> Excellent pour terrain propre. Attention aux faux signaux sur sol minéralisé.</p>`;
-            } else if (reac >= 3) {
-                 analysis += `<p class="alert alert-warn">⚡ <strong>Mode Snipper :</strong> Séparation extrême pour zones polluées (clous). Vous perdez environ ${(reac*5)}% de profondeur.</p>`;
-            } else {
-                 analysis += `<p class="alert alert-info">⚖️ <strong>Mode Équilibré :</strong> Bon compromis pour la prospection générale.</p>`;
-            }
-            
-            if(notch > 0) {
-                 analysis += `<p class="alert alert-info">🎯 <strong>Notch Actif :</strong> Vous rejetez une fenêtre de cibles. Utile pour les tirettes d'alu, mais risqué pour certains bijoux.</p>`;
-            }
-
+            const analysis = `<strong>📊 Indice Puissance:</strong> <strong style="color:var(--accent-gold);">${perf.depth.toFixed(0)}/100</strong><br/>
+                <strong>Masquage:</strong> <strong>${perf.masking.toFixed(1)}%</strong> ${perf.masking > 60 ? '⚠️ Risque cibles manquées' : '✅ Acceptable'}<br/>
+                <strong>Séparation:</strong> <strong>${perf.separation.toFixed(1)}%</strong>`;
             document.getElementById('sim-analysis').innerHTML = analysis;
+
+            updateRadarChart();
         }
 
-        // --- EXPERT LOGIC ---
         function updateExpert() {
-            const r1 = document.getElementById('rng-v1-reac').value;
-            const s1 = document.getElementById('rng-v1-sens').value;
-            const r2 = document.getElementById('rng-v2-reac').value;
-            const s2 = document.getElementById('rng-v2-sens').value;
-            const stab = document.getElementById('exp-stab').value;
+            const v1Reac = parseFloat(document.getElementById('rng-v1-reac').value);
+            const v1Sens = parseFloat(document.getElementById('rng-v1-sens').value);
+            const v2Reac = parseFloat(document.getElementById('rng-v2-reac').value);
+            const v2Sens = parseFloat(document.getElementById('rng-v2-sens').value);
 
-            document.getElementById('val-v1-reac').textContent = r1;
-            document.getElementById('val-v1-sens').textContent = s1;
-            document.getElementById('val-v2-reac').textContent = r2;
-            document.getElementById('val-v2-sens').textContent = s2;
+            document.getElementById('val-v1-reac').textContent = v1Reac.toFixed(1);
+            document.getElementById('val-v1-sens').textContent = v1Sens;
+            document.getElementById('val-v2-reac').textContent = v2Reac.toFixed(1);
+            document.getElementById('val-v2-sens').textContent = v2Sens;
 
-             // Update Feedback Text for Expert
-            function setFb(id, obj) {
-                const el = document.getElementById(id);
-                el.innerText = obj.text;
-                el.className = "param-feedback " + (obj.color === 'warn' ? 'feedback-warn' : 'feedback-good');
-            }
-            setFb('feed-v1-reac', getFeedback('v1reac', r1));
-            setFb('feed-v1-sens', getFeedback('v1sens', s1));
-            setFb('feed-v2-reac', getFeedback('v2reac', r2));
-            setFb('feed-v2-sens', getFeedback('v2sens', s2));
-            setFb('feed-stab', getFeedback('stab', stab));
+            const v1Depth = 50 - (v1Reac * 3) - ((100 - v1Sens) * 0.1);
+            const v2Sep = (v2Reac / 5) * 100;
 
+            const gap = v2Reac - v1Reac;
+            const coverage = gap > 2 ? '✅ Couverture maximale' : gap > 1 ? '⚠️ Bon écart' : '❌ Écart trop faible';
 
-            let fb = `<div class="result-box">`;
-            fb += `<h4 style="color:var(--text-main); margin-bottom:10px;">État du Multi-Processing</h4>`;
-            
-            const delta = r2 - r1;
-            if(delta >= 2.5) {
-                fb += `<div class="alert alert-success">✅ <strong>Couverture Totale :</strong> L'écart de réactivité est idéal. V1 attrape le fond, V2 nettoie la surface.</div>`;
-            } else if (delta < 1) {
-                fb += `<div class="alert alert-warn">⚠️ <strong>Redondance :</strong> Les deux voies sont trop proches. Écartez les réactivités pour bénéficier du V4.</div>`;
-            }
-
-            if(stab > 1) {
-                fb += `<div style="font-size:0.9rem; color:var(--text-dim); margin-top:5px;">Note: Avec un Stabilizer à ${stab}, vous sacrifiez un peu de sensibilité aux petites cibles (or fin).</div>`;
-            }
-            fb += `</div>`;
-            document.getElementById('expert-feedback').innerHTML = fb;
+            document.getElementById('expert-feedback').innerHTML = `<strong>V1 Profondeur:</strong> ${v1Depth.toFixed(1)} (index) | <strong>V2 Séparation:</strong> ${v2Sep.toFixed(1)}%<br/>
+                <strong>Écart réactivité:</strong> ${gap.toFixed(1)} - ${coverage}`;
         }
 
-        // --- SAVE PROFILE LOGIC (PERSISTENCE) ---
+        function updateAdvanced() {
+            const stab = document.getElementById('rng-stab').value;
+            const grab = document.getElementById('rng-grab').value;
+
+            document.getElementById('val-stab').textContent = stab;
+            document.getElementById('val-grab').textContent = grab == 0 ? 'AUTO' : grab + ' GB';
+
+            const stabTxt = stab == 0 ? 'OFF (Risque faux signaux)' : stab == 1 ? 'Léger' : stab == 2 ? 'Standard' : 'Fort (Perte or fin)';
+            document.getElementById('feed-stab').textContent = stabTxt;
+            document.getElementById('feed-grab').textContent = grab == 0 ? 'Mode AUTO (scan permanent)' : `GB Manuel: ${grab}`;
+
+            const analysis = `<strong>🎛️ Tuning Avancé:</strong> Stabilizer ${stabTxt} | Ground Grab ${grab == 0 ? 'AUTO' : grab}`;
+            
+            // Correction de l'erreur: s'assurer que l'élément existe avant d'écrire
+            const feedbackEl = document.getElementById('advanced-feedback');
+            if (feedbackEl) {
+                feedbackEl.innerHTML = analysis;
+            }
+        }
+
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart');
+            if (!ctx) return;
+            
+            if (radarChart) {
+                radarChart.destroy();
+            }
+
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: { 
+                    labels: ['Puissance', 'Séparation', 'Finesse', 'ID (Stabilité)', 'Zéro Masquage'], 
+                    datasets: [{ 
+                        label: 'Performance Actuelle', 
+                        data: [50, 50, 50, 50, 50],
+                        borderColor: '#d4af37', 
+                        backgroundColor: 'rgba(212, 175, 55, 0.15)', 
+                        borderWidth: 2, 
+                        pointBackgroundColor: '#d4af37',
+                        fill: true
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { labels: { color: '#e0e6ed' } } }, 
+                    scales: { r: { beginAtZero: true, max: 100, grid: { color: '#2d333d' }, ticks: { display: false } } } 
+                }
+            });
+            updateRadarChart();
+        }
+
+        function updateRadarChart() {
+            if (!radarChart) return;
+            const perf = calculatePerformance();
+            radarChart.data.datasets[0].data = [perf.depth, perf.separation, perf.finesse, perf.id, 100 - perf.masking];
+            radarChart.update();
+        }
+
+        function loadFAQ() {
+            const container = document.getElementById('faq-container');
+            container.innerHTML = DATA.faq.map(item => `<div class="faq-item">
+                <strong>Q: ${item.q}</strong>
+                <p style="margin-top:10px; color:var(--text-main);">R: ${item.r}</p>
+            </div>`).join('');
+        }
+
         function saveProfile() {
-            const name = document.getElementById('profile-name').value;
-            if(!name) { alert("Veuillez donner un nom au profil."); return; }
-
+            const name = document.getElementById('profile-name').value.trim();
+            if (!name) { alert('❌ Nom requis'); return; }
             const profile = {
-                id: Date.now(),
                 name: name,
-                date: new Date().toLocaleDateString(),
-                sens: document.getElementById('rng-sens').value,
-                reac: document.getElementById('rng-reac').value,
-                disc: document.getElementById('rng-disc').value,
+                terrain: document.getElementById('profile-terrain').value,
+                sens: parseFloat(document.getElementById('rng-sens').value),
+                reac: parseFloat(document.getElementById('rng-reac').value),
+                disc: parseFloat(document.getElementById('rng-disc').value),
+                sil: parseFloat(document.getElementById('rng-sil').value),
+                bcaps: parseFloat(document.getElementById('rng-bcaps').value),
+                notch: parseFloat(document.getElementById('rng-notch').value),
+                fmf: document.getElementById('sel-fmf').value,
                 audio: document.getElementById('sel-audio').value,
-                expertV1: { r: document.getElementById('rng-v1-reac').value, s: document.getElementById('rng-v1-sens').value },
-                expertV2: { r: document.getElementById('rng-v2-reac').value, s: document.getElementById('rng-v2-sens').value }
+                resp: parseFloat(document.getElementById('rng-resp').value),
+                iron: parseFloat(document.getElementById('rng-iron').value),
+                v1reac: parseFloat(document.getElementById('rng-v1-reac').value),
+                v1sens: parseFloat(document.getElementById('rng-v1-sens').value),
+                v2reac: parseFloat(document.getElementById('rng-v2-reac').value),
+                v2sens: parseFloat(document.getElementById('rng-v2-sens').value),
+                stab: parseFloat(document.getElementById('rng-stab').value),
+                grab: parseFloat(document.getElementById('rng-grab').value),
+                timestamp: new Date().toLocaleString('fr-FR')
             };
-
-            let profiles = JSON.parse(localStorage.getItem('deus_profiles')) || [];
+            let profiles = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
             profiles.push(profile);
-            localStorage.setItem('deus_profiles', JSON.stringify(profiles));
-            document.getElementById('profile-name').value = "";
-            renderProfiles();
-            alert("Profil sauvegardé !");
+            localStorage.setItem('xpProfiles', JSON.stringify(profiles));
+            alert('✅ Profil sauvegardé!');
+            document.getElementById('profile-name').value = '';
+            document.getElementById('profile-terrain').value = '';
+            loadProfilesList();
         }
 
-        function renderProfiles() {
+        function loadProfilesList() {
+            const profiles = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
             const list = document.getElementById('saved-profiles-list');
-            let profiles = JSON.parse(localStorage.getItem('deus_profiles')) || [];
-            
-            if(profiles.length === 0) {
-                list.innerHTML = `<p style="color:var(--text-dim); text-align:center;">Aucun profil sauvegardé.</p>`;
-                return;
-            }
-
-            let html = "";
-            profiles.forEach((p, index) => {
-                html += `
+            if (profiles.length === 0) { list.innerHTML = '<p style="color:var(--text-dim); text-align:center;">Aucun profil.</p>'; return; }
+            list.innerHTML = profiles.map((p, i) => `
                 <div class="saved-item">
-                    <div class="saved-item-content">
+                    <div style="flex:1;">
                         <h4>${p.name}</h4>
-                        <p>Sens: ${p.sens} | Reac: ${p.reac} | Disc: ${p.disc} | ${p.audio}</p>
-                        <p style="font-size:0.75rem; color:var(--accent-blue);">Expert V4: V1(${p.expertV1.r}) / V2(${p.expertV2.r})</p>
+                        <p>${p.terrain || 'N/A'} | S:${p.sens} R:${p.reac} D:${p.disc}</p>
+                        <p style="font-size:0.75rem; color:var(--text-dim);">${p.timestamp}</p>
                     </div>
-                    <button class="btn btn-danger" onclick="deleteProfile(${index})" style="padding:5px 10px; font-size:0.7rem;">X</button>
-                </div>`;
-            });
-            list.innerHTML = html;
+                    <div class="saved-item-actions">
+                        <button class="btn-download" onclick="loadProfile(${i})">📥 Charger</button>
+                        <button class="btn-delete" onclick="deleteProfile(${i})">🗑️ Suppr</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function deleteProfile(index) {
-            let profiles = JSON.parse(localStorage.getItem('deus_profiles')) || [];
-            profiles.splice(index, 1);
-            localStorage.setItem('deus_profiles', JSON.stringify(profiles));
-            renderProfiles();
+        function loadProfile(idx) {
+            const profiles = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
+            const p = profiles[idx];
+            if(!p) return;
+            document.getElementById('rng-sens').value = p.sens;
+            document.getElementById('rng-reac').value = p.reac;
+            document.getElementById('rng-disc').value = p.disc;
+            document.getElementById('rng-sil').value = p.sil || 1;
+            document.getElementById('rng-bcaps').value = p.bcaps || 0;
+            document.getElementById('rng-notch').value = p.notch || 0;
+            document.getElementById('sel-fmf').value = p.fmf || 'general';
+            document.getElementById('sel-audio').value = p.audio || 'Square';
+            document.getElementById('rng-resp').value = p.resp || 4;
+            document.getElementById('rng-iron').value = p.iron || 3;
+            document.getElementById('rng-v1-reac').value = p.v1reac || 1;
+            document.getElementById('rng-v1-sens').value = p.v1sens || 95;
+            document.getElementById('rng-v2-reac').value = p.v2reac || 3.5;
+            document.getElementById('rng-v2-sens').value = p.v2sens || 90;
+            document.getElementById('rng-stab').value = p.stab || 2;
+            document.getElementById('rng-grab').value = p.grab || 0;
+            
+            // Expert Mode Load
+            if (p.processMode) document.getElementById('sel-process-mode').value = p.processMode;
+
+            setTab('config');
+            updateSimulator();
+            alert('✅ Profil chargé!');
         }
 
-        // --- LOGBOOK LOGIC ---
+        function deleteProfile(idx) {
+            if (!confirm('Supprimer ce profil?')) return;
+            let profiles = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
+            profiles.splice(idx, 1);
+            localStorage.setItem('xpProfiles', JSON.stringify(profiles));
+            loadProfilesList();
+        }
+
         function addLog() {
-            const find = document.getElementById('log-find').value;
+            const find = document.getElementById('log-find').value.trim();
             const depth = document.getElementById('log-depth').value;
-            if(!find) return;
-
-            const log = {
-                find: find,
-                depth: depth || "?",
-                date: new Date().toLocaleDateString()
-            };
-
-            let logs = JSON.parse(localStorage.getItem('deus_logs')) || [];
-            logs.unshift(log); // Add to top
-            localStorage.setItem('deus_logs', JSON.stringify(logs));
-            
-            document.getElementById('log-find').value = "";
-            document.getElementById('log-depth').value = "";
-            renderLogs();
+            if (!find) { alert('Trouvaille requise'); return; }
+            let logs = JSON.parse(localStorage.getItem('xpLogs') || '[]');
+            logs.push({ find, depth, date: new Date().toLocaleString('fr-FR') });
+            localStorage.setItem('xpLogs', JSON.stringify(logs));
+            document.getElementById('log-find').value = '';
+            document.getElementById('log-depth').value = '';
+            loadLogbook();
         }
 
-        function renderLogs() {
+        function loadLogbook() {
+            const logs = JSON.parse(localStorage.getItem('xpLogs') || '[]');
             const list = document.getElementById('logbook-list');
-            let logs = JSON.parse(localStorage.getItem('deus_logs')) || [];
-            
-            if(logs.length === 0) {
-                list.innerHTML = `<p style="color:var(--text-dim); text-align:center; font-style:italic;">Carnet vide. Ajoutez votre première découverte !</p>`;
-                return;
-            }
-
-            let html = "";
-            logs.forEach(l => {
-                html += `
-                <div style="border-left:2px solid var(--accent-gold); padding-left:10px; margin-bottom:15px;">
-                    <div style="color:var(--text-main); font-weight:bold;">${l.find}</div>
-                    <div style="color:var(--text-dim); font-size:0.8rem;">Profondeur: ${l.depth}cm • ${l.date}</div>
-                </div>`;
-            });
-            list.innerHTML = html;
+            if (logs.length === 0) { list.innerHTML = '<p style="color:var(--text-dim);">Journal vide.</p>'; return; }
+            list.innerHTML = logs.reverse().map(l => `<div class="saved-item">
+                <p><strong>${l.find}</strong> - ${l.depth || 'N/A'}cm | ${l.date}</p>
+            </div>`).join('');
         }
-
-        // --- FAQ RENDER ---
-        function renderFAQ() {
-            const c = document.getElementById('faq-container');
-            if(c.innerHTML !== "") return;
-            
-            DATA.faq.forEach(item => {
-                c.innerHTML += `
-                <div style="background:var(--bg-input); padding:15px; border-radius:6px; margin-bottom:10px; border:1px solid var(--border-light);">
-                    <div style="color:var(--accent-blue); font-weight:bold; margin-bottom:5px;">❓ ${item.q}</div>
-                    <div style="color:var(--text-main); font-size:0.95rem;">${item.a}</div>
-                </div>`;
-            });
-        }
-
-        // INITIALISATION
-        updateSim();
-        updateExpert();
-        renderProfiles();
-        renderLogs();
-
     </script>
 </body>
 </html>
