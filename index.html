@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP Deus II - CONSOLE EXPERT PRO v3</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #121418;
+            --bg-panel: #1b2028;
+            --bg-input: #0f1114;
+            --accent-gold: #d4af37;
+            --accent-blue: #5c8bc0;
+            --text-main: #e0e6ed;
+            --text-dim: #aab6c6;
+            --border-light: #2d333d;
+            --success: #66bb6a;
+            --warning: #ffa726;
+            --danger: #ef5350;
+            --info: #29b6f6;
+            --fmf: #b388ff;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f5f5f5;
+            --bg-panel: #ffffff;
+            --bg-input: #e8e8e8;
+            --text-main: #1a1a1a;
+            --text-dim: #555555;
+            --border-light: #d0d0d0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; min-height: 100vh; font-size: 15px; transition: var(--transition); }
+
+        header { background: linear-gradient(180deg, #1f242d 0%, #121418 100%); padding: 15px; border-bottom: 2px solid var(--accent-gold); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); flex-wrap: wrap; gap: 10px; }
+        [data-theme="light"] header { background: linear-gradient(180deg, #f0f0f0 0%, #e0e0e0 100%); }
+        header h1 { color: var(--accent-gold); font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; flex: 1; min-width: 200px; }
+        header p { color: var(--text-dim); font-size: 0.8rem; }
+
+        .header-right { display: flex; gap: 10px; align-items: center; }
+        .theme-toggle { background: var(--bg-panel); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: var(--transition); }
+        .theme-toggle:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+        .nav-container { background: var(--bg-panel); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-light); padding: 0 5px; overflow-x: auto; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .nav-btn { background: none; border: none; color: var(--text-dim); padding: 12px 15px; cursor: pointer; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; transition: var(--transition); border-bottom: 3px solid transparent; white-space: nowrap; }
+        .nav-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.02); }
+        .nav-btn.active { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px 60px 15px; }
+        .tab-content { display: none; animation: fadeEffect 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeEffect { from {opacity: 0; transform: translateY(5px);} to {opacity: 1; transform: translateY(0);} }
+
+        .card { background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: 8px; padding: 20px; margin-bottom: 20px; transition: var(--transition); }
+        .card h2 { color: var(--accent-blue); font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent-gold); padding-left: 10px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-right: 5px; margin-bottom: 5px; }
+        .badge-recommended { background: rgba(102, 187, 106, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge-risky { background: rgba(255, 167, 38, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-optimal { background: rgba(92, 139, 192, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .badge-source { background: rgba(102, 187, 106, 0.15); color: var(--success); border: 1px solid var(--success); font-size: 0.65rem; }
+
+        label { display: block; color: var(--text-dim); margin-bottom: 6px; font-size: 0.8rem; text-transform: uppercase; }
+        select, input[type="text"], input[type="number"], textarea { width: 100%; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-main); padding: 12px; border-radius: 4px; font-size: 0.95rem; font-family: inherit; transition: var(--transition); }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2); }
+
+        .btn { padding: 12px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; transition: var(--transition); }
+        .btn-gold { background: var(--accent-gold); color: #121418; }
+        .btn-gold:hover { background: #bfa030; transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-light); color: var(--text-dim); }
+        .btn-outline:hover { border-color: var(--text-main); color: var(--text-main); }
+        .btn-danger { background: rgba(239, 83, 80, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: white; }
+
+        .slider-container { margin-bottom: 25px; }
+        .slider-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .slider-val { color: var(--accent-gold); font-weight: bold; font-family: monospace; font-size: 1.1rem; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; background: var(--bg-input); border-radius: 4px; outline: none; border: 1px solid var(--border-light); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body); box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4); }
+        input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--accent-gold); cursor: pointer; border: 2px solid var(--bg-body); box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4); }
+        input[type="range"]:disabled { opacity: 0.4; }
+
+        .param-feedback { font-size: 0.8rem; color: var(--text-dim); margin-top: 5px; font-style: italic; border-left: 2px solid var(--border-light); padding-left: 8px; }
+        .feedback-warn { color: var(--warning); border-color: var(--warning); }
+        .feedback-good { color: var(--success); border-color: var(--success); }
+        .feedback-danger { color: var(--danger); border-color: var(--danger); }
+
+        .result-box { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 6px; padding: 15px; margin-top: 20px; }
+
+        .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-gold); }
+        .checkbox-row label { margin-bottom: 0; text-transform: none; font-size: 0.9rem; color: var(--text-main); }
+
+        /* ---- MODE TERRAIN ---- */
+        .field-wrap { max-width: 720px; margin: 0 auto; }
+        .field-progress { display: flex; gap: 4px; margin-bottom: 18px; }
+        .field-progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--border-light); transition: var(--transition); }
+        .field-progress span.done { background: var(--accent-gold); }
+        .field-progress span.current { background: var(--accent-blue); }
+
+        .field-card { background: var(--bg-panel); border: 2px solid var(--accent-gold); border-radius: 10px; padding: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+        .field-step-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-blue); font-weight: bold; margin-bottom: 8px; }
+        .field-question { font-size: 1.25rem; font-weight: bold; color: var(--text-main); margin-bottom: 12px; line-height: 1.35; }
+        .field-help { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 18px; border-left: 3px solid var(--accent-blue); padding-left: 12px; }
+        .field-help strong { color: var(--text-main); }
+
+        .field-live { background: var(--bg-input); border: 1px dashed var(--accent-gold); border-radius: 6px; padding: 12px; margin-bottom: 16px; font-family: monospace; font-size: 1.05rem; color: var(--accent-gold); text-align: center; }
+        .field-live small { display:block; font-family: 'Segoe UI', sans-serif; font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+
+        .field-options { display: flex; flex-direction: column; gap: 10px; }
+        .field-opt { width: 100%; text-align: left; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-main); padding: 14px 16px; border-radius: 6px; cursor: pointer; font-size: 0.95rem; transition: var(--transition); line-height: 1.35; }
+        .field-opt:hover { border-color: var(--accent-gold); background: rgba(212,175,55,0.08); transform: translateX(3px); }
+        .field-opt small { display: block; color: var(--text-dim); font-size: 0.78rem; margin-top: 3px; }
+        .field-opt.opt-good { border-left: 4px solid var(--success); }
+        .field-opt.opt-warn { border-left: 4px solid var(--warning); }
+        .field-opt.opt-danger { border-left: 4px solid var(--danger); }
+        .field-opt.opt-info { border-left: 4px solid var(--accent-blue); }
+
+        .field-nav { display: flex; justify-content: space-between; margin-top: 18px; gap: 10px; }
+
+        .tips-block { margin-top: 22px; }
+        .tips-block h3 { color: var(--accent-gold); font-size: 1rem; text-transform: uppercase; letter-spacing: .5px; margin: 18px 0 10px; border-bottom: 1px solid var(--border-light); padding-bottom: 6px; }
+        .tip { background: var(--bg-input); border-left: 3px solid var(--accent-blue); border-radius: 0 5px 5px 0; padding: 11px 13px; margin-bottom: 9px; font-size: 0.9rem; line-height: 1.45; }
+        .tip b { color: var(--accent-gold); }
+        .tip.t-key { border-left-color: var(--accent-gold); background: rgba(212,175,55,0.07); }
+        .tip.t-warn { border-left-color: var(--warning); background: rgba(255,167,38,0.06); }
+        .tip.t-good { border-left-color: var(--success); background: rgba(102,187,106,0.06); }
+        .cadence { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+        .cadence div { flex:1; min-width:130px; background:var(--bg-input); border:1px solid var(--border-light); border-radius:6px; padding:10px; text-align:center; }
+        .cadence div span { display:block; color:var(--accent-gold); font-family:monospace; font-size:1.15rem; font-weight:bold; }
+        .cadence div small { color:var(--text-dim); font-size:0.72rem; }
+
+        .recap-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .recap-table td { padding: 9px 8px; border-bottom: 1px solid var(--border-light); font-size: 0.92rem; }
+        .recap-table td:first-child { color: var(--text-dim); text-transform: uppercase; font-size: 0.75rem; width: 48%; }
+        .recap-table td:last-child { color: var(--accent-gold); font-weight: bold; font-family: monospace; text-align: right; }
+
+        /* STICKY PANEL & CHARTS */
+        .sticky-panel { position: sticky; top: 48px; z-index: 95; background: var(--bg-panel); border: 1px solid var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 25px; padding: 10px; border-radius: 6px; }
+        .sticky-content { display: flex; gap: 15px; align-items: center; }
+        .sticky-bars-col { flex: 1; min-width: 0; }
+        .sticky-chart-col { width: 220px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px solid var(--border-light); padding-left: 10px; }
+        .chart-legend-mini { font-size: 0.65rem; color: var(--text-dim); text-align: center; margin-top: 5px; line-height: 1.2; }
+        .radar-container-mini { position: relative; width: 100%; height: 180px; }
+
+        .perf-bar-container { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+        .perf-label-group { display: flex; flex-direction: column; width: 100px; text-align: right; flex-shrink: 0; }
+        .perf-title { font-size: 0.75rem; font-weight: bold; color: var(--text-main); text-transform: uppercase; white-space: nowrap; }
+        .perf-question { font-size: 0.6rem; color: var(--text-dim); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .perf-track-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 4px; }
+        .perf-track { flex-grow: 1; height: 6px; background: var(--bg-input); border-radius: 3px; overflow: hidden; }
+        .perf-fill { height: 100%; transition: width var(--transition); }
+        .range-label { font-size: 0.6rem; color: var(--text-dim); white-space: nowrap; width: 50px; }
+
+        .fill-depth { background: var(--accent-blue); }
+        .fill-sep { background: var(--warning); }
+        .fill-fine { background: var(--success); }
+        .fill-id { background: var(--info); }
+        .fill-mask { background: var(--danger); }
+        .fill-aud { background: var(--fmf); }
+
+        .id-scale { display: flex; height: 30px; border-radius: 4px; overflow: hidden; margin-top: 10px; font-size: 0.75rem; color: #000; font-weight: bold; }
+        .id-zone { height: 100%; transition: var(--transition); }
+
+        .saved-item { background: var(--bg-input); border: 1px solid var(--border-light); padding: 15px; border-radius: 6px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .saved-item:hover { border-color: var(--accent-gold); box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1); }
+        .saved-item h4 { color: var(--text-main); font-size: 1rem; margin-bottom: 4px; }
+        .saved-item p { color: var(--text-dim); font-size: 0.85rem; }
+        .saved-item-actions { display: flex; gap: 8px; }
+        .saved-item-actions button { padding: 6px 12px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; transition: var(--transition); }
+
+        .btn-download { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+        .btn-download:hover { background: var(--accent-gold); color: #121418; }
+        .btn-delete { background: rgba(239, 83, 80, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-delete:hover { background: var(--danger); color: white; }
+
+        .alert { padding: 12px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; border-left: 3px solid; }
+        .alert-info { background: rgba(92, 139, 192, 0.1); border-color: var(--accent-blue); }
+        .alert-warn { background: rgba(255, 167, 38, 0.1); border-color: var(--warning); }
+        .alert-success { background: rgba(102, 187, 106, 0.1); border-color: var(--success); }
+        .alert-danger { background: rgba(239, 83, 80, 0.1); border-color: var(--danger); }
+
+        .terrain-card { background: var(--bg-input); border: 1px solid var(--border-light); padding: 15px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .terrain-card:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2); }
+        .terrain-card h3 { color: var(--accent-gold); margin-bottom: 8px; }
+        .terrain-card p { color: var(--text-dim); font-size: 0.9rem; margin: 4px 0; }
+
+        .faq-item { margin-bottom: 20px; padding: 15px; background: var(--bg-input); border-left: 3px solid var(--accent-gold); border-radius: 4px; }
+        .faq-item strong { color: var(--accent-blue); }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            header { flex-direction: column; text-align: center; }
+            .sticky-panel { padding: 8px 5px; top: 45px; }
+            .sticky-content { gap: 5px; }
+            .sticky-chart-col { width: 110px; border-left: none; padding-left: 2px; }
+            .radar-container-mini { height: 110px; }
+            .chart-legend-mini { font-size: 0.55rem; display: block; }
+            .perf-label-group { width: 70px; }
+            .perf-title { font-size: 0.65rem; }
+            .perf-question { display: none; }
+            .range-label { display: none; }
+            .perf-track { height: 5px; }
+            .field-card { padding: 16px; }
+            .field-question { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>⚡ XP Deus II</h1>
+            <p>Console Expert Pro v3 — Design by MICHEL09 · données manuel officiel FR</p>
+        </div>
+        <div class="header-right">
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Thème</button>
+        </div>
+    </header>
+
+    <div class="nav-container" id="nav-tabs">
+        <button class="nav-btn active" data-tab="field" onclick="setTab('field', this)">🎯 Mode Terrain</button>
+        <button class="nav-btn" data-tab="config" onclick="setTab('config', this)">⚡ Configuration</button>
+        <button class="nav-btn" data-tab="terrains" onclick="setTab('terrains', this)">🌍 Terrains</button>
+        <button class="nav-btn" data-tab="profiles" onclick="setTab('profiles', this)">💾 Profils</button>
+        <button class="nav-btn" data-tab="tools" onclick="setTab('tools', this)">🆔 Outils</button>
+        <button class="nav-btn" data-tab="faq" onclick="setTab('faq', this)">❓ FAQ</button>
+    </div>
+
+    <div class="container">
+
+        <!-- ================= MODE TERRAIN ================= -->
+        <div id="field" class="tab-content active">
+            <div class="field-wrap">
+                <div class="field-progress" id="field-progress"></div>
+                <div class="field-card" id="field-card"></div>
+                <div class="field-nav">
+                    <button class="btn btn-outline" onclick="fieldBack()" id="field-back-btn">← Retour</button>
+                    <button class="btn btn-outline" onclick="fieldRestart()">↺ Recommencer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= CONFIG ================= -->
+        <div id="config" class="tab-content">
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Indices "Analyse Tactique" :</strong> heuristiques pédagogiques pour visualiser l'effet
+                <em>relatif</em> des réglages. Ce ne sont pas des mesures certifiées XP. La courbe Réactivité→Profondeur
+                est désormais pondérée par la minéralisation déclarée (voir ci-dessous).
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--info);">
+                <h2>🧭 Contexte de sol (pilote le modèle)</h2>
+                <div class="grid-2">
+                    <div>
+                        <label>Minéralisation du sol (GND LVL après pompage)</label>
+                        <select id="sel-mineral" onchange="updateSimulator()">
+                            <option value="0">Faible — sol propre, sable clair, prairie saine</option>
+                            <option value="1" selected>Moyenne — sol agricole courant, argile légère</option>
+                            <option value="2">Forte — argile rouge, ferrites, sable noir, sol aurifère</option>
+                        </select>
+                        <div class="param-feedback">Le manuel rappelle qu'en sol minéralisé on trouve <strong>plus</strong> de cibles avec une réactivité moyenne à haute, malgré une portée dans l'air inférieure. Le modèle applique désormais cette inversion.</div>
+                    </div>
+                    <div>
+                        <label>Disque monté</label>
+                        <select id="sel-coil" onchange="onCoilChange()">
+                            <option value="c9">9" rond (22,5 cm) — 4 à 45 kHz</option>
+                            <option value="c11" selected>11" rond (28 cm) — 4 à 45 kHz</option>
+                            <option value="c1311">13x11" elliptique (34x28 cm) — 4 à 45 kHz</option>
+                            <option value="hf2">HF2 elliptique (24x13 cm) — FMF 9 à 90 kHz</option>
+                        </select>
+                        <div id="feed-coil" class="param-feedback"></div>
+                    </div>
+                    <div>
+                        <label>Densité de ferraille</label>
+                        <select id="sel-ferraille" onchange="updateSimulator()">
+                            <option value="0">Faible — champ propre</option>
+                            <option value="1" selected>Moyenne — habitat ancien, chemin</option>
+                            <option value="2">Élevée — ferme, décharge, zone de vie dense</option>
+                        </select>
+                        <div class="param-feedback">Influence le calcul du masquage et la réactivité optimale.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="border-left: 4px solid var(--accent-gold);">
+                <h2>1️⃣ Assistant rapide</h2>
+                <div class="grid-2">
+                    <div>
+                        <label>Terrain</label>
+                        <select id="wiz-terrain">
+                            <option value="">-- Sélectionner le terrain --</option>
+                            <option value="prairie">🌾 Prairie / Champ propre</option>
+                            <option value="minéralisé">🔴 Sol minéralisé (argile rouge)</option>
+                            <option value="pollué">🔩 Terrain très pollué (ferraille)</option>
+                            <option value="plage">🏖️ Plage (sable sec/humide)</option>
+                            <option value="eau">💧 Eau douce / immersion</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Objectif</label>
+                        <select id="wiz-obj">
+                            <option value="">-- Sélectionner la cible --</option>
+                            <option value="monnaies">💰 Monnaies anciennes</option>
+                            <option value="or">✨ Or natif</option>
+                            <option value="reliques">🏛️ Reliques & militaria</option>
+                            <option value="profond">🔍 Masses profondes</option>
+                            <option value="tout">🎯 Polyvalent</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-gold" style="width:100%; margin-top:20px;" onclick="runWizardCheck()">🚀 Trouver le programme optimal</button>
+                <p style="font-size:0.82rem; color:var(--text-dim); margin-top:10px;">Pour un réglage complet pas-à-pas sur le terrain, utilisez plutôt l'onglet <strong>🎯 Mode Terrain</strong>.</p>
+            </div>
+
+            <div id="wizard-outcome" style="display:none;">
+                <div class="card" style="border: 2px solid var(--accent-blue); background:rgba(92, 139, 192, 0.05);">
+                    <h2>2️⃣ Programme recommandé</h2>
+                    <div id="wiz-recommendation-text" style="margin-bottom:20px; font-size:1.1rem;"></div>
+                    <div style="background:var(--bg-panel); padding:15px; border-radius:6px; border:1px solid var(--border-light);">
+                        <label style="color:var(--accent-gold); font-weight:bold;">Changer de base (programme d'usine)</label>
+                        <select id="sel-factory-prog" style="margin-top:8px;" onchange="manualProgramChange()">
+                            <option value="">-- Choisir un programme --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYSE TACTIQUE -->
+            <div class="sticky-panel">
+                <div class="sticky-content">
+                    <div class="sticky-bars-col">
+                        <label style="margin-bottom:8px; color:var(--accent-gold); font-weight:bold; display:block; font-size:0.9rem;">📊 ANALYSE TACTIQUE (heuristique)</label>
+                        
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title">Portée</span><span class="perf-question">Profondeur physique</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Surface</span>
+                                <div class="perf-track"><div id="bar-depth" class="perf-fill fill-depth" style="width:0%"></div></div>
+                                <span class="range-label">Profond</span>
+                            </div>
+                        </div>
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title" style="color:var(--fmf);">Audibilité</span><span class="perf-question">Signal faible entendu ?</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Discret</span>
+                                <div class="perf-track"><div id="bar-aud" class="perf-fill fill-aud" style="width:0%"></div></div>
+                                <span class="range-label">Amplifié</span>
+                            </div>
+                        </div>
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title">Séparation</span><span class="perf-question">Pièce au milieu de clous ?</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Amalgame</span>
+                                <div class="perf-track"><div id="bar-sep" class="perf-fill fill-sep" style="width:0%"></div></div>
+                                <span class="range-label">Séparé</span>
+                            </div>
+                        </div>
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title">Finesse</span><span class="perf-question">Objets minuscules ?</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Standard</span>
+                                <div class="perf-track"><div id="bar-fine" class="perf-fill fill-fine" style="width:0%"></div></div>
+                                <span class="range-label">Extra fin</span>
+                            </div>
+                        </div>
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title">Stabilité ID</span><span class="perf-question">Indice fiable ?</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Erratique</span>
+                                <div class="perf-track"><div id="bar-id" class="perf-fill fill-id" style="width:0%"></div></div>
+                                <span class="range-label">Stable</span>
+                            </div>
+                        </div>
+                        <div class="perf-bar-container">
+                            <div class="perf-label-group"><span class="perf-title" style="color:var(--danger);">⚠️ Masquage</span><span class="perf-question">Cibles manquées ?</span></div>
+                            <div class="perf-track-wrapper">
+                                <span class="range-label">Faible</span>
+                                <div class="perf-track"><div id="bar-mask" class="perf-fill fill-mask" style="width:0%"></div></div>
+                                <span class="range-label">Élevé</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sticky-chart-col">
+                        <div class="radar-container-mini"><canvas id="radarChart"></canvas></div>
+                        <div class="chart-legend-mini">
+                            <span style="color:#d4af37;">● Actuel</span> &nbsp;|&nbsp; <span style="color:#a0a0a0;">-- Usine</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULATEUR -->
+            <div class="card">
+                <h2>3️⃣ Simulateur & ajustements <span class="badge badge-source">Bornes conformes manuel FR</span></h2>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div>
+                        <h4 style="color:var(--accent-blue); margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">⚡ Puissance & Vitesse</h4>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Sensibilité (0-99)</label><span id="val-sens" class="slider-val">95</span></div>
+                            <input type="range" id="rng-sens" min="0" max="99" value="95" oninput="updateSimulator()">
+                            <div id="feed-sens" class="param-feedback">Niveaux usuels 70-90 ; à régler juste sous le seuil d'instabilité.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Réactivité (9 paliers réels)</label><span id="val-reac" class="slider-val">2.0</span></div>
+                            <select id="sel-reac" onchange="updateSimulator()">
+                                <option value="0">0</option><option value="0.5">0.5</option><option value="1">1</option>
+                                <option value="1.5">1.5</option><option value="2" selected>2</option><option value="2.5">2.5</option>
+                                <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                            </select>
+                            <div id="feed-reac" class="param-feedback">Vitesse standard.</div>
+                        </div>
+
+                        <h4 style="color:var(--accent-blue); margin-top:25px; margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">🔍 Filtres & Rejets</h4>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Discrimination (-6.4 à 99)</label><span id="val-disc" class="slider-val">10.0</span></div>
+                            <input type="range" id="rng-disc" min="-6.4" max="99" step="0.1" value="10" oninput="updateSimulator()">
+                            <div id="feed-disc" class="param-feedback">Rejet des ferreux.</div>
+                        </div>
+                        <div id="iar-container" class="slider-container" style="display:none; border:1px solid var(--warning); padding:10px; border-radius:6px; background:rgba(255,167,38,0.05);">
+                            <div class="slider-header"><label style="color:var(--warning);">Discrimination IAR (Gold Field / Relic)</label><span id="val-iar" class="slider-val">OFF</span></div>
+                            <input type="range" id="rng-iar" min="0" max="5" value="0" oninput="updateSimulator()">
+                            <div id="feed-iar" class="param-feedback">Iron Amplitude Rejection : rejette les ferreux selon leur distance. OFF = pas de rejet · 3 = ferreux proches · 5 = proches et distants.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Silencieux (-3 à 7)</label><span id="val-sil" class="slider-val">2</span></div>
+                            <input type="range" id="rng-sil" min="-3" max="7" step="1" value="2" oninput="updateSimulator()">
+                            <div id="feed-sil" class="param-feedback">Standard.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>B.Caps (0-5)</label><span id="val-bcaps" class="slider-val">0</span></div>
+                            <input type="range" id="rng-bcaps" min="0" max="5" value="0" oninput="updateSimulator()">
+                            <div id="feed-bcaps" class="param-feedback">Filtre désactivé.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="checkbox-row">
+                                <input type="checkbox" id="chk-notch" onchange="updateSimulator()">
+                                <label for="chk-notch">Notch actif — fenêtre sur l'indice de conductivité (TID), pas une fréquence</label>
+                            </div>
+                            <div class="slider-header"><label>Notch — Seuil 1</label><span id="val-notch-s1" class="slider-val">23</span></div>
+                            <input type="range" id="rng-notch-s1" min="0" max="99" value="23" oninput="updateSimulator()">
+                            <div class="slider-header"><label>Notch — Seuil 2</label><span id="val-notch-s2" class="slider-val">24</span></div>
+                            <input type="range" id="rng-notch-s2" min="0" max="99" value="24" oninput="updateSimulator()">
+                            <div id="feed-notch" class="param-feedback">Notch inactif.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="color:var(--fmf); margin-bottom:15px; border-bottom: 1px solid var(--border-light); padding-bottom: 10px;">🌊 FMF & Audio</h4>
+                        <div style="margin-bottom:20px; border:1px solid var(--fmf); padding:10px; border-radius:6px; background:rgba(179, 136, 255, 0.05);">
+                            <label style="color:var(--fmf); font-weight:bold;">Fréquence Max FMF</label>
+                            <select id="sel-fmf" onchange="updateSimulator()">
+                                <option value="14">14 kHz (29 avec HF2) — hauts conducteurs, grosses masses, moins de pics ferreux</option>
+                                <option value="24" selected>24 kHz (53 avec HF2) — plus stable sur sol, permet de remonter sens./réactivité</option>
+                                <option value="40">40 kHz (89 avec HF2) — le plus polyvalent, max de petites cibles en sol ferreux</option>
+                            </select>
+                            <div class="param-feedback" style="margin-top:5px;">Baisser la fréquence max rend la machine plus stable et permet ensuite de remonter sensibilité et réactivité.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Type Audio</label><span id="val-audio" class="slider-val">PWM</span></div>
+                            <select id="sel-audio" onchange="updateSimulator()">
+                                <option value="PWM" selected>🔊 PWM (son XP historique, riche harmoniquement)</option>
+                                <option value="Square">📊 Square (harmoniques fixes, plus doux)</option>
+                                <option value="HighSquare">🔆 High Square (plus clair sur cibles lointaines)</option>
+                                <option value="LowSquare">🌙 Low Square (doux, riche en basses, pour Morphing)</option>
+                                <option value="Pitch">🔊 Pitch / Pitch 2 (hauteur variable selon distance)</option>
+                                <option value="FullTones">🎹 Full Tones (un ton par indice de conductivité)</option>
+                            </select>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Réponse Audio (0-7)</label><span id="val-resp" class="slider-val">4</span></div>
+                            <input type="range" id="rng-resp" min="0" max="7" value="4" oninput="updateSimulator()">
+                            <div id="feed-resp" class="param-feedback">Agit sur l'audibilité, pas sur la portée physique.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Volume Fer (0-10)</label><span id="val-iron" class="slider-val">7</span></div>
+                            <input type="range" id="rng-iron" min="0" max="10" value="7" oninput="updateSimulator()">
+                            <div id="feed-iron" class="param-feedback">Réglage usine = 7 sur tous les programmes.</div>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Filtre Audio (0-5)</label><span id="val-filtaudio" class="slider-val">0</span></div>
+                            <input type="range" id="rng-filtaudio" min="0" max="5" value="0" oninput="updateSimulator()">
+                            <div id="feed-filtaudio" class="param-feedback">Nettoie l'audio ; quelques cm gagnés en limite de portée.</div>
+                        </div>
+                        <div id="selsens-container" class="slider-container" style="display:none; border:1px solid var(--info); padding:10px; border-radius:6px; background:rgba(41,182,246,0.05);">
+                            <div class="slider-header"><label style="color:var(--info);">Sel Sens (1-9) — plage/plongée</label><span id="val-selsens" class="slider-val">9</span></div>
+                            <input type="range" id="rng-selsens" min="1" max="9" value="9" oninput="updateSimulator()">
+                            <div class="param-feedback">Sur plage, baissez <strong>Sel Sens avant</strong> la sensibilité générale : il n'atténue que les instabilités liées à l'eau de mer.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sim-analysis" class="result-box"></div>
+            </div>
+
+            <!-- AVANCÉ -->
+            <div class="card" style="border-left: 3px solid var(--info);">
+                <h2>🎛️ Sol & Stabilité</h2>
+                <div class="grid-2">
+                    <div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Stabilité Sol (1 à 3)</label><span id="val-stab" class="slider-val">2</span></div>
+                            <input type="range" id="rng-stab" min="1" max="3" value="2" oninput="updateAdvanced(); updateSimulator();">
+                            <div id="feed-stab" class="param-feedback">Standard.</div>
+                        </div>
+                        <div id="stab1-warning" style="display:none;" class="alert alert-warn">
+                            <strong>Mode expert.</strong> Au niveau 1, la zone au-dessus de la valeur sol captée est acceptée :
+                            briques (~78), ferrites et chocs de disque (~88) vont sonner. Réservé à l'exploitation
+                            des signaux profonds masqués par la minéralisation — pas à la prospection large.
+                        </div>
+                    </div>
+                    <div>
+                        <div class="checkbox-row">
+                            <input type="checkbox" id="chk-grab-auto" checked onchange="updateAdvanced(); updateSimulator();">
+                            <label for="chk-grab-auto">Mode GRAB automatique (recommandé par XP)</label>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Sol manuel (60-90)</label><span id="val-grab" class="slider-val">AUTO</span></div>
+                            <input type="range" id="rng-grab" min="60" max="90" value="90" oninput="updateAdvanced(); updateSimulator();" disabled>
+                            <div id="feed-grab" class="param-feedback">GRAB automatique actif.</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="advanced-feedback" class="result-box" style="margin-top:15px;"></div>
+            </div>
+
+            <!-- MULTI-PROCESS -->
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <h2>🔥 Multi-Process</h2>
+                    <span class="badge badge-risky">Casque stéréo requis</span>
+                </div>
+                <div class="alert alert-warn">
+                    Disponible <strong>uniquement avec les casques WS6ST, WSAST ou WSAXL ST</strong>. Deux usages :
+                    <strong>Multi-Réactivité</strong> (canal profond peu réactif + canal réactif pour trier près du fer)
+                    et <strong>Morphing audio</strong> (fusion de tonalités harmoniques).
+                </div>
+
+                <div style="margin-bottom:20px; border:1px solid var(--accent-gold); padding:15px; border-radius:6px; background:rgba(212, 175, 55, 0.05);">
+                    <label style="color:var(--accent-gold); font-weight:bold;">Preset Multi-Process</label>
+                    <select id="sel-process-mode" onchange="updateExpert(); updateSimulator();" style="margin-top:8px;">
+                        <option value="standard" selected>0. Désactivé (mono-canal)</option>
+                        <option value="morph1">1. MORPH.1 — 2 Tons + Chorus sur cibles lointaines</option>
+                        <option value="morph2">2. MORPH.2 — 3 Tons CH1, morphing CH2 en approche</option>
+                        <option value="dualreact">3. DUAL REACT — High Square réactif + PWM profond</option>
+                        <option value="dualaxis">4. DUAL AXIS — dynamique 2.5 + statique retune rapide</option>
+                    </select>
+                </div>
+
+                <div id="dualaxis-note" style="display:none;" class="alert alert-danger">
+                    ⚠️ <strong>DUAL AXIS :</strong> le réglage d'effet de sol doit impérativement être fait
+                    <strong>en mode statique</strong> (pomper le disque au sol tout en pressant le bouton Pinpoint).
+                    Oublier cette étape fausse tout le comportement du canal 2.
+                </div>
+
+                <div class="grid-2" id="multiprocess-detail" style="display:none;">
+                    <div style="border:1px solid var(--accent-blue); padding:20px; border-radius:6px; background:rgba(92, 139, 192, 0.05);">
+                        <h3 style="color:var(--accent-blue); font-size:1rem; margin-bottom:15px;">📍 CANAL 1</h3>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Réactivité CH1</label><span id="val-v1-reac" class="slider-val">1.0</span></div>
+                            <select id="sel-v1-reac" onchange="updateExpert(); updateSimulator();">
+                                <option value="0">0</option><option value="0.5">0.5</option><option value="1" selected>1</option>
+                                <option value="1.5">1.5</option><option value="2">2</option><option value="2.5">2.5</option>
+                            </select>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Sensibilité CH1</label><span id="val-v1-sens" class="slider-val">95</span></div>
+                            <input type="range" id="rng-v1-sens" min="0" max="99" value="95" oninput="updateExpert(); updateSimulator();">
+                        </div>
+                    </div>
+                    <div style="border:1px solid var(--warning); padding:20px; border-radius:6px; background:rgba(255, 167, 38, 0.05);">
+                        <h3 style="color:var(--warning); font-size:1rem; margin-bottom:15px;">⚡ CANAL 2</h3>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Réactivité CH2</label><span id="val-v2-reac" class="slider-val">3.0</span></div>
+                            <select id="sel-v2-reac" onchange="updateExpert(); updateSimulator();">
+                                <option value="2.5">2.5</option><option value="3" selected>3</option>
+                                <option value="4">4</option><option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Sensibilité CH2</label><span id="val-v2-sens" class="slider-val">90</span></div>
+                            <input type="range" id="rng-v2-sens" min="0" max="99" value="90" oninput="updateExpert(); updateSimulator();">
+                        </div>
+                        <div class="slider-container">
+                            <div class="slider-header"><label>Panoramique CH1/CH2</label><span id="val-pan" class="slider-val">0</span></div>
+                            <input type="range" id="rng-pan" min="-9" max="9" value="0" oninput="updateExpert(); updateSimulator();">
+                        </div>
+                    </div>
+                </div>
+                <div id="expert-feedback" class="result-box"></div>
+            </div>
+        </div>
+
+        <!-- TERRAINS -->
+        <div id="terrains" class="tab-content">
+            <div class="card">
+                <h2>🌍 Encyclopédie des terrains</h2>
+                <div id="terrain-grid" class="grid-3"></div>
+            </div>
+            <div id="terrain-detail"></div>
+        </div>
+
+        <!-- PROFILS -->
+        <div id="profiles" class="tab-content">
+            <div class="card">
+                <h2>💾 Sauvegarder une configuration</h2>
+                <div class="grid-2">
+                    <div><label>Nom du profil</label><input type="text" id="profile-name" placeholder="Ex : Prairie - Monnaies"></div>
+                    <div><label>Terrain / objectif</label><input type="text" id="profile-terrain" placeholder="Ex : Prairie minéralisée - monnaies"></div>
+                </div>
+                <button class="btn btn-gold" style="width:100%; margin-top:12px;" onclick="saveProfile()">💾 Enregistrer la config actuelle</button>
+            </div>
+            <div class="card">
+                <h2>📋 Mes profils enregistrés</h2>
+                <div id="saved-profiles-list"></div>
+            </div>
+        </div>
+
+        <!-- OUTILS -->
+        <div id="tools" class="tab-content">
+            <div class="card">
+                <h2>🆔 Guide visuel des indices (TID)</h2>
+                <div style="margin-bottom:30px;">
+                    <div class="id-scale">
+                        <div class="id-zone" style="width:10%; background:#ef5350;">FER</div>
+                        <div class="id-zone" style="width:20%; background:#ffa726;">OR/ALU</div>
+                        <div class="id-zone" style="width:30%; background:#ffee58; color:#000;">BRONZE</div>
+                        <div class="id-zone" style="width:30%; background:#66bb6a;">ARGENT</div>
+                        <div class="id-zone" style="width:10%; background:#29b6f6;">GROS</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-dim); margin-top:5px;">
+                        <span>-6.4</span><span>10</span><span>30</span><span>60</span><span>90</span><span>99</span>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <ul style="font-size:0.9rem; list-style-position: inside;">
+                        <li><strong style="color:#ef5350;">-6.4 à 09 :</strong> zone sol / ferreux (silencieuse par défaut)</li>
+                        <li><strong style="color:#ffa726;">10-25 :</strong> aluminium, petit or, bijoux</li>
+                        <li><strong style="color:#ffee58;">26-50 :</strong> nickel, cartouches, bronze</li>
+                    </ul>
+                    <ul style="font-size:0.9rem; list-style-position: inside;">
+                        <li><strong style="color:#66bb6a;">51-85 :</strong> cuivre, monnaies, bronze large</li>
+                        <li><strong style="color:#29b6f6;">86-99 :</strong> grosses masses, argent, hot rocks</li>
+                        <li><strong>Repères :</strong> coke ~25 · brique ~78 · ferrite/choc ~88</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card">
+                <h2>📝 Carnet de découvertes</h2>
+                <div class="grid-2">
+                    <div><label>Trouvaille</label><input type="text" id="log-find" placeholder="Ex : Napoléon III"></div>
+                    <div><label>Profondeur (cm)</label><input type="number" id="log-depth" placeholder="20"></div>
+                </div>
+                <button class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="addLog()">➕ Ajouter au journal</button>
+                <div id="logbook-list" style="margin-top:20px;"></div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div id="faq" class="tab-content">
+            <div class="card"><h2>❓ Foire aux questions</h2><div id="faq-container"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================================
+        // DONNÉES OFFICIELLES — manuel XP DEUS II FR (fr-rc-deusii.pdf)
+        // =====================================================================
+        const DATA = {
+            // Gamme officielle XP (xpmetaldetectors.com / revendeurs agrees).
+            // reacOffset / depth / sep / fine / mask = ponderations heuristiques
+            // du modele, calibrees sur la physique du disque (surface vue au sol,
+            // plage de frequences), PAS sur des mesures certifiees XP.
+            coils: {
+                c9:   { label: '9" rond (22,5 cm)',        freq: '4 à 45 kHz',  freqLo: 4, freqHi: 45,
+                        note: "Le plus maniable. Voit peu de sol à la fois : c'est ce qui lui donne sa séparation en ferraille dense, au prix de la portée sur cible isolée.",
+                        best: "Ferraille dense, zones fouillées, bordures, entre les ceps",
+                        reacOffset: -0.5, dDepth: -5, dSep: +12, dFine: +8, dMask: -10 },
+                c11:  { label: '11" rond (28 cm)',         freq: '4 à 45 kHz',  freqLo: 4, freqHi: 45,
+                        note: "Le disque de référence, livré d'origine. Meilleur compromis portée / séparation / poids.",
+                        best: "Usage général, tous terrains",
+                        reacOffset: 0, dDepth: 0, dSep: 0, dFine: 0, dMask: 0 },
+                c1311:{ label: '13x11" elliptique (34x28 cm)', freq: '4 à 45 kHz', freqLo: 4, freqHi: 45,
+                        note: "Le plus grand : couverture et portée maximales sur cible isolée. Voit beaucoup de sol d'un coup, donc masque davantage en zone polluée et fatigue le bras.",
+                        best: "Grands champs propres, labours, masses profondes, prospection rapide",
+                        reacOffset: +0.5, dDepth: +7, dSep: -12, dFine: -8, dMask: +12 },
+                hf2:  { label: 'HF2 elliptique (24x13 cm)', freq: 'FMF 9 à 90 kHz · mono jusqu\'à 120 kHz', freqLo: 9, freqHi: 90,
+                        note: "Haute fréquence. Sa forme fine réduit la surface qui voit le sol : moins d'effet de masque des ferreux et identification plus rapide des bons sons collés aux déchets. En contrepartie, sur monnaie épaisse isolée un 22 ou 28 cm garde l'avantage en profondeur.",
+                        best: "Micro-cibles, bijoux fins, or natif, billon/potin, sols très minéralisés",
+                        reacOffset: -0.5, dDepth: -6, dSep: +18, dFine: +22, dMask: -14 }
+            },
+            terrains: {
+                prairie: { name: "🌾 Prairie / champ propre", depth: "Portée maximale possible", poll: "Faible", config: { sens: 95, reac: 1, disc: 10 }, tips: ["Réactivité 1-1.5 pour gagner en performance sur sol peu pollué", "GENERAL en usage courant, DEEP HC pour la profondeur", "Stabilité Sol 1 en passe experte sur zone chaude"] },
+                "minéralisé": { name: "🔴 Sol minéralisé (argile rouge)", depth: "Réduite par le sol", poll: "Moyenne", config: { sens: 88, reac: 2.5, disc: 10 }, tips: ["Augmentez la Réactivité si la minéralisation est forte, pour gagner en stabilité", "Réduisez la sensibilité juste sous le seuil d'instabilité", "Grabbing fréquent, Stabilité Sol 2"] },
+                "pollué": { name: "🔩 Terrain pollué (ferraille)", depth: "Fortement réduite", poll: "Très haute", config: { sens: 88, reac: 3, disc: 6.8 }, tips: ["Réactivité 3+ (SENSI FT ou FAST)", "Silencieux négatif (-3 à -1) : masquage réduit, T.ID très réactif", "B.Caps plutôt que discrimination haute"] },
+                plage: { name: "🏖️ Plage (sable)", depth: "Bonne sur humide", poll: "Sel / alu", config: { sens: 95, reac: 0, disc: 8 }, tips: ["Baissez Sel Sens avant la sensibilité générale", "Réactivité 0-1 (cibles espacées) ; 2-2.5 si sable noir ou plage polluée", "Balayez parallèle sans relever le disque en fin de course"] },
+                eau: { name: "💧 Eau douce / immersion", depth: "Bonne", poll: "Faible", config: { sens: 93, reac: 1, disc: 8 }, tips: ["DIVING pour l'immersion saline", "En eau douce, préférez un programme continental", "Guide d'onde nécessaire si la télécommande est immergée"] }
+            },
+            factoryPrograms: {
+                general:    { label: "1. GENERAL",     sens: 95, reac: 2,   disc: 10,  iron: 7, resp: 4, audio: "PWM",       fmfMax: 40, sil: 2,  bcaps: 0, notch: null,     stab: 2,    filtAudio: 0, selSens: null, iar: null },
+                sensitive:  { label: "2. SENSITIVE",   sens: 90, reac: 2.5, disc: 6.8, iron: 7, resp: 4, audio: "PWM",       fmfMax: 40, sil: 1,  bcaps: 0, notch: [23,24],  stab: 2,    filtAudio: 0, selSens: null, iar: null },
+                sensi_ft:   { label: "3. SENSI FT",    sens: 90, reac: 3,   disc: 6.8, iron: 7, resp: 4, audio: "FullTones", fmfMax: 40, sil: 3,  bcaps: 0, notch: [23,24],  stab: 2,    filtAudio: 0, selSens: null, iar: null },
+                fast:       { label: "4. FAST",        sens: 90, reac: 3,   disc: 6.8, iron: 7, resp: 4, audio: "Square",    fmfMax: 40, sil: 2,  bcaps: 0, notch: [23,24],  stab: 2,    filtAudio: 0, selSens: null, iar: null },
+                park:       { label: "5. PARK",        sens: 90, reac: 2.5, disc: 9.0, iron: 7, resp: 4, audio: "Square",    fmfMax: 24, sil: 3,  bcaps: 2, notch: [23,35],  stab: 3,    filtAudio: 0, selSens: null, iar: null },
+                deep_hc:    { label: "6. DEEP HC",     sens: 93, reac: 2,   disc: 9.0, iron: 7, resp: 4, audio: "PWM",       fmfMax: 14, sil: 1,  bcaps: 0, notch: null,     stab: 2,    filtAudio: 0, selSens: null, iar: null },
+                deus_mono:  { label: "7. DEUS MONO",   sens: 90, reac: 2.5, disc: 6.1, iron: 7, resp: 4, audio: "PWM",       fmfMax: 24, sil: 2,  bcaps: 0, notch: null,     stab: null, filtAudio: 0, selSens: null, iar: null },
+                gold_field: { label: "8. GOLD FIELD",  sens: 95, reac: 2,   disc: null,iron: 7, resp: 7, audio: "Square",    fmfMax: 40, sil: null,bcaps: null,notch: null,   stab: null, filtAudio: 3, selSens: null, iar: 0 },
+                relic:      { label: "9. RELIC",       sens: 95, reac: 1,   disc: null,iron: 7, resp: 5, audio: "Square",    fmfMax: 24, sil: null,bcaps: null,notch: null,   stab: null, filtAudio: 0, selSens: null, iar: 0 },
+                diving:     { label: "10. DIVING",     sens: 93, reac: 1,   disc: 8.0, iron: 7, resp: 5, audio: "PWM",       fmfMax: 14, sil: 2,  bcaps: 0, notch: null,     stab: null, filtAudio: 0, selSens: 9,    iar: null },
+                beach:      { label: "11. BEACH",      sens: 95, reac: 0,   disc: 8.0, iron: 7, resp: 5, audio: "PWM",       fmfMax: 24, sil: 2,  bcaps: 0, notch: null,     stab: null, filtAudio: 0, selSens: 9,    iar: null },
+                beach_sens: { label: "12. BEACH SENS", sens: 95, reac: 0,   disc: 8.0, iron: 7, resp: 5, audio: "PWM",       fmfMax: 40, sil: 2,  bcaps: 0, notch: null,     stab: null, filtAudio: 0, selSens: 7,    iar: null }
+            },
+            faq: [
+                { q: "Réactivité 0 = profondeur max ?", r: "Pour la portée pure dans l'air, oui. Mais sur sol minéralisé ou pollué, un niveau moyen à haut trouve en réalité PLUS de cibles. Le manuel avertit de ne pas se fier aux seules performances dans l'air." },
+                { q: "Pourquoi le Freq Scan est-il si important ?", r: "Un canal mal choisi peut rendre une cible franche totalement inaudible, sans même un ID ferreux. Il conditionne aussi le plafond de sensibilité exploitable." },
+                { q: "Faut-il monter la discrimination en zone à déchets ?", r: "Non. Le manuel recommande de rester bas (ex. 8) et d'utiliser l'affichage TID, les multi-tons et B.Caps. Monter la discri fait perdre des cibles en métal noble." },
+                { q: "La Réponse Audio donne-t-elle de la profondeur ?", r: "Non. Elle amplifie le volume des cibles lointaines et procure une sensation de puissance, mais n'apporte pas de profondeur : elle n'agit que sur l'audio et la dynamique." },
+                { q: "À quoi sert le Silencieux négatif ?", r: "De -3 à -1 : très bonne performance sur sol pollué de ferreux, masquage particulièrement réduit et T.ID très réactif. En contrepartie les ferreux génèrent plus de pics aigus." },
+                { q: "Stabilité Sol 1, quel intérêt ?", r: "Elle accepte la zone au-dessus de la valeur sol captée (briques ~78, ferrites/chocs ~88) pour exploiter les signaux profonds masqués par la minéralisation. Sur la plupart des détecteurs cette zone est définitivement masquée." },
+                { q: "Le Notch est-il une fréquence ?", r: "Non, c'est une fenêtre de rejet sur l'indice de conductivité des cibles (TID, -6.4 à 99)." },
+                { q: "Faut-il balayer lentement ?", r: "Pas systématiquement. La lenteur favorise la profondeur, la vitesse sollicite la discrimination. Le DEUS est un détecteur dynamique : une vitesse trop faible peut faire perdre une cible. La vitesse de balayage doit suivre la réactivité." },
+                { q: "Quelle cadence de balayage viser ?", r: "En progression : environ 1 battement par seconde sur 50 cm. En recherche fine : 1 battement par seconde sur 20 cm, ce qui est considéré comme lent. Sur une cible à vérifier : 2 battements par seconde ou plus." },
+                { q: "Comment éviter de creuser un gros ferreux ?", r: "Croisé à 90° d'abord. Puis pompez le disque à la verticale au-dessus de la cible, comme pour un réglage de sol : si le son reste bon, c'est une cible conductrice ; sinon c'est très probablement du gros ferreux." },
+                { q: "À quoi sert le GND/IRON Break (firmware V3) ?", r: "Certains ferreux corrodés entrent partiellement dans la plage d'ID négative du sol, ce qui coupe leurs tonalités basses et brouille leur identification. Réglé entre -1 et -5, ce paramètre rend audibles davantage de tons graves : les têtes de clous arrondies, souvent mal discriminées, deviennent plus faciles à identifier." },
+                { q: "B.Caps sur la plage, bonne idée ?", r: "À utiliser avec parcimonie. Les capsules aluminium oxydées par le sel produisent un fort effet de halo, et ce filtre peut provoquer du masquage. Beaucoup préfèrent un mode plage classique et un tri à l'oreille." },
+                { q: "Sel Sens ou Sensibilité sur plage ?", r: "Sel Sens en priorité : il n'atténue que les instabilités liées à l'eau de mer, alors que la sensibilité générale agit sur toutes les cibles et tous les signaux." }
+            ]
+        };
+
+        let radarChart = null;
+        let referenceStats = null;
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+        }
+        function $(id) { return document.getElementById(id); }
+
+        function toggleTheme() {
+            const theme = localStorage.getItem('theme') || 'dark';
+            const newTheme = theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+
+        function setTab(tabName, btnEl) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            const target = $(tabName);
+            if (target) target.classList.add('active');
+            const btn = btnEl || document.querySelector('.nav-btn[data-tab="' + tabName + '"]');
+            if (btn) btn.classList.add('active');
+            if (tabName === 'config') {
+                setTimeout(() => { if (!radarChart) initRadarChart(); else radarChart.update(); }, 100);
+            }
+        }
+
+        function setSelectClosest(id, val) {
+            const sel = $(id);
+            let best = null, bestDiff = Infinity;
+            for (const opt of sel.options) {
+                const diff = Math.abs(parseFloat(opt.value) - val);
+                if (diff < bestDiff) { bestDiff = diff; best = opt.value; }
+            }
+            if (best !== null) sel.value = best;
+        }
+
+        // =====================================================================
+        //  MODE TERRAIN — protocole guidé question / réponse
+        //  Ordre imposé par la hiérarchie causale des réglages :
+        //  EMI → Sol → Programme → Fréquence → Réactivité → Sensibilité → Filtres → Audio
+        // =====================================================================
+        const REAC_STEPS = [0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5];
+
+        const FIELD = {
+            step: 'intro',
+            history: [],
+            a: {},          // réponses
+            work: {}        // valeurs en cours de réglage
+        };
+
+        // Ordre v4 : on charge GENERAL comme INSTRUMENT DE MESURE, on diagnostique
+        // le sol, PUIS seulement on choisit le programme de chasse sur des mesures.
+        const FIELD_ORDER = ['intro','coil','diagprog','freqscan','grab','mineral','ferraille','terrain','objectif','casque','programme','freqmax','regrab','reac','sens','bcaps','ferraille_filtre','notch','stabsol','audio','multiproc','recap'];
+
+        function fieldRestart() {
+            FIELD.step = 'intro';
+            FIELD.history = [];
+            FIELD.a = {};
+            FIELD.work = {};
+            renderField();
+        }
+
+        function fieldGo(step, answerKey, answerVal) {
+            if (answerKey !== undefined && answerKey !== null) FIELD.a[answerKey] = answerVal;
+            FIELD.history.push({ step: FIELD.step, a: Object.assign({}, FIELD.a), work: Object.assign({}, FIELD.work) });
+            FIELD.step = step;
+            renderField();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function fieldBack() {
+            if (FIELD.history.length === 0) return;
+            const prev = FIELD.history.pop();
+            FIELD.step = prev.step;
+            FIELD.a = prev.a;
+            FIELD.work = prev.work;
+            renderField();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderProgress() {
+            const idx = FIELD_ORDER.indexOf(FIELD.step);
+            $('field-progress').innerHTML = FIELD_ORDER.map((s, i) => {
+                const cls = i < idx ? 'done' : (i === idx ? 'current' : '');
+                return '<span class="' + cls + '"></span>';
+            }).join('');
+        }
+
+        function fieldTpl(tag, question, help, optionsHtml, liveHtml) {
+            return '<div class="field-step-tag">' + tag + '</div>'
+                 + '<div class="field-question">' + question + '</div>'
+                 + (help ? '<div class="field-help">' + help + '</div>' : '')
+                 + (liveHtml || '')
+                 + '<div class="field-options">' + optionsHtml + '</div>';
+        }
+
+        function opt(label, sub, onclick, cls) {
+            return '<button class="field-opt ' + (cls || '') + '" onclick="' + onclick + '">'
+                 + label + (sub ? '<small>' + sub + '</small>' : '') + '</button>';
+        }
+
+        function renderField() {
+            renderProgress();
+            $('field-back-btn').style.visibility = FIELD.history.length ? 'visible' : 'hidden';
+            const c = $('field-card');
+            const a = FIELD.a;
+
+            switch (FIELD.step) {
+
+            case 'intro':
+                c.innerHTML = fieldTpl('Protocole de réglage terrain',
+                    'Prêt à régler le détecteur sur place ?',
+                    'On ne choisit pas le programme au feeling : on <strong>mesure d\'abord le sol</strong>, puis on choisit. Le protocole vous fait charger GENERAL comme instrument de diagnostic, prend deux mesures, et ne recommande le programme de chasse qu\'ensuite. Comptez 5 à 10 minutes, disque en main.',
+                    opt('▶️ Démarrer le protocole complet', 'Diagnostic du sol puis réglage pas-à-pas', "fieldGo('coil')", 'opt-good')
+                    + opt('⚡ Je démarre tout de suite', 'GENERAL en valeurs sûres — je réglerai plus tard', "fieldGo('quickstart')", 'opt-warn')
+                    + opt('📋 Reprendre le dernier réglage terrain', 'Recharge le profil "Terrain" sauvegardé', "loadFieldProfile()", 'opt-info')
+                );
+                break;
+
+            case 'quickstart':
+                c.innerHTML = fieldTpl('Démarrage rapide',
+                    '⚡ Chargez GENERAL et partez',
+                    'Configuration sûre et polyvalente pour commencer à chasser immédiatement. GENERAL convient au débutant comme au chercheur expérimenté et offre un très bon rapport cibles/faux signaux. Vous affinerez quand vous aurez une idée du terrain.',
+                    '<div class="field-live">GENERAL · Réactivité 2 · Sensibilité 88<small>Faites quand même le Freq Scan (appui long sur SOL) — c\'est 10 secondes</small></div>'
+                    + opt('✅ C\'est parti', 'Charge cette config dans le simulateur', "applyQuickStart()", 'opt-good')
+                    + opt('🔬 Finalement, je fais le protocole complet', '', "fieldGo('coil')", 'opt-info')
+                );
+                break;
+
+            case 'coil': {
+                let html = '';
+                Object.keys(DATA.coils).forEach(k => {
+                    const cc = DATA.coils[k];
+                    html += opt(escapeHtml(cc.label),
+                        escapeHtml(cc.freq) + ' — ' + escapeHtml(cc.best),
+                        "fieldGo('diagprog','coil','" + k + "')");
+                });
+                c.innerHTML = fieldTpl('Étape 0 / Matériel',
+                    'Quel disque est monté ?',
+                    'Le disque conditionne tout le reste : plage de fréquences disponible, séparation en ferraille, portée, et donc la réactivité qui vous conviendra. Un 13x11" et un HF2 n\'appellent pas les mêmes réglages sur le même terrain.',
+                    html);
+                break;
+            }
+
+            case 'diagprog':
+                c.innerHTML = fieldTpl('Étape 0 / Instrument de mesure',
+                    'Chargez le programme <span style="color:var(--accent-gold)">1. GENERAL</span>',
+                    'Ce n\'est <strong>pas encore votre programme de chasse</strong> — c\'est votre instrument de diagnostic. Les deux mesures qui suivent (minéralisation, pollution ferreuse) ont besoin d\'une machine neutre pour être fiables. GENERAL est le bon candidat : il supprime l\'humidité des sols, source de halos et de faux sons, et ne masque rien d\'important.<br><br>Le vrai programme de chasse sera choisi à l\'étape 7, sur la base de ce que vous aurez mesuré.',
+                    opt('✅ GENERAL chargé', 'Touches + / − pour changer de programme', "fieldGo('freqscan')", 'opt-good')
+                );
+                break;
+
+            case 'regrab':
+                c.innerHTML = fieldTpl('Étape 11 / Re-Grabbing',
+                    'Refaites un Grabbing rapide.',
+                    'Vous venez de changer de programme et de fréquence max : la compensation de sol faite au diagnostic n\'est plus valable. Pinpoint pressé + pompage du disque, jusqu\'à stabilisation.'
+                    + (a.prog === 'gold_field' || a.prog === 'relic' ? '<br><br>⚠️ <strong>Gold Field / Relic :</strong> ces programmes ne rejettent QUE le sol ambiant sur lequel vous vous êtes réglé. Le Grabbing est ici primordial et à refaire régulièrement en cours de chasse.' : ''),
+                    opt('✅ Fait', '', "fieldGo('reac')", 'opt-good')
+                );
+                break;
+
+            case 'terrain':
+                c.innerHTML = fieldTpl('Étape 6 / Contexte', 'Sur quel type de terrain êtes-vous ?', null,
+                    opt('🌾 Prairie / champ labouré propre', 'Peu de ferraille visible', "fieldGo('objectif','terrain','prairie')")
+                  + opt('🏛️ Habitat ancien / motte / chemin', 'Ferraille présente, sol travaillé', "fieldGo('objectif','terrain','habitat')")
+                  + opt('🔩 Ferme, décharge, zone très polluée', 'Ferraille dense', "fieldGo('objectif','terrain','pollue')")
+                  + opt('🏖️ Plage / sable', 'Sable sec, humide ou immersion', "fieldGo('objectif','terrain','plage')")
+                  + opt('⛰️ Zone aurifère minéralisée', 'Recherche d\'or natif', "fieldGo('objectif','terrain','aurifere')")
+                );
+                break;
+
+            case 'mineral':
+                c.innerHTML = fieldTpl('Étape 4 / Diagnostic du sol',
+                    'Pompez le disque au sol 5-6 fois. Quel niveau de minéralisation (GND LVL) affiche l\'écran ?',
+                    'Vous venez de pomper le disque : lisez la barre GND LVL. Plus elle est haute, plus le terrain est difficile. <strong>C\'est la mesure qui détermine votre réactivité optimale — et une partie du choix du programme.</strong>',
+                    opt('🟢 Faible — barre basse', 'Sol sain, sable clair, prairie', "fieldGo('ferraille','mineral',0)", 'opt-good')
+                  + opt('🟡 Moyenne — barre à mi-hauteur', 'Sol agricole courant', "fieldGo('ferraille','mineral',1)", 'opt-warn')
+                  + opt('🔴 Forte — barre haute', 'Argile rouge, ferrites, sable noir', "fieldGo('ferraille','mineral',2)", 'opt-danger')
+                  + opt('❓ Je ne sais pas lire l\'indice', 'On partira sur "moyenne", le plus courant', "fieldGo('ferraille','mineral',1)", 'opt-info')
+                );
+                break;
+
+            case 'ferraille':
+                c.innerHTML = fieldTpl('Étape 5 / Diagnostic pollution',
+                    'Balayez 30 secondes en tous métaux. Combien de signaux ferreux entendez-vous ?',
+                    'Entrez dans le menu SOL : le détecteur passe en tous métaux, c\'est le raccourci idéal pour sonder la pollution réelle d\'une zone.',
+                    opt('🟢 Presque rien — quelques signaux isolés', '', "fieldGo('terrain','ferraille',0)", 'opt-good')
+                  + opt('🟡 Régulier — un signal toutes les 2-3 secondes', '', "fieldGo('terrain','ferraille',1)", 'opt-warn')
+                  + opt('🔴 Permanent — ça grésille sans arrêt', '', "fieldGo('terrain','ferraille',2)", 'opt-danger')
+                );
+                break;
+
+            case 'objectif':
+                c.innerHTML = fieldTpl('Étape 7 / Objectif', 'Que cherchez-vous en priorité aujourd\'hui ?',
+                    'Ce choix arbitre les compromis : on ne règle pas pareil pour ratisser large que pour aller chercher une cible profonde précise.',
+                    opt('💰 Monnaies & petits objets', 'Le plus courant', "fieldGo('casque','objectif','monnaies')")
+                  + opt('🏛️ Reliques, militaria, grosses masses', 'Cibles larges, souvent profondes', "fieldGo('casque','objectif','reliques')")
+                  + opt('🔍 Profondeur maximale', 'Site déjà ratissé, on cherche le fond', "fieldGo('casque','objectif','profond')")
+                  + opt('✨ Or natif / pépites', 'Sol aurifère minéralisé', "fieldGo('casque','objectif','or')")
+                  + opt('🎯 Polyvalent — je découvre le site', '', "fieldGo('casque','objectif','tout')")
+                );
+                break;
+
+            case 'casque':
+                c.innerHTML = fieldTpl('Étape 8 / Matériel', 'Quel casque utilisez-vous ?',
+                    'Le Multi-Process (2 canaux simultanés) n\'est audible qu\'avec un casque stéréo XP. Sans lui, cette fonction est inaccessible.',
+                    opt('🎧 WS6ST / WSAST / WSAXL ST', 'Casque stéréo XP — Multi-Process disponible', "fieldGo('programme','stereo',true)", 'opt-good')
+                  + opt('🔊 Haut-parleur, BH-01 ou casque filaire', 'Multi-Process indisponible', "fieldGo('programme','stereo',false)", 'opt-info')
+                );
+                break;
+
+            case 'freqscan':
+                c.innerHTML = fieldTpl('Étape 1 / EMI — ÉTAPE CRITIQUE',
+                    'Lancez un Freq Scan maintenant. Le détecteur est-il calme ?',
+                    'Appui long sur la touche SOL depuis l\'écran d\'accueil = raccourci Scan automatique de fréquence. <strong>Ne sautez jamais cette étape :</strong> un canal parasité peut rendre une cible franche totalement inaudible — pas même un ID ferreux. Disque en l\'air, immobile, loin de tout métal pendant le scan.',
+                    opt('✅ Calme — scan effectué', '', "fieldGo('grab','emi','ok')", 'opt-good')
+                  + opt('⚠️ Encore bruyant après le scan', 'Relancez le scan ailleurs, ou décalez la fréquence (SHIFT)', "fieldGo('grab','emi','bruit')", 'opt-warn')
+                );
+                break;
+
+            case 'programme': {
+                const reco = fieldRecommendProgram();
+                const p = DATA.factoryPrograms[reco.key];
+                c.innerHTML = fieldTpl('Étape 9 / Programme de chasse',
+                    'Programme recommandé : <span style="color:var(--accent-gold)">' + escapeHtml(p.label) + '</span>',
+                    escapeHtml(reco.reason)
+                    + '<br><br><strong>Recommandation basée sur vos mesures</strong> — minéralisation '
+                    + ['faible','moyenne','forte'][a.mineral === undefined ? 1 : a.mineral]
+                    + ', pollution ferreuse ' + ['faible','moyenne','élevée'][a.ferraille === undefined ? 1 : a.ferraille]
+                    + '. Sélectionnez-le sur la machine avec les touches + / −.',
+                    opt('✅ Programme chargé, continuer', '', "fieldGo('freqmax','prog','" + reco.key + "')", 'opt-good')
+                  + opt('🔄 Je préfère un autre programme', 'Choisir manuellement', "fieldGo('progmanual')", 'opt-info')
+                );
+                break;
+            }
+
+            case 'progmanual': {
+                let html = '';
+                Object.keys(DATA.factoryPrograms).forEach(k => {
+                    html += opt(escapeHtml(DATA.factoryPrograms[k].label), '', "fieldGo('freqmax','prog','" + k + "')");
+                });
+                c.innerHTML = fieldTpl('Étape 9 / Programme de chasse', 'Quel programme utilisez-vous ?', null, html);
+                break;
+            }
+
+            case 'freqmax': {
+                const reco = fieldRecommendFreq();
+                const coil = DATA.coils[a.coil] || DATA.coils.c11;
+                c.innerHTML = fieldTpl('Étape 10 / Fréquence Max',
+                    'Réglez la Fréquence Max sur <span style="color:var(--accent-gold)">' + reco.val + ' kHz</span>',
+                    escapeHtml(reco.reason)
+                    + '<br><br>🔵 <strong>' + escapeHtml(coil.label) + '</strong> — plage disponible : ' + escapeHtml(coil.freq)
+                    + (a.coil === 'hf2' ? '. Sur ce disque haute fréquence, les trois crans se situent tous plus haut que sur un disque FMF standard : attendez-vous à un comportement plus nerveux et plus fin.' : '.')
+                    + '<br><br><strong>Astuce :</strong> baisser la fréquence max rend la machine plus stable vis-à-vis du sol, ce qui vous permettra ensuite de remonter sensibilité et réactivité.',
+                    opt('✅ ' + reco.val + ' kHz — appliqué', 'Recommandé ici', "fieldGo('regrab','freqmax'," + reco.val + ")", 'opt-good')
+                  + opt('14 kHz', 'Hauts conducteurs, grosses masses, moins de pics ferreux', "fieldGo('regrab','freqmax',14)")
+                  + opt('24 kHz', 'Compromis stable, moins sensible aux petits conducteurs', "fieldGo('regrab','freqmax',24)")
+                  + opt('40 kHz', 'Plage la plus étendue, max de cibles en sol ferreux/minéralisé', "fieldGo('regrab','freqmax',40)")
+                );
+                break;
+            }
+
+            case 'grab':
+                c.innerHTML = fieldTpl('Étape 2 / Effet de sol (diagnostic) — ÉTAPE CRITIQUE',
+                    'Faites un Grabbing maintenant.',
+                    'Maintenez la touche <strong>Pinpoint pressée</strong> tout en pompant le disque au sol (±15 cm), jusqu\'à ce que le son du sol s\'atténue et que la valeur se stabilise. Le mode GRAB est celui recommandé par XP : rapide et précis. Même si votre Stabilité Sol rejette les sols hauts, le Grabbing reste utile car il améliore la fiabilité de l\'affichage TID.'
+                    + '<br><br>📏 <strong>Pendant le pompage, lisez la barre GND LVL</strong> — c\'est la mesure de minéralisation que la question suivante vous demandera.',
+                    opt('✅ Grabbing fait, valeur stabilisée', '', "fieldGo('mineral','grab','ok')", 'opt-good')
+                  + opt('⚠️ La valeur ne se stabilise pas', 'Sol très hétérogène — refaites-le sur une zone propre, sans métal sous le disque', "fieldGo('mineral','grab','instable')", 'opt-warn')
+                );
+                break;
+
+            case 'reac': {
+                if (FIELD.work.reac === undefined) FIELD.work.reac = fieldStartReac();
+                const r = FIELD.work.reac;
+                const live = '<div class="field-live">RÉACTIVITÉ = ' + r.toFixed(1)
+                    + '<small>Réglez cette valeur sur la machine, puis balayez 30 secondes</small></div>';
+                const canDown = REAC_STEPS.indexOf(r) > 0;
+                let html = '';
+                if (canDown) {
+                    html += opt('🟢 Sol calme, fer propre et net', 'On descend d\'un cran pour gagner en portée', "fieldReacDown()", 'opt-good');
+                }
+                html += opt('🟡 Le sol devient bruyant OU le fer commence à fausser', 'On remonte d\'un cran et on valide — c\'est votre point optimal', "fieldReacUpAndLock()", 'opt-warn');
+                html += opt('🔴 Cibles collées au fer non séparées', 'On monte d\'un cran pour améliorer la séparation', "fieldReacUp()", 'opt-danger');
+                html += opt('✅ C\'est bon, je valide cette valeur', '', "fieldGo('sens','reac'," + r + ")", 'opt-info');
+
+                c.innerHTML = fieldTpl('Étape 13 / Réactivité',
+                    'À réactivité ' + r.toFixed(1) + ', que se passe-t-il ?',
+                    'Méthode : on <strong>descend cran par cran</strong> jusqu\'à ce que le sol devienne bruyant ou que le fer fausse, puis on remonte d\'un cran. '
+                    + (a.mineral === 2 ? '<br><br>⚠️ <strong>Sol fortement minéralisé :</strong> ne descendez pas trop. Le manuel est clair — on trouve plus de cibles et on va plus profond avec des niveaux moyens à hauts sur ce type de sol, malgré une portée dans l\'air inférieure.' : '')
+                    + (a.ferraille === 2 ? '<br><br>⚠️ <strong>Ferraille dense :</strong> visez plutôt 3 à 4. La portée brute ne sert à rien si tout est masqué.' : '')
+                    + (a.coil === 'c1311' ? '<br><br>🔵 <strong>Grand disque 13x11" :</strong> il voit beaucoup de sol à chaque balayage. Comptez environ un demi-cran de réactivité en plus qu\'avec un 11" à conditions égales.' : '')
+                    + (a.coil === 'c9' || a.coil === 'hf2' ? '<br><br>🔵 <strong>Petit disque :</strong> sa séparation intrinsèque vous permet de descendre un demi-cran plus bas qu\'avec un 11" sans perdre le tri des cibles.' : ''),
+                    html, live);
+                break;
+            }
+
+            case 'sens': {
+                if (FIELD.work.sens === undefined) FIELD.work.sens = fieldStartSens();
+                const s = FIELD.work.sens;
+                const live = '<div class="field-live">SENSIBILITÉ = ' + s
+                    + '<small>Réglez cette valeur, puis balayez 30 secondes disque au sol</small></div>';
+                let html = '';
+                if (s < 99) html += opt('🟢 Parfaitement stable', 'On monte de 3 points', "fieldSensUp()", 'opt-good');
+                html += opt('🟡 Quelques craquements légers', 'On redescend de 5 points et on valide', "fieldSensDownAndLock()", 'opt-warn');
+                html += opt('🔴 Ça crache en permanence', 'On redescend de 5 points et on retente', "fieldSensDown()", 'opt-danger');
+                html += opt('✅ C\'est bon, je valide', '', "fieldGo('bcaps','sens'," + s + ")", 'opt-info');
+
+                c.innerHTML = fieldTpl('Étape 14 / Sensibilité',
+                    'À sensibilité ' + s + ', la machine est-elle stable ?',
+                    'La bonne valeur n\'est pas un chiffre choisi : c\'est <strong>le seuil d\'instabilité, moins une marge</strong>. Les niveaux usuels vont de 70 à 90 — ne vous forcez pas à rester haut. Plancher raisonnable : 75.'
+                    + (a.emi === 'bruit' ? '<br><br>⚠️ Vous aviez du bruit EMI résiduel : votre plafond de sensibilité sera plus bas que la normale. C\'est normal, ne forcez pas.' : ''),
+                    html, live);
+                break;
+            }
+
+            case 'bcaps':
+                c.innerHTML = fieldTpl('Étape 15 / Filtres',
+                    'Déterrez-vous beaucoup de capsules de bouteille ou de cartouches ?',
+                    'B.Caps rejette efficacement les capsules ferreuses, mais aide aussi à éliminer des ferreux habituellement difficiles : cartouches en fer, anneaux en fer, certains gros ferreux. Le manuel recommande de l\'utiliser <strong>plutôt que de monter la discrimination</strong>.',
+                    opt('❌ Non, pas de problème', 'B.Caps = 0', "fieldGo('ferraille_filtre','bcaps',0)")
+                  + opt('🟡 Quelques-unes, gênantes', 'B.Caps = 2', "fieldGo('ferraille_filtre','bcaps',2)", 'opt-warn')
+                  + opt('🔴 Beaucoup — parc, plage, zone de loisir', 'B.Caps = 3 à 4', "fieldGo('ferraille_filtre','bcaps',3)", 'opt-danger')
+                );
+                break;
+
+            case 'ferraille_filtre':
+                c.innerHTML = fieldTpl('Étape 16 / Silencieux',
+                    'Comment voulez-vous traiter les craquements de gros ferreux ?',
+                    'Le Silencieux filtre les pics aigus résiduels des ferreux difficiles — <strong>mais peut masquer une bonne cible collée à un ferreux</strong>. Sa plage réelle va de -3 à 7. Les valeurs négatives sont le vrai mode "chasse en zone ferreuse" : masquage particulièrement réduit et T.ID très réactif, au prix de plus de pics aigus sur le fer.',
+                    opt('🎯 Priorité : ne rien manquer près du fer', 'Silencieux -2 — masquage minimal, il faudra trier à l\'oreille', "fieldGo('notch','sil',-2)", 'opt-good')
+                  + opt('⚖️ Compromis standard', 'Silencieux 1 à 2', "fieldGo('notch','sil',2)", 'opt-info')
+                  + opt('😌 Priorité : confort d\'écoute', 'Silencieux 4 — filtrage efficace, risque de masquage accru', "fieldGo('notch','sil',4)", 'opt-warn')
+                );
+                break;
+
+            case 'notch':
+                c.innerHTML = fieldTpl('Étape 17 / Notch',
+                    'Un déchet précis revient-il sans arrêt avec le même indice ?',
+                    'Le Notch rejette une <strong>fenêtre de conductivité</strong> (TID), pas une fréquence. Repérez l\'indice affiché par le déchet récurrent et notchez cette valeur. Attention : tout ce qui a la même conductivité disparaît aussi.',
+                    opt('❌ Non, je laisse tout passer', 'Recommandé par défaut', "fieldGo('stabsol','notch',null)", 'opt-good')
+                  + opt('🥫 Papiers d\'alu / capsules alu', 'Notch 23-35 (comme le programme PARK)', "fieldGo('stabsol','notch','23-35')", 'opt-warn')
+                  + opt('💧 Cokes / humidité du sol / faux sons de trous', 'Notch fin 23-24 (comme SENSITIVE/FAST)', "fieldGo('stabsol','notch','23-24')", 'opt-warn')
+                  + opt('🎯 Autre déchet — je réglerai le TID manuellement', '', "fieldGo('stabsol','notch','manuel')", 'opt-info')
+                );
+                break;
+
+            case 'stabsol': {
+                const isMineral = a.mineral === 2;
+                c.innerHTML = fieldTpl('Étape 18 / Stabilité Sol',
+                    'Quel niveau de Stabilité Sol ?',
+                    'Niveau 1 : la zone au-dessus de la valeur sol captée est <strong>acceptée</strong> — briques (~78), ferrites et chocs de disque (~88) vont sonner. C\'est le mode expert pour exploiter les signaux profonds masqués par la minéralisation. Sur la plupart des détecteurs, cette zone est définitivement masquée.'
+                    + (isMineral ? '<br><br>💡 <strong>Sur votre sol fortement minéralisé, le niveau 1 est justement là où se cachent les cibles profondes</strong> — mais réservez-le à une passe ciblée sur zone chaude, pas à la prospection large.' : ''),
+                    opt('🔥 Niveau 1 — mode expert profondeur', 'Bruit accru, chocs de disque audibles. Passe ciblée uniquement.', "fieldGo('audio','stab',1)", 'opt-danger')
+                  + opt('⚖️ Niveau 2 — standard', 'Rejette les sols hauts mais analyse multifréquentielle à travers la minéralisation', "fieldGo('audio','stab',2)", 'opt-good')
+                  + opt('🛡️ Niveau 3 — maximum de stabilité', 'Sol non minéralisé, disque qui touche souvent', "fieldGo('audio','stab',3)", 'opt-info')
+                );
+                break;
+            }
+
+            case 'audio':
+                c.innerHTML = fieldTpl('Étape 19 / Audio',
+                    'Cherchez-vous à entendre les signaux les plus faibles ?',
+                    'La Réponse Audio amplifie le volume des cibles lointaines et procure une sensation de puissance — <strong>mais n\'apporte aucune profondeur physique</strong>, elle n\'agit que sur l\'audio et la dynamique. En la montant trop, vous amplifiez aussi les petits faux signaux et perdez l\'appréciation de la distance. Le Filtre Audio, lui, lisse le son et fait réellement gagner quelques centimètres en limite de portée.',
+                    opt('🔍 Oui — je chasse le signal limite', 'Réponse Audio 6-7 + Filtre Audio 3', "fieldGo('multiproc','audio','deep')", 'opt-good')
+                  + opt('⚖️ Équilibré — je veux juger la profondeur à l\'oreille', 'Réponse Audio 4 + Filtre Audio 1-2', "fieldGo('multiproc','audio','balance')", 'opt-info')
+                  + opt('🔩 Zone ferreuse — je veux les nuances des craquements', 'Réponse Audio 4 + Filtre Audio 0', "fieldGo('multiproc','audio','iron')", 'opt-warn')
+                );
+                break;
+
+            case 'multiproc':
+                if (!a.stereo) { fieldGo('recap', 'multiproc', 'standard'); return; }
+                c.innerHTML = fieldTpl('Étape 20 / Multi-Process',
+                    'Voulez-vous activer le double canal audio ?',
+                    'Vous avez un casque stéréo compatible. Le Multi-Process permet de combiner une réactivité basse pour les recherches profondes avec une réactivité haute pour trouver les petites cibles proches de ferreux. Prévoyez du temps d\'adaptation : les presets d\'usine sont volontairement modérés pour ne pas perturber vos habitudes.',
+                    opt('❌ Non, canal simple', 'Recommandé si vous découvrez la machine', "fieldGo('recap','multiproc','standard')", 'opt-good')
+                  + opt('🎧 DUAL REACT', 'High Square réactif (surface) + PWM peu réactif (profondeur), un son par oreille', "fieldGo('recap','multiproc','dualreact')", 'opt-info')
+                  + opt('🎯 DUAL AXIS', 'Canal dynamique 2.5 + canal statique — ⚠️ réglage du sol à faire EN MODE STATIQUE', "fieldGo('recap','multiproc','dualaxis')", 'opt-warn')
+                  + opt('🌊 MORPH.1', '2 Tons + effet Chorus mettant en évidence les cibles lointaines', "fieldGo('recap','multiproc','morph1')", 'opt-info')
+                );
+                break;
+
+            case 'recap':
+                c.innerHTML = renderFieldRecap();
+                break;
+
+            default:
+                c.innerHTML = '<p>Étape inconnue.</p>';
+            }
+        }
+
+        // --- logique de recommandation du mode terrain ---
+        function fieldRecommendProgram() {
+            const a = FIELD.a;
+            if (a.objectif === 'or') return { key: 'gold_field', reason: "Gold Field est destiné aux sols aurifères très minéralisés, où les pépites sont souvent perçues comme du sol ou des ferreux. Il travaille en tous métaux et ne rejette que le sol ambiant." };
+            if (a.terrain === 'plage') {
+                if (a.objectif === 'profond' || a.objectif === 'monnaies') return { key: 'beach_sens', reason: "Beach Sens monte jusqu'à ~40 kHz : c'est le programme plage le plus profond sur l'humide, mais aussi le plus nerveux." };
+                return { key: 'beach', reason: "Beach offre plus de sensibilité aux petites cibles que Diving et convient bien en zone humide." };
+            }
+            if (a.objectif === 'reliques') return { key: 'relic', reason: "Relic est paramétré en tous métaux avec une réactivité basse, pour la recherche de grosses masses. Balayez à 15-20 cm du sol pour ne pas être gêné par les ferreux et les effets de sol." };
+            if (a.objectif === 'profond') return { key: 'deep_hc', reason: "Deep HC additionne des fréquences très basses et moyennes jusqu'à 14 kHz : parfait pour les amas de monnaies et les cibles de bonne conductivité." };
+            if (a.ferraille === 2 || a.terrain === 'pollue') {
+                if (a.mineral === 2) return { key: 'sensi_ft', reason: "Sensi FT offre une identification sonore très riche et sera performant sur terrain très pollué de ferreux et minéralisé." };
+                return { key: 'fast', reason: "Fast est réglé en Pitch avec une réactivité élevée : sensation de rapidité pour la localisation sur terrain pollué de ferreux." };
+            }
+            if (a.mineral === 2) return { key: 'sensitive', reason: "Sensitive monte jusqu'à ~40 kHz et sera très efficace sur terrain minéralisé et pollué pour dénicher la moindre cible." };
+            return { key: 'general', reason: "General offre un très bon rapport cibles/faux signaux grâce à sa suppression de l'humidité des sols, source de halos et de faux sons. Il convient au débutant comme au chercheur expérimenté." };
+        }
+
+        function fieldRecommendFreq() {
+            const a = FIELD.a;
+            if (a.objectif === 'profond' || a.objectif === 'reliques') return { val: 14, reason: "Vous cherchez des masses profondes : la limite à 14 kHz concentre la machine sur les hauts conducteurs et réduit les pics aigus des ferreux." };
+            if (a.objectif === 'or') return { val: 40, reason: "Pour l'or natif, la fréquence la plus haute maximise la sensibilité aux petites cibles, surtout en sol minéralisé." };
+            if (a.mineral === 2 && a.ferraille < 2) return { val: 24, reason: "Sur sol fortement minéralisé, la limite à 24 kHz vous rend plus stable vis-à-vis du sol — et vous permettra ensuite de remonter sensibilité et réactivité." };
+            if (a.ferraille === 2) return { val: 40, reason: "En sol ferreux, la limite à 40 kHz reste la plus polyvalente : sa plage de fréquences étendue garantit les meilleures chances de sortir les bonnes cibles du fer." };
+            return { val: 40, reason: "40 kHz est la limite la plus polyvalente de par sa plage de fréquences la plus étendue." };
+        }
+
+        function fieldStartReac() {
+            const a = FIELD.a;
+            if (a.ferraille === 2) return 3;
+            if (a.mineral === 2) return 3;
+            if (a.objectif === 'profond' || a.objectif === 'reliques') return 1.5;
+            if (a.terrain === 'plage') return 1;
+            if (a.mineral === 0 && a.ferraille === 0) return 1.5;
+            return 2.5;
+        }
+        function fieldStartSens() {
+            const a = FIELD.a;
+            if (a.mineral === 2) return 85;
+            if (a.emi === 'bruit') return 82;
+            return 88;
+        }
+
+        function fieldReacDown() {
+            const i = REAC_STEPS.indexOf(FIELD.work.reac);
+            if (i > 0) FIELD.work.reac = REAC_STEPS[i - 1];
+            renderField();
+        }
+        function fieldReacUp() {
+            const i = REAC_STEPS.indexOf(FIELD.work.reac);
+            if (i < REAC_STEPS.length - 1) FIELD.work.reac = REAC_STEPS[i + 1];
+            renderField();
+        }
+        function fieldReacUpAndLock() {
+            const i = REAC_STEPS.indexOf(FIELD.work.reac);
+            if (i < REAC_STEPS.length - 1) FIELD.work.reac = REAC_STEPS[i + 1];
+            fieldGo('sens', 'reac', FIELD.work.reac);
+        }
+        function fieldSensUp() {
+            FIELD.work.sens = Math.min(99, FIELD.work.sens + 3);
+            renderField();
+        }
+        function fieldSensDown() {
+            FIELD.work.sens = Math.max(60, FIELD.work.sens - 5);
+            renderField();
+        }
+        function fieldSensDownAndLock() {
+            FIELD.work.sens = Math.max(60, FIELD.work.sens - 5);
+            fieldGo('bcaps', 'sens', FIELD.work.sens);
+        }
+
+        function fieldBuildConfig() {
+            const a = FIELD.a;
+            const base = DATA.factoryPrograms[a.prog] || DATA.factoryPrograms.general;
+            const cfg = {
+                prog: a.prog || 'general',
+                progLabel: base.label,
+                sens: a.sens !== undefined ? a.sens : base.sens,
+                reac: a.reac !== undefined ? a.reac : base.reac,
+                disc: base.disc === null ? 0 : base.disc,
+                iar: base.iar,
+                sil: a.sil !== undefined ? a.sil : (base.sil === null ? 0 : base.sil),
+                bcaps: a.bcaps !== undefined ? a.bcaps : (base.bcaps === null ? 0 : base.bcaps),
+                notch: a.notch,
+                fmfMax: a.freqmax || base.fmfMax,
+                audio: base.audio,
+                stab: a.stab !== undefined ? a.stab : (base.stab === null ? 2 : base.stab),
+                iron: base.iron,
+                selSens: base.selSens,
+                multiproc: a.multiproc || 'standard',
+                coil: a.coil || 'c11',
+                mineral: a.mineral !== undefined ? a.mineral : 1,
+                ferraille: a.ferraille !== undefined ? a.ferraille : 1
+            };
+            if (a.audio === 'deep') { cfg.resp = 7; cfg.filtAudio = 3; }
+            else if (a.audio === 'iron') { cfg.resp = 4; cfg.filtAudio = 0; }
+            else { cfg.resp = 4; cfg.filtAudio = 2; }
+            if (a.objectif === 'or' && base.iar !== null) cfg.iar = 3;
+            return cfg;
+        }
+
+        function renderFieldRecap() {
+            const cfg = fieldBuildConfig();
+            window.__fieldCfg = cfg;
+            let notchTxt = 'OFF';
+            if (cfg.notch === '23-35') notchTxt = '23 → 35';
+            else if (cfg.notch === '23-24') notchTxt = '23 → 24';
+            else if (cfg.notch === 'manuel') notchTxt = 'à régler sur le TID du déchet';
+
+            const coilInfo = DATA.coils[cfg.coil] || DATA.coils.c11;
+            const rows = [
+                ['Disque', coilInfo.label],
+                ['Programme', cfg.progLabel],
+                ['Fréquence Max', cfg.fmfMax + ' kHz'],
+                ['Réactivité', cfg.reac.toFixed(1)],
+                ['Sensibilité', cfg.sens],
+                ['Discrimination', cfg.iar !== null && cfg.iar !== undefined ? 'IAR ' + cfg.iar : cfg.disc],
+                ['Silencieux', cfg.sil],
+                ['B.Caps', cfg.bcaps === 0 ? 'OFF' : cfg.bcaps],
+                ['Notch', notchTxt],
+                ['Stabilité Sol', cfg.stab],
+                ['Réponse Audio', cfg.resp],
+                ['Filtre Audio', cfg.filtAudio],
+                ['Volume Fer', cfg.iron],
+                ['Type Audio', cfg.audio]
+            ];
+            if (cfg.selSens !== null && cfg.selSens !== undefined) rows.push(['Sel Sens', cfg.selSens]);
+            if (cfg.multiproc !== 'standard') rows.push(['Multi-Process', cfg.multiproc.toUpperCase()]);
+
+            let warnings = '';
+            if (cfg.stab === 1) warnings += '<div class="alert alert-warn">Stabilité Sol 1 : les briques (~78) et ferrites/chocs (~88) vont sonner. Passe ciblée, pas prospection large.</div>';
+            if (cfg.multiproc === 'dualaxis') warnings += '<div class="alert alert-danger">DUAL AXIS : réglez l\'effet de sol <strong>en mode statique</strong> (pompez le disque en pressant Pinpoint).</div>';
+            if (cfg.iar !== null && cfg.iar !== undefined) warnings += '<div class="alert alert-info">Gold Field / Relic : refaites le <strong>Grabbing régulièrement</strong>, ces programmes ne rejettent que le sol ambiant sur lequel vous vous êtes réglé.</div>';
+            if (cfg.coil === 'c1311' && cfg.ferraille === 2) warnings += '<div class="alert alert-warn">Grand disque 13x11" en ferraille dense : c\'est la pire combinaison pour le masquage. Si vous manquez des cibles, passez au 9" ou au HF2 avant de retoucher les réglages.</div>';
+            if (cfg.coil === 'hf2') warnings += '<div class="alert alert-info">HF2 : excellent sur micro-cibles et en zone ferreuse, mais sur monnaie épaisse isolée un 22 ou 28 cm garde l\'avantage en profondeur.</div>';
+            if (cfg.sil < 0) warnings += '<div class="alert alert-info">Silencieux négatif : attendez-vous à plus de pics aigus sur le fer. C\'est le prix du masquage réduit — triez au TID et à l\'oreille.</div>';
+            if (cfg.selSens !== null && cfg.selSens !== undefined) warnings += '<div class="alert alert-info">Plage : en cas d\'instabilité, baissez <strong>Sel Sens avant</strong> la sensibilité générale.</div>';
+
+            return '<div class="field-step-tag">Protocole terminé</div>'
+                + '<div class="field-question">🎯 Votre configuration terrain</div>'
+                + '<div class="field-help">Reportez ces valeurs sur la machine. Refaites un <strong>Freq Scan</strong> et un <strong>Grabbing</strong> à chaque changement de zone.</div>'
+                + '<table class="recap-table">' + rows.map(r => '<tr><td>' + escapeHtml(r[0]) + '</td><td>' + escapeHtml(r[1]) + '</td></tr>').join('') + '</table>'
+                + warnings
+                + buildFieldTips(cfg)
+                + '<div class="field-options" style="margin-top:16px;">'
+                + opt('📊 Charger dans le simulateur', 'Voir l\'analyse tactique de cette config', "applyFieldConfig()", 'opt-good')
+                + opt('💾 Sauvegarder comme profil "Terrain"', 'Rechargeable au prochain démarrage du protocole', "saveFieldProfile()", 'opt-info')
+                + opt('🔄 Le terrain a changé', 'Refaire seulement le diagnostic du sol (Grabbing + mesures)', "fieldRediag()", 'opt-warn')
+                + opt('↺ Refaire tout le protocole', 'Nouveau site', "fieldRestart()", 'opt-warn')
+                + '</div>';
+        }
+
+        // Re-diagnostic : la mineralisation change d'un bout de parcelle a l'autre.
+        // On repart du Grabbing en conservant objectif, casque et programme.
+        function fieldRediag() {
+            FIELD.history.push({ step: FIELD.step, a: Object.assign({}, FIELD.a), work: Object.assign({}, FIELD.work) });
+            delete FIELD.a.mineral;
+            delete FIELD.a.ferraille;
+            delete FIELD.work.reac;
+            delete FIELD.work.sens;
+            FIELD.step = 'grab';
+            renderField();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function applyQuickStart() {
+            loadProgramByKey('general');
+            $('rng-sens').value = 88;
+            setSelectClosest('sel-reac', 2);
+            $('sel-mineral').value = '1';
+            $('sel-ferraille').value = '1';
+            onCoilChange();
+            setTab('config');
+            updateAdvanced();
+            updateExpert();
+            updateSimulator();
+        }
+
+        // =================================================================
+        //  CONSEILS TERRAIN — generes selon la config obtenue.
+        //  Sources : manuel XP DEUS II FR, forum officiel XP, retours terrain.
+        // =================================================================
+        function buildFieldTips(cfg) {
+            const a = FIELD.a;
+            const coil = DATA.coils[cfg.coil] || DATA.coils.c11;
+            const T = (cls, txt) => '<div class="tip ' + cls + '">' + txt + '</div>';
+            let h = '<div class="tips-block">';
+
+            // ---------- 1. BALAYAGE ----------
+            h += '<h3>🌀 Balayage</h3>';
+            h += T('t-key', '<b>La règle de base :</b> la lenteur favorise la profondeur, la vitesse sollicite la discrimination. '
+                + 'Mais attention — le DEUS est un détecteur <b>dynamique</b> : une vitesse trop faible peut vous faire <b>perdre</b> une cible. '
+                + '« Balayer lentement » n\'est donc pas un conseil universel, c\'est un compromis à choisir.');
+
+            h += '<div class="cadence">'
+              + '<div><span>1 / sec</span>sur 50 cm<small>Progression, ratissage</small></div>'
+              + '<div><span>1 / sec</span>sur 20 cm<small>Recherche fine (= lent)</small></div>'
+              + '<div><span>2 / sec</span>sur cible<small>Vérification (= rapide)</small></div>'
+              + '</div>';
+
+            if (cfg.reac <= 1) {
+                h += T('t-key', '<b>Votre réactivité est basse (' + cfg.reac.toFixed(1) + ') :</b> adaptez avec un balayage lent et régulier, '
+                    + 'battement d\'environ 1 seconde sur 20 cm. C\'est là que vous irez chercher la portée maximale. '
+                    + 'Ne balayez pas vite avec cette réactivité, vous perdriez des cibles.');
+            } else if (cfg.reac >= 3) {
+                h += T('t-key', '<b>Votre réactivité est haute (' + cfg.reac.toFixed(1) + ') :</b> accélérez le balayage en conséquence. '
+                    + 'Réactivité haute et balayage lent est une combinaison qui fait manquer des cibles — la vitesse de balayage doit suivre la réactivité.');
+            } else {
+                h += T('', '<b>Réactivité moyenne (' + cfg.reac.toFixed(1) + ') :</b> battement régulier d\'environ 1 seconde sur 40-50 cm en progression, '
+                    + 'ralentissez sur les zones qui donnent.');
+            }
+
+            h += T('', '<b>Parallèle au sol, sans relever en bout de course.</b> C\'est l\'erreur la plus fréquente : '
+                + 'relever le disque en fin de balayage crée des faux signaux et vous fait perdre les centimètres du bord de la zone.');
+
+            if (cfg.ferraille === 2) {
+                h += T('t-warn', '<b>Ferraille dense :</b> gardez des balayages modérés et resserrez la largeur. '
+                    + 'Recouvrez à 50 % d\'un passage à l\'autre — en zone polluée, ce qui compte n\'est pas la surface couverte mais le nombre de cibles réellement analysées.');
+            }
+            if (cfg.coil === 'hf2' || cfg.coil === 'c9') {
+                h += T('t-good', '<b>Petit disque :</b> balayage lent et <b>croisé</b>. Un elliptique découpe le tapis ferreux — faites-en un atout, '
+                    + 'ne balayez pas comme avec un grand rond.');
+            }
+            if (cfg.coil === 'c1311') {
+                h += T('t-warn', '<b>Grand disque 13x11" :</b> son inertie l\'aide dans l\'herbe, mais il est difficile de balayer vite sur cette largeur. '
+                    + 'Sur cible localisée, raccourcissez la distance de balayage pour accélérer le battement et solliciter la discrimination.');
+            }
+
+            // ---------- 2. CONFIRMER UNE CIBLE ----------
+            h += '<h3>🎯 Confirmer une cible avant de creuser</h3>';
+            h += T('t-key', '<b>Le croisé à 90° :</b> repassez perpendiculairement au premier balayage. '
+                + 'Un bon signal reste franc dans les deux axes ; un ferreux ou un faux signal se dégrade nettement dans l\'un des deux.');
+            h += T('t-key', '<b>Le pompage vertical (astuce anti-gros ferreux) :</b> quand vous doutez de creuser sur un fer à bœuf ou une grosse masse ferreuse, '
+                + 'pompez le disque à la verticale au-dessus de la cible, comme pour un réglage de sol. Si le son reste bon, c\'est une cible conductrice ; '
+                + 'sinon c\'est très probablement du gros ferreux. Cela évite de creuser 40 cm pour rien.');
+            h += T('', '<b>Lisez la stabilité du TID, pas seulement sa valeur.</b> Un indice élevé <b>et stable</b> est un meilleur indicateur qu\'un indice élevé isolé. '
+                + 'Si les chiffres fluctuent de plus de deux unités, la cible est douteuse. Un signal ferreux suivi de chiffres plus bas = clou, phénomène normal sur tous les détecteurs.');
+            h += T('', '<b>Accélérez le battement sur la cible.</b> Le signal d\'une bonne cible persiste ; un mauvais signal crachote ou disparaît. '
+                + 'Attention toutefois : près d\'un ferreux volumineux, un bon signal peut disparaître à l\'accélération — c\'est le cas où il faut monter la réactivité.');
+
+            // ---------- 3. SPECIFIQUE A LA CONFIG ----------
+            h += '<h3>⚙️ Spécifique à votre configuration</h3>';
+
+            if (cfg.sil < 0) {
+                h += T('t-warn', '<b>Silencieux négatif (' + cfg.sil + ') :</b> vous allez entendre davantage de sons aigus produits par du fer. '
+                    + 'C\'est le prix du masquage réduit. Ne remontez pas le Silencieux au premier agacement — c\'est précisément ce réglage qui fait ressortir '
+                    + 'les bonnes cibles masquées par du fer adjacent. Triez au TID et au croisé.');
+            }
+            if (cfg.stab === 1) {
+                h += T('t-warn', '<b>Stabilité Sol 1 :</b> les briques (~78) et les chocs de disque (~88) vont sonner. '
+                    + 'Ne cognez pas le disque, et faites cette passe sur une zone restreinte déjà repérée — pas sur un champ entier.');
+            }
+            if (cfg.bcaps > 0 && (a.terrain === 'plage')) {
+                h += T('t-warn', '<b>B.Caps sur la plage :</b> à utiliser avec parcimonie. Les capsules aluminium oxydées par le sel produisent un fort effet de halo, '
+                    + 'et ce filtre peut masquer de bonnes cibles. Beaucoup de plagistes préfèrent le désactiver et trier à l\'oreille.');
+            }
+            if (cfg.reac >= 3 && (a.objectif === 'profond' || a.objectif === 'reliques')) {
+                h += T('t-warn', '<b>Attention :</b> vous cherchez de la profondeur avec une réactivité haute. C\'est cohérent si votre sol est difficile, '
+                    + 'mais sur une zone propre, redescendez : vous y gagnerez nettement en portée.');
+            }
+            if (cfg.resp >= 6) {
+                h += T('', '<b>Réponse Audio ' + cfg.resp + ' :</b> les cibles lointaines sont amplifiées, mais vous perdez l\'appréciation de la profondeur à l\'oreille. '
+                    + 'Fiez-vous à l\'indicateur de profondeur et au pinpoint plutôt qu\'au volume.');
+            }
+
+            // ---------- 4. SPECIFIQUE AU TERRAIN ----------
+            if (a.terrain === 'plage') {
+                h += '<h3>🏖️ Plage</h3>';
+                h += T('', '<b>Balayez bien parallèle sans relever le disque en bout de balayage.</b> Si vous n\'arrivez pas à maintenir un balayage régulier '
+                    + 'et que la machine devient instable, réduisez <b>Sel Sens avant</b> la sensibilité générale.');
+                h += T('', 'Sur sable mouillé, travaillez la laisse de mer et les zones de dépôt. Rincez le disque à l\'eau douce après chaque sortie en bord de mer.');
+            }
+            if (a.objectif === 'or') {
+                h += '<h3>✨ Or natif</h3>';
+                h += T('t-key', '<b>Refaites le réglage de sol très régulièrement.</b> Gold Field ne rejette que le sol ambiant sur lequel vous vous êtes calé — '
+                    + 'dès que la nature du terrain change, la compensation n\'est plus valable.');
+                h += T('', 'Balayage lent et très près du sol, en recouvrement serré. Les pépites sont souvent perçues comme du sol ou du ferreux : creusez les sons douteux.');
+            }
+            if (a.objectif === 'reliques' || a.objectif === 'profond') {
+                h += '<h3>🏛️ Cibles profondes</h3>';
+                h += T('', 'Sur Relic, <b>balayez à 15-20 cm au-dessus du sol</b> : vous serez moins gêné par les ferreux de surface et les effets de sol, '
+                    + 'tout en conservant la portée sur les grosses masses.');
+            }
+
+            // ---------- 5. ROUTINE ----------
+            h += '<h3>🔁 Routine de session</h3>';
+            h += T('t-key', '<b>Refaites Freq Scan + Grabbing à chaque changement de zone.</b> La minéralisation change d\'un bout de parcelle à l\'autre, '
+                + 'et l\'environnement électromagnétique change avec la météo et l\'heure. C\'est 30 secondes qui conditionnent toute la suite.');
+            h += T('', '<b>Creusez tout pendant 30 minutes en arrivant sur un site inconnu.</b> C\'est le seul moyen d\'apprendre ce que ce terrain-là raconte : '
+                + 'quel TID correspond à quoi, quels sons sont du fer local. Vous trierez ensuite bien plus vite.');
+            h += T('', '<b>Notez vos trouvailles dans le carnet</b> (onglet Outils) avec la profondeur. Au bout de quelques sorties vous saurez quels réglages '
+                + 'sortent quoi sur vos terrains — ce qui vaut mieux que n\'importe quelle recommandation générique, y compris les miennes.');
+
+            h += '</div>';
+            return h;
+        }
+
+        function applyFieldConfig() {
+            const cfg = window.__fieldCfg;
+            if (!cfg) return;
+            if (cfg.coil) $('sel-coil').value = cfg.coil;
+            $('sel-mineral').value = String(cfg.mineral);
+            $('sel-ferraille').value = String(cfg.ferraille);
+            loadProgramByKey(cfg.prog);
+            $('rng-sens').value = cfg.sens;
+            setSelectClosest('sel-reac', cfg.reac);
+            $('rng-sil').value = cfg.sil;
+            $('rng-bcaps').value = cfg.bcaps;
+            $('sel-fmf').value = String(cfg.fmfMax);
+            $('rng-resp').value = cfg.resp;
+            $('rng-filtaudio').value = cfg.filtAudio;
+            $('rng-stab').value = cfg.stab;
+            if (cfg.iar !== null && cfg.iar !== undefined) $('rng-iar').value = cfg.iar;
+            if (cfg.notch === '23-35') { $('chk-notch').checked = true; $('rng-notch-s1').value = 23; $('rng-notch-s2').value = 35; }
+            else if (cfg.notch === '23-24') { $('chk-notch').checked = true; $('rng-notch-s1').value = 23; $('rng-notch-s2').value = 24; }
+            else if (!cfg.notch) { $('chk-notch').checked = false; }
+            $('sel-process-mode').value = cfg.multiproc;
+            setTab('config');
+            onCoilChange();
+            updateAdvanced();
+            updateExpert();
+            updateSimulator();
+        }
+
+        function saveFieldProfile() {
+            const cfg = window.__fieldCfg;
+            if (!cfg) return;
+            cfg.savedAt = new Date().toLocaleString('fr-FR');
+            localStorage.setItem('xpFieldProfile', JSON.stringify(cfg));
+            alert('✅ Profil terrain sauvegardé.');
+        }
+
+        function loadFieldProfile() {
+            const raw = localStorage.getItem('xpFieldProfile');
+            if (!raw) { alert('Aucun profil terrain sauvegardé.'); return; }
+            try {
+                window.__fieldCfg = JSON.parse(raw);
+                FIELD.history.push({ step: FIELD.step, a: Object.assign({}, FIELD.a), work: Object.assign({}, FIELD.work) });
+                FIELD.step = 'recap';
+                renderField();
+            } catch (e) { alert('Profil illisible.'); }
+        }
+
+        // =====================================================================
+        //  MOTEUR HEURISTIQUE (v3) — courbe réactivité pondérée par le sol
+        // =====================================================================
+        function calculatePerfFromValues(o) {
+            const minIdx = o.mineral;      // 0 faible, 1 moyenne, 2 forte
+            const ferIdx = o.ferraille;
+
+            // Réactivité optimale : dépend du sol. C'est la correction clé de la v3.
+            // Sol propre -> la portée max est bien aux réactivités basses.
+            // Sol minéralisé / ferreux -> l'optimum se déplace vers le haut.
+            const coil = DATA.coils[o.coil] || DATA.coils.c11;
+            // Le disque decale l'optimum : un grand disque voit plus de sol a chaque
+            // balayage et demande donc un peu plus de reactivite a conditions egales.
+            const optimalReac = Math.max(0, [0.5, 2, 3][minIdx] + [0, 0.5, 1][ferIdx] + coil.reacOffset);
+            const penalty = [6, 4, 3][minIdx];
+
+            let depth = 52 + (o.sens - 90) * 1.2 - Math.abs(o.reac - optimalReac) * penalty;
+            depth -= minIdx * 6;                       // le sol coûte de la portée dans l'absolu
+            if (o.stab === 1) depth += 8;              // exploite les signaux sous la valeur sol
+            if (o.stab === 3) depth -= 4;
+            if (o.fmfMax === 14) depth += 10;
+            if (o.fmfMax === 40) depth -= 4;
+            depth += o.filtAudio * 1.2;                // gain réel revendiqué en limite de portée
+
+            // Audibilité : ce que la Réponse Audio améliore réellement (perception, pas portée)
+            let audibility = 28 + o.resp * 8 + o.filtAudio * 3;
+            if (o.resp >= 6) audibility += 5;
+
+            // Masquage
+            let masking = 18 + Math.max(0, o.disc) * 0.35 + Math.max(0, o.sil) * 5 - o.reac * 7 + ferIdx * 12;
+            if (o.sil < 0) masking -= 8;
+            if (o.bcaps > 0) masking += o.bcaps * 2;
+            if (o.notchActive) masking += 6;
+            if (o.iron === 0) masking += 10;
+
+            let separation = (o.reac / 5) * 100 - ferIdx * 5;
+            if (o.fmfMax === 40) separation += 6;
+            if (o.fmfMax === 14) separation -= 6;
+
+            let finesse = ((o.sens - 50) / 49) * 100;
+            if (o.fmfMax === 40) finesse += 18;
+            if (o.fmfMax === 14) finesse -= 18;
+
+            let id = 78 - (o.sens > 95 ? (o.sens - 95) * 4 : 0) + o.stab * 5 - minIdx * 8;
+            if (o.sil < 0) id += 6;                    // T.ID très réactif en silencieux négatif
+            if (o.fmfMax === 24) id += 4;
+
+            // Ponderations du disque
+            depth      += coil.dDepth;
+            separation += coil.dSep;
+            finesse    += coil.dFine;
+            masking    += coil.dMask;
+
+            const clamp = v => Math.max(0, Math.min(100, v));
+            return { depth: clamp(depth), audibility: clamp(audibility), masking: clamp(masking),
+                     separation: clamp(separation), finesse: clamp(finesse), id: clamp(id),
+                     optimalReac: optimalReac };
+        }
+
+        function readSimState() {
+            let sens = parseFloat($('rng-sens').value);
+            let reac = parseFloat($('sel-reac').value);
+
+            const processMode = $('sel-process-mode').value;
+            if (processMode !== 'standard') {
+                const v1Reac = parseFloat($('sel-v1-reac').value);
+                const v1Sens = parseFloat($('rng-v1-sens').value);
+                const v2Reac = parseFloat($('sel-v2-reac').value);
+                const v2Sens = parseFloat($('rng-v2-sens').value);
+                sens = sens * 0.6 + ((v1Sens + v2Sens) / 2) * 0.4;
+                reac = reac * 0.5 + ((v1Reac + v2Reac) / 2) * 0.5;
+            }
+
+            return {
+                sens: sens,
+                reac: reac,
+                disc: parseFloat($('rng-disc').value),
+                sil: parseFloat($('rng-sil').value),
+                bcaps: parseFloat($('rng-bcaps').value),
+                iron: parseFloat($('rng-iron').value),
+                resp: parseFloat($('rng-resp').value),
+                filtAudio: parseFloat($('rng-filtaudio').value),
+                stab: parseFloat($('rng-stab').value),
+                fmfMax: parseFloat($('sel-fmf').value),
+                notchActive: $('chk-notch').checked,
+                coil: $('sel-coil').value,
+                mineral: parseInt($('sel-mineral').value, 10),
+                ferraille: parseInt($('sel-ferraille').value, 10)
+            };
+        }
+
+        function calculatePerformance() { return calculatePerfFromValues(readSimState()); }
+
+        function updateSimulator() {
+            const st = readSimState();
+            const notchActive = $('chk-notch').checked;
+
+            $('val-sens').textContent = $('rng-sens').value;
+            $('val-reac').textContent = parseFloat($('sel-reac').value).toFixed(1);
+            $('val-disc').textContent = parseFloat($('rng-disc').value).toFixed(1);
+            $('val-sil').textContent = $('rng-sil').value;
+            $('val-iron').textContent = $('rng-iron').value;
+            $('val-bcaps').textContent = $('rng-bcaps').value;
+            $('val-resp').textContent = $('rng-resp').value;
+            $('val-filtaudio').textContent = $('rng-filtaudio').value;
+            $('val-audio').textContent = $('sel-audio').value;
+            $('val-notch-s1').textContent = $('rng-notch-s1').value;
+            $('val-notch-s2').textContent = $('rng-notch-s2').value;
+            $('rng-notch-s1').disabled = !notchActive;
+            $('rng-notch-s2').disabled = !notchActive;
+
+            const iarVal = parseInt($('rng-iar').value, 10);
+            $('val-iar').textContent = iarVal === 0 ? 'OFF' : iarVal;
+            if ($('selsens-container').style.display !== 'none') {
+                $('val-selsens').textContent = $('rng-selsens').value;
+            }
+
+            const perf = calculatePerformance();
+            $('bar-depth').style.width = perf.depth + '%';
+            $('bar-aud').style.width = perf.audibility + '%';
+            $('bar-sep').style.width = perf.separation + '%';
+            $('bar-fine').style.width = perf.finesse + '%';
+            $('bar-id').style.width = perf.id + '%';
+            $('bar-mask').style.width = perf.masking + '%';
+
+            // Feedbacks
+            const sens = st.sens;
+            const fs = sens < 70 ? 'Bas — utile en zone très parasitée' : sens < 90 ? 'Zone usuelle (70-90)' : sens < 96 ? 'Agressif' : 'Très agressif';
+            $('feed-sens').textContent = fs + (sens > 95 ? ' ⚠️ À valider sous le seuil d\'instabilité' : '');
+            $('feed-sens').className = 'param-feedback ' + (sens > 95 ? 'feedback-warn' : 'feedback-good');
+
+            const reac = parseFloat($('sel-reac').value);
+            const gap = Math.abs(reac - perf.optimalReac);
+            let rTxt = reac <= 1 ? 'Grosses masses et monnaies, terrain non pollué' : reac <= 2.5 ? 'Usage général, sol peu pollué' : 'Sol pollué de ferreux et/ou minéralisé';
+            rTxt += ' · Optimum estimé pour ce sol : ' + perf.optimalReac.toFixed(1);
+            $('feed-reac').textContent = rTxt;
+            $('feed-reac').className = 'param-feedback ' + (gap <= 0.5 ? 'feedback-good' : gap <= 1.5 ? '' : 'feedback-warn');
+
+            const disc = st.disc;
+            $('feed-disc').textContent = disc < 0 ? 'Zone négative : les ferreux fins deviennent audibles.'
+                : disc > 15 ? '⚠️ Discri haute : vous perdrez des cibles en métal noble. Préférez TID + multi-tons + B.Caps.'
+                : 'Rejette les cibles de conductivité < ' + disc.toFixed(1) + '. Le manuel recommande de rester bas (ex. 8).';
+            $('feed-disc').className = 'param-feedback ' + (disc > 15 ? 'feedback-warn' : 'feedback-good');
+
+            const sil = st.sil;
+            $('feed-sil').textContent = sil < 0 ? 'Masquage particulièrement réduit, T.ID très réactif — les ferreux génèrent plus de pics aigus.'
+                : sil === 0 ? 'Filtrage désactivé.'
+                : sil <= 3 ? 'Bon compromis. Pour plus de rejet fer, montez B.Caps plutôt que le Silencieux.'
+                : 'Filtrage des ferreux très efficace — risque de masquer une bonne cible collée au fer.';
+            $('feed-sil').className = 'param-feedback ' + (sil >= 4 ? 'feedback-warn' : 'feedback-good');
+
+            $('feed-iron').textContent = st.iron === 0 ? '⚠️ Fer MUET : vous perdez l\'information de contexte ferreux.' : 'Volume Fer ' + st.iron + '/10 (usine = 7).';
+            $('feed-bcaps').textContent = st.bcaps === 0 ? 'Désactivé.' : 'Actif à ' + st.bcaps + ' — rejette capsules ferreuses, cartouches fer, anneaux fer, certains gros ferreux.';
+            $('feed-notch').textContent = notchActive ? 'Rejette les cibles de TID ' + $('rng-notch-s1').value + ' à ' + $('rng-notch-s2').value + '.' : 'Notch inactif.';
+            $('feed-resp').textContent = st.resp >= 6 ? 'Cibles lointaines amplifiées — mais faux signaux amplifiés aussi, et perte d\'appréciation de la distance.' : 'Bonne dynamique, la distance reste lisible à l\'oreille.';
+            $('feed-filtaudio').textContent = st.filtAudio === 0 ? 'Désactivé — conserve toutes les nuances des craquements de ferreux.'
+                : st.filtAudio <= 2 ? 'Niveau bas : bon compromis en milieu ferreux.'
+                : 'Niveau élevé : son plus doux, quelques cm gagnés en limite de portée. À éviter en zone ferreuse dense.';
+            $('feed-iar').textContent = iarVal === 0 ? 'OFF — pas de rejet ferreux (performance maximale).' : iarVal <= 3 ? 'Rejet des ferreux proches.' : 'Rejet des ferreux proches ET distants.';
+
+            const analysis = '<strong>📊 Portée (heuristique) :</strong> <strong style="color:var(--accent-gold);">' + perf.depth.toFixed(0) + '/100</strong>'
+                + ' &nbsp;·&nbsp; <strong>Audibilité :</strong> ' + perf.audibility.toFixed(0) + '/100<br/>'
+                + '<strong>Masquage :</strong> ' + perf.masking.toFixed(0) + '% ' + (perf.masking > 60 ? '⚠️ risque de cibles manquées' : '✅ acceptable')
+                + ' &nbsp;·&nbsp; <strong>Séparation :</strong> ' + perf.separation.toFixed(0) + '%<br/>'
+                + '<em style="font-size:0.82rem; color:var(--text-dim);">Réactivité optimale estimée pour ce sol : '
+                + perf.optimalReac.toFixed(1) + ' — la portée maximale n\'est aux réactivités basses que sur sol propre.</em>';
+            $('sim-analysis').innerHTML = analysis;
+
+            updateRadarChart();
+        }
+
+        function onCoilChange() {
+            const cc = DATA.coils[$('sel-coil').value];
+            $('feed-coil').textContent = cc ? cc.note : '';
+            updateSimulator();
+        }
+
+        function updateAdvanced() {
+            const grabAuto = $('chk-grab-auto').checked;
+            const grabSlider = $('rng-grab');
+            grabSlider.disabled = grabAuto;
+            const stab = parseInt($('rng-stab').value, 10);
+            $('val-stab').textContent = stab;
+            $('val-grab').textContent = grabAuto ? 'AUTO' : grabSlider.value;
+            $('stab1-warning').style.display = (stab === 1) ? 'block' : 'none';
+
+            const stabTxt = stab === 1 ? 'Niveau 1 — accepte la zone au-dessus de la valeur sol (mode expert)'
+                : stab === 2 ? 'Niveau 2 — standard, analyse multifréquentielle à travers les sols minéralisés'
+                : 'Niveau 3 — le plus stable aux chocs sur sol non minéralisé';
+            $('feed-stab').textContent = stabTxt;
+            $('feed-grab').textContent = grabAuto ? 'GRAB automatique — rapide et précis, recommandé par XP.' : 'Sol manuel à ' + grabSlider.value + ' (disponible sur Deus Mono ; 88-90 rejette sols, ferrites et chocs).';
+            $('advanced-feedback').innerHTML = '<strong>🎛️ Sol :</strong> ' + escapeHtml(stabTxt) + ' | ' + (grabAuto ? 'GRAB AUTO' : 'Manuel ' + grabSlider.value);
+        }
+
+        function updateExpert() {
+            const mode = $('sel-process-mode').value;
+            $('multiprocess-detail').style.display = (mode === 'standard') ? 'none' : 'grid';
+            $('dualaxis-note').style.display = (mode === 'dualaxis') ? 'block' : 'none';
+
+            if (mode === 'standard') {
+                $('expert-feedback').innerHTML = 'Multi-Process désactivé — sortie mono-canal standard.';
+                return;
+            }
+            const v1Reac = parseFloat($('sel-v1-reac').value);
+            const v1Sens = parseFloat($('rng-v1-sens').value);
+            const v2Reac = parseFloat($('sel-v2-reac').value);
+            const v2Sens = parseFloat($('rng-v2-sens').value);
+            const pan = parseFloat($('rng-pan').value);
+
+            $('val-v1-reac').textContent = v1Reac.toFixed(1);
+            $('val-v1-sens').textContent = v1Sens;
+            $('val-v2-reac').textContent = v2Reac.toFixed(1);
+            $('val-v2-sens').textContent = v2Sens;
+            $('val-pan').textContent = pan;
+
+            const names = { morph1: 'MORPH.1 — 2 Tons + Chorus sur cibles lointaines', morph2: 'MORPH.2 — 3 Tons CH1 + morphing CH2 en approche', dualreact: 'DUAL REACT — High Square réactif + PWM profond', dualaxis: 'DUAL AXIS — dynamique 2.5 + statique retune rapide' };
+            const gap = v2Reac - v1Reac;
+            const cov = gap > 2 ? '✅ Bonne couverture profondeur / séparation' : gap > 1 ? '⚠️ Écart correct' : '❌ Écart faible entre canaux';
+            $('expert-feedback').innerHTML = '<strong>Preset :</strong> ' + escapeHtml(names[mode] || mode)
+                + '<br/><strong>Écart de réactivité CH1↔CH2 :</strong> ' + gap.toFixed(1) + ' — ' + cov
+                + '<br/><em style="font-size:0.8rem;">Nécessite un casque WS6ST / WSAST / WSAXL ST.</em>';
+        }
+
+        // --- programmes ---
+        function loadProgramByKey(key) {
+            const p = DATA.factoryPrograms[key];
+            if (!p) return;
+            $('sel-process-mode').value = 'standard';
+            $('rng-sens').value = p.sens;
+            setSelectClosest('sel-reac', p.reac);
+            $('rng-disc').value = (p.disc === null ? 0 : p.disc);
+            $('rng-sil').value = (p.sil === null ? 0 : p.sil);
+            $('rng-bcaps').value = (p.bcaps === null ? 0 : p.bcaps);
+            if (p.notch) {
+                $('chk-notch').checked = true;
+                $('rng-notch-s1').value = p.notch[0];
+                $('rng-notch-s2').value = p.notch[1];
+            } else { $('chk-notch').checked = false; }
+            $('sel-fmf').value = String(p.fmfMax);
+            $('sel-audio').value = p.audio;
+            $('rng-resp').value = p.resp;
+            $('rng-iron').value = p.iron;
+            $('rng-filtaudio').value = p.filtAudio;
+            if (p.stab !== null) $('rng-stab').value = p.stab;
+
+            $('iar-container').style.display = (p.iar !== null && p.iar !== undefined) ? 'block' : 'none';
+            if (p.iar !== null && p.iar !== undefined) $('rng-iar').value = p.iar;
+
+            $('selsens-container').style.display = (p.selSens !== null && p.selSens !== undefined) ? 'block' : 'none';
+            if (p.selSens !== null && p.selSens !== undefined) $('rng-selsens').value = p.selSens;
+
+            const st = readSimState();
+            st.sens = p.sens; st.reac = p.reac; st.disc = (p.disc === null ? 0 : p.disc);
+            st.sil = (p.sil === null ? 0 : p.sil); st.bcaps = (p.bcaps === null ? 0 : p.bcaps);
+            st.iron = p.iron; st.resp = p.resp; st.filtAudio = p.filtAudio;
+            st.stab = (p.stab === null ? 2 : p.stab); st.fmfMax = p.fmfMax; st.notchActive = !!p.notch;
+            referenceStats = calculatePerfFromValues(st);
+
+            updateAdvanced();
+            updateExpert();
+            updateSimulator();
+        }
+
+        function manualProgramChange() {
+            const key = $('sel-factory-prog').value;
+            if (key) loadProgramByKey(key);
+        }
+
+        function runWizardCheck() {
+            const terrain = $('wiz-terrain').value;
+            const obj = $('wiz-obj').value;
+            if (!terrain || !obj) { alert('⚠️ Sélectionnez un terrain et un objectif.'); return; }
+
+            const saveA = FIELD.a;
+            FIELD.a = {
+                terrain: terrain === 'pollué' ? 'pollue' : terrain === 'minéralisé' ? 'habitat' : terrain,
+                mineral: terrain === 'minéralisé' ? 2 : terrain === 'prairie' ? 0 : 1,
+                ferraille: terrain === 'pollué' ? 2 : 1,
+                objectif: obj
+            };
+            const reco = fieldRecommendProgram();
+            FIELD.a = saveA;
+
+            $('wizard-outcome').style.display = 'block';
+            $('wiz-recommendation-text').innerHTML =
+                '<strong style="color:var(--accent-gold); font-size:1.3rem;">' + escapeHtml(DATA.factoryPrograms[reco.key].label) + '</strong><br>'
+                + '<span style="font-style:italic;">' + escapeHtml(reco.reason) + '</span>';
+            $('sel-factory-prog').value = reco.key;
+            loadProgramByKey(reco.key);
+            $('wizard-outcome').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- radar ---
+        function initRadarChart() {
+            const ctx = $('radarChart');
+            if (!ctx) return;
+            if (radarChart) radarChart.destroy();
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Portée', 'Audibilité', 'Séparation', 'Finesse', 'ID stable', 'Zéro masquage'],
+                    datasets: [
+                        { label: 'Actuel', data: [50,50,50,50,50,50], borderColor: '#d4af37', backgroundColor: 'rgba(212,175,55,0.15)', borderWidth: 2, pointBackgroundColor: '#d4af37', fill: true, order: 1 },
+                        { label: 'Usine', data: [50,50,50,50,50,50], borderColor: '#a0a0a0', backgroundColor: 'transparent', borderWidth: 1, borderDash: [5,5], pointBackgroundColor: 'transparent', pointBorderColor: 'transparent', order: 2 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { r: { beginAtZero: true, max: 100, grid: { color: '#2d333d' }, ticks: { display: false }, pointLabels: { font: { size: 9 } } } }
+                }
+            });
+            updateRadarChart();
+        }
+
+        function updateRadarChart() {
+            if (!radarChart) return;
+            const p = calculatePerformance();
+            radarChart.data.datasets[0].data = [p.depth, p.audibility, p.separation, p.finesse, p.id, 100 - p.masking];
+            if (referenceStats) {
+                const r = referenceStats;
+                radarChart.data.datasets[1].data = [r.depth, r.audibility, r.separation, r.finesse, r.id, 100 - r.masking];
+            }
+            radarChart.update();
+        }
+
+        // --- terrains / faq / profils / journal ---
+        function loadTerrainGrid() {
+            $('terrain-grid').innerHTML = Object.keys(DATA.terrains).map(key => {
+                const t = DATA.terrains[key];
+                return '<div class="terrain-card" onclick="showTerrainDetail(\'' + key + '\')">'
+                    + '<h3>' + escapeHtml(t.name) + '</h3>'
+                    + '<p><strong>Portée :</strong> ' + escapeHtml(t.depth) + '</p>'
+                    + '<p><strong>Pollution :</strong> ' + escapeHtml(t.poll) + '</p>'
+                    + '<p style="color:var(--accent-gold); font-size:0.85rem; margin-top:10px;">👆 Détails</p></div>';
+            }).join('');
+        }
+
+        function showTerrainDetail(key) {
+            const t = DATA.terrains[key];
+            $('terrain-detail').innerHTML = '<div class="card" style="border-left: 4px solid var(--accent-gold);">'
+                + '<h2>' + escapeHtml(t.name) + '</h2><div class="grid-2"><div>'
+                + '<h4 style="color:var(--accent-blue); margin-bottom:10px;">📊 Point de départ</h4>'
+                + '<p><strong>Sensibilité :</strong> ' + t.config.sens + '</p>'
+                + '<p><strong>Réactivité :</strong> ' + t.config.reac + '</p>'
+                + '<p><strong>Discrimination :</strong> ' + t.config.disc + '</p></div><div>'
+                + '<h4 style="color:var(--accent-blue); margin-bottom:10px;">💡 Conseils (manuel)</h4><ul>'
+                + t.tips.map(tip => '<li>• ' + escapeHtml(tip) + '</li>').join('') + '</ul></div></div>'
+                + '<button class="btn btn-gold" style="width:100%; margin-top:15px;" onclick="applyTerrainConfig(\'' + key + '\')">🚀 Appliquer</button></div>';
+        }
+
+        function applyTerrainConfig(key) {
+            const t = DATA.terrains[key];
+            $('rng-sens').value = t.config.sens;
+            setSelectClosest('sel-reac', t.config.reac);
+            $('rng-disc').value = t.config.disc;
+            setTab('config');
+            updateSimulator();
+        }
+
+        function loadFAQ() {
+            $('faq-container').innerHTML = DATA.faq.map(i =>
+                '<div class="faq-item"><strong>Q : ' + escapeHtml(i.q) + '</strong>'
+                + '<p style="margin-top:10px;">R : ' + escapeHtml(i.r) + '</p></div>').join('');
+        }
+
+        function saveProfile() {
+            const name = $('profile-name').value.trim();
+            if (!name) { alert('❌ Nom requis'); return; }
+            const p = {
+                name: name, terrain: $('profile-terrain').value,
+                coil: $('sel-coil').value, mineral: $('sel-mineral').value, ferraille: $('sel-ferraille').value,
+                sens: +$('rng-sens').value, reac: +$('sel-reac').value, disc: +$('rng-disc').value,
+                iar: +$('rng-iar').value, sil: +$('rng-sil').value, bcaps: +$('rng-bcaps').value,
+                notchActive: $('chk-notch').checked, notchS1: +$('rng-notch-s1').value, notchS2: +$('rng-notch-s2').value,
+                fmfMax: +$('sel-fmf').value, audio: $('sel-audio').value, resp: +$('rng-resp').value,
+                iron: +$('rng-iron').value, filtAudio: +$('rng-filtaudio').value, selSens: +$('rng-selsens').value,
+                processMode: $('sel-process-mode').value, v1reac: +$('sel-v1-reac').value, v1sens: +$('rng-v1-sens').value,
+                v2reac: +$('sel-v2-reac').value, v2sens: +$('rng-v2-sens').value, pan: +$('rng-pan').value,
+                stab: +$('rng-stab').value, grabAuto: $('chk-grab-auto').checked, grab: +$('rng-grab').value,
+                timestamp: new Date().toLocaleString('fr-FR')
+            };
+            const list = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
+            list.push(p);
+            localStorage.setItem('xpProfiles', JSON.stringify(list));
+            $('profile-name').value = ''; $('profile-terrain').value = '';
+            loadProfilesList();
+            alert('✅ Profil sauvegardé.');
+        }
+
+        function loadProfilesList() {
+            const profiles = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
+            const list = $('saved-profiles-list');
+            if (!profiles.length) { list.innerHTML = '<p style="color:var(--text-dim); text-align:center; padding:20px;">Aucun profil.</p>'; return; }
+            list.innerHTML = profiles.map((p, i) =>
+                '<div class="saved-item"><div style="flex:1;"><h4>' + escapeHtml(p.name) + '</h4>'
+                + '<p>' + escapeHtml(p.terrain || 'N/A') + ' | S:' + escapeHtml(p.sens) + ' R:' + escapeHtml(p.reac) + ' D:' + escapeHtml(p.disc) + '</p>'
+                + '<p style="font-size:0.75rem; color:var(--text-dim);">' + escapeHtml(p.timestamp) + '</p></div>'
+                + '<div class="saved-item-actions"><button class="btn-download" onclick="loadProfile(' + i + ')">📥</button>'
+                + '<button class="btn-delete" onclick="deleteProfile(' + i + ')">🗑️</button></div></div>').join('');
+        }
+
+        function loadProfile(idx) {
+            const p = JSON.parse(localStorage.getItem('xpProfiles') || '[]')[idx];
+            if (!p) return;
+            if (p.coil) $('sel-coil').value = p.coil;
+            if (p.mineral !== undefined) $('sel-mineral').value = p.mineral;
+            if (p.ferraille !== undefined) $('sel-ferraille').value = p.ferraille;
+            $('rng-sens').value = p.sens;
+            setSelectClosest('sel-reac', p.reac);
+            $('rng-disc').value = p.disc;
+            $('rng-iar').value = p.iar || 0;
+            $('rng-sil').value = p.sil || 0;
+            $('rng-bcaps').value = p.bcaps || 0;
+            $('chk-notch').checked = !!p.notchActive;
+            $('rng-notch-s1').value = p.notchS1 || 23;
+            $('rng-notch-s2').value = p.notchS2 || 24;
+            $('sel-fmf').value = String(p.fmfMax || 24);
+            $('sel-audio').value = p.audio || 'PWM';
+            $('rng-resp').value = p.resp !== undefined ? p.resp : 4;
+            $('rng-iron').value = p.iron !== undefined ? p.iron : 7;
+            $('rng-filtaudio').value = p.filtAudio || 0;
+            $('rng-selsens').value = p.selSens || 9;
+            $('rng-v1-sens').value = p.v1sens || 95;
+            $('rng-v2-sens').value = p.v2sens || 90;
+            $('rng-pan').value = p.pan || 0;
+            if (p.v1reac !== undefined) setSelectClosest('sel-v1-reac', p.v1reac);
+            if (p.v2reac !== undefined) setSelectClosest('sel-v2-reac', p.v2reac);
+            $('rng-stab').value = p.stab || 2;
+            $('chk-grab-auto').checked = p.grabAuto !== undefined ? p.grabAuto : true;
+            $('rng-grab').value = p.grab || 90;
+            if (p.processMode) $('sel-process-mode').value = p.processMode;
+            setTab('config');
+            onCoilChange(); updateAdvanced(); updateExpert(); updateSimulator();
+        }
+
+        function deleteProfile(idx) {
+            if (!confirm('Supprimer ce profil ?')) return;
+            const list = JSON.parse(localStorage.getItem('xpProfiles') || '[]');
+            list.splice(idx, 1);
+            localStorage.setItem('xpProfiles', JSON.stringify(list));
+            loadProfilesList();
+        }
+
+        function addLog() {
+            const find = $('log-find').value.trim();
+            const depth = $('log-depth').value;
+            if (!find) { alert('Trouvaille requise'); return; }
+            const logs = JSON.parse(localStorage.getItem('xpLogs') || '[]');
+            logs.push({ find: find, depth: depth, date: new Date().toLocaleString('fr-FR') });
+            localStorage.setItem('xpLogs', JSON.stringify(logs));
+            $('log-find').value = ''; $('log-depth').value = '';
+            loadLogbook();
+        }
+
+        function loadLogbook() {
+            const logs = JSON.parse(localStorage.getItem('xpLogs') || '[]');
+            const list = $('logbook-list');
+            if (!logs.length) { list.innerHTML = '<p style="color:var(--text-dim);">Journal vide.</p>'; return; }
+            list.innerHTML = logs.slice().reverse().map(l =>
+                '<div class="saved-item"><p><strong>' + escapeHtml(l.find) + '</strong> — '
+                + escapeHtml(l.depth || 'N/A') + ' cm | ' + escapeHtml(l.date) + '</p></div>').join('');
+        }
+
+        // --- init ---
+        window.addEventListener('load', () => {
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+
+            const progSelect = $('sel-factory-prog');
+            Object.keys(DATA.factoryPrograms).forEach(key => {
+                const o = document.createElement('option');
+                o.value = key; o.textContent = DATA.factoryPrograms[key].label;
+                progSelect.appendChild(o);
+            });
+
+            loadTerrainGrid();
+            loadFAQ();
+            loadProfilesList();
+            loadLogbook();
+            onCoilChange();
+            updateAdvanced();
+            updateExpert();
+            updateSimulator();
+            renderField();
+            setTimeout(() => { if ($('radarChart')) initRadarChart(); }, 400);
+        });
+    </script>
+</body>
+</html>
